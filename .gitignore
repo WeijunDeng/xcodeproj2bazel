@@ -1,0 +1,11 @@
+Gemfile.lock
+vendor_bundle
+xcodeproj2bazel.log
+examples/*/bazel-*
+examples/*/WORKSPACE
+examples/*/xcodeproj2bazel_rules
+examples/*/.bazelrc
+examples/*/.bazelversion
+examples/*/BUILD.bazel
+*.xcuserdatad
+
