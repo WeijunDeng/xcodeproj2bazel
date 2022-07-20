@@ -66,7 +66,9 @@ bash test.sh
     - OTHER_CFLAGS
     - OTHER_CPLUSPLUSFLAGS
     - OTHER_LDFLAGS
+    - OTHER_SWIFT_FLAGS
     - PRODUCT_BUNDLE_IDENTIFIER
+    - PRODUCT_BUNDLE_PACKAGE_TYPE
     - PRODUCT_MODULE_NAME
     - PRODUCT_NAME
     - PROVISIONING_PROFILE_SPECIFIER
@@ -85,7 +87,8 @@ Doing or Planning:
 - use for dependency detect and isolate
 - parse file with defined macro
 - use tulsi to generate a xcode project, building with bazel, indexing with xcode
-- support more xcode build settings such as OTHER_SWIFT_FLAGS and GENERATE_INFOPLIST_FILE
+- support more xcode build settings such as GENERATE_INFOPLIST_FILE
 - read iOS default template build settings to parse
 - test for xcode 14 (xcode 13 now)
 - more examples
+- support xcframework

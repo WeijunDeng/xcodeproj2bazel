@@ -28,7 +28,6 @@ class DependencyAnalyzer
                 system_modules.add system_module
                 next
             end
-            binding.pry if module_name == "AppKit"
             user_modules.add module_name
         end
         return system_modules, user_modules

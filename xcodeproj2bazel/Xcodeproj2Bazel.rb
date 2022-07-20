@@ -28,7 +28,7 @@ class Xcodeproj2Bazel
         $xcodeproj2bazel_pwd = get_argument("--pwd=")
         raise "please set --pwd=/full/path" unless $xcodeproj2bazel_pwd 
         if File.exist? $xcodeproj2bazel_pwd
-            $xcodeproj2bazel_pwd = File.expand_path($xcodeproj2bazel_pwd)
+            $xcodeproj2bazel_pwd = File.realpath(File.expand_path($xcodeproj2bazel_pwd))
         else
             raise "#{$xcodeproj2bazel_pwd} should exist"
         end
@@ -41,7 +41,7 @@ class Xcodeproj2Bazel
         if workspace_path
             if File.exist? workspace_path
                 puts workspace_path
-                workspace_path = File.expand_path(workspace_path)
+                workspace_path = File.realpath(File.expand_path(workspace_path))
             else
                 raise "#{workspace_path} should exist"
             end
@@ -49,7 +49,7 @@ class Xcodeproj2Bazel
         if project_path
             if File.exist? project_path
                 puts project_path
-                project_path = File.expand_path(project_path)
+                project_path = File.realpath(File.expand_path(project_path))
             else
                 raise "#{project_path} should exist"
             end
@@ -57,7 +57,7 @@ class Xcodeproj2Bazel
         config_path = get_argument("--config=")
         if config_path
             if File.exist? config_path
-                config_path = File.expand_path(config_path)
+                config_path = File.realpath(File.expand_path(config_path))
                 puts config_path
                 require config_path
             else

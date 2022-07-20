@@ -1,0 +1,255 @@
+load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
+load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+package(default_visibility = ["//visibility:public"])
+apple_bundle_version(
+    name = "swift_app_with_pod_no_use_frameworks_app_version",
+    build_version = "1",
+)
+header_map(
+    name = "Kingfisher_header_map",
+    hdrs = [
+        "Pods/Kingfisher/Sources/Kingfisher.h",
+        "Pods/Target Support Files/Kingfisher/Kingfisher-umbrella.h",
+    ],
+    namespace = "Kingfisher",
+)
+header_map(
+    name = "MJExtension_header_map",
+    hdrs = [
+        "Pods/MJExtension/MJExtension/MJExtension.h",
+        "Pods/MJExtension/MJExtension/MJExtensionConst.h",
+        "Pods/MJExtension/MJExtension/MJFoundation.h",
+        "Pods/MJExtension/MJExtension/MJProperty.h",
+        "Pods/MJExtension/MJExtension/MJPropertyKey.h",
+        "Pods/MJExtension/MJExtension/MJPropertyType.h",
+        "Pods/MJExtension/MJExtension/NSObject+MJClass.h",
+        "Pods/MJExtension/MJExtension/NSObject+MJCoding.h",
+        "Pods/MJExtension/MJExtension/NSObject+MJKeyValue.h",
+        "Pods/MJExtension/MJExtension/NSObject+MJProperty.h",
+        "Pods/MJExtension/MJExtension/NSString+MJExtension.h",
+    ],
+    namespace = "MJExtension",
+)
+header_map(
+    name = "Pods_swift_app_with_pod_no_use_frameworks_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-umbrella.h",
+    ],
+    namespace = "Pods_swift_app_with_pod_no_use_frameworks",
+)
+ios_application(
+    name = "swift_app_with_pod_no_use_frameworks_app",
+    app_icons = glob([
+        "swift_app_with_pod_no_use_frameworks/Assets.xcassets/AppIcon.appiconset/**",
+    ]),
+    bundle_id = "com.dengweijun.empty-app-with-pods",
+    bundle_name = "swift_app_with_pod_no_use_frameworks",
+    deps = [
+        ":libKingfisher_a",
+        ":libMJExtension_a",
+        ":libPods_swift_app_with_pod_no_use_frameworks_a",
+        ":swift_app_with_pod_no_use_frameworks_app_swift",
+        ":swift_app_with_pod_no_use_frameworks_app_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "swift_app_with_pod_no_use_frameworks/Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    resources = [
+        "swift_app_with_pod_no_use_frameworks/Base.lproj/LaunchScreen.storyboard",
+        "swift_app_with_pod_no_use_frameworks/Base.lproj/Main.storyboard",
+    ] + glob([
+        "swift_app_with_pod_no_use_frameworks/Assets.xcassets/**",
+    ], exclude=[
+        "swift_app_with_pod_no_use_frameworks/Assets.xcassets/*.appiconset/**",
+    ]),
+    version = ":swift_app_with_pod_no_use_frameworks_app_version",
+)
+objc_library(
+    name = "libKingfisher_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/Kingfisher/Kingfisher-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Kingfisher/Kingfisher-dummy.m",
+    ],
+)
+objc_library(
+    name = "libMJExtension_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":MJExtension_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/MJExtension/MJExtension-prefix.pch",
+    srcs = [
+        "Pods/MJExtension/MJExtension/MJExtensionConst.m",
+        "Pods/MJExtension/MJExtension/MJFoundation.m",
+        "Pods/MJExtension/MJExtension/MJProperty.m",
+        "Pods/MJExtension/MJExtension/MJPropertyKey.m",
+        "Pods/MJExtension/MJExtension/MJPropertyType.m",
+        "Pods/MJExtension/MJExtension/NSObject+MJClass.m",
+        "Pods/MJExtension/MJExtension/NSObject+MJCoding.m",
+        "Pods/MJExtension/MJExtension/NSObject+MJKeyValue.m",
+        "Pods/MJExtension/MJExtension/NSObject+MJProperty.m",
+        "Pods/MJExtension/MJExtension/NSString+MJExtension.m",
+        "Pods/Target Support Files/MJExtension/MJExtension-dummy.m",
+    ],
+)
+objc_library(
+    name = "libPods_swift_app_with_pod_no_use_frameworks_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-dummy.m",
+    ],
+)
+static_library(
+    name = "libKingfisher_a",
+    deps = [
+        ":Kingfisher_swift",
+        ":libKingfisher_a_m",
+        ":libKingfisher_a_system_library",
+    ],
+)
+static_library(
+    name = "libMJExtension_a",
+    deps = [
+        ":libMJExtension_a_m",
+        ":libMJExtension_a_system_library",
+    ],
+)
+static_library(
+    name = "libPods_swift_app_with_pod_no_use_frameworks_a",
+    deps = [
+        ":libPods_swift_app_with_pod_no_use_frameworks_a_m",
+        ":libPods_swift_app_with_pod_no_use_frameworks_a_system_library",
+    ],
+)
+swift_library(
+    name = "Kingfisher_swift",
+    alwayslink = True,
+    copts = [
+        "-Xcc",
+        "-fmodule-map-file=Pods/Headers/Public/Kingfisher/Kingfisher.modulemap",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    module_name = "Kingfisher",
+    srcs = [
+        "Pods/Kingfisher/Sources/AnimatedImageView.swift",
+        "Pods/Kingfisher/Sources/Box.swift",
+        "Pods/Kingfisher/Sources/CacheSerializer.swift",
+        "Pods/Kingfisher/Sources/Filter.swift",
+        "Pods/Kingfisher/Sources/FormatIndicatedCacheSerializer.swift",
+        "Pods/Kingfisher/Sources/Image.swift",
+        "Pods/Kingfisher/Sources/ImageCache.swift",
+        "Pods/Kingfisher/Sources/ImageDownloader.swift",
+        "Pods/Kingfisher/Sources/ImageModifier.swift",
+        "Pods/Kingfisher/Sources/ImagePrefetcher.swift",
+        "Pods/Kingfisher/Sources/ImageProcessor.swift",
+        "Pods/Kingfisher/Sources/ImageTransition.swift",
+        "Pods/Kingfisher/Sources/ImageView+Kingfisher.swift",
+        "Pods/Kingfisher/Sources/Indicator.swift",
+        "Pods/Kingfisher/Sources/Kingfisher.swift",
+        "Pods/Kingfisher/Sources/KingfisherManager.swift",
+        "Pods/Kingfisher/Sources/KingfisherOptionsInfo.swift",
+        "Pods/Kingfisher/Sources/Placeholder.swift",
+        "Pods/Kingfisher/Sources/RequestModifier.swift",
+        "Pods/Kingfisher/Sources/Resource.swift",
+        "Pods/Kingfisher/Sources/String+MD5.swift",
+        "Pods/Kingfisher/Sources/ThreadHelper.swift",
+        "Pods/Kingfisher/Sources/UIButton+Kingfisher.swift",
+    ],
+)
+swift_library(
+    name = "swift_app_with_pod_no_use_frameworks_app_swift",
+    alwayslink = True,
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+    ],
+    deps = [
+        ":Kingfisher_swift",
+    ],
+    srcs = [
+        "swift_app_with_pod_no_use_frameworks/AppDelegate.swift",
+        "swift_app_with_pod_no_use_frameworks/SceneDelegate.swift",
+        "swift_app_with_pod_no_use_frameworks/ViewController.swift",
+    ],
+)
+system_library(
+    name = "libKingfisher_a_system_library",
+    sdk_frameworks = [
+        "Accelerate",
+        "CoreGraphics",
+        "CoreImage",
+        "Foundation",
+        "ImageIO",
+        "MobileCoreServices",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libMJExtension_a_system_library",
+    sdk_frameworks = [
+        "CoreData",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libPods_swift_app_with_pod_no_use_frameworks_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "swift_app_with_pod_no_use_frameworks_app_system_library",
+    sdk_frameworks = [
+        "CFNetwork",
+        "UIKit",
+    ],
+)

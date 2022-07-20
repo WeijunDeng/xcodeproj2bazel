@@ -6,6 +6,7 @@ examples/*/WORKSPACE
 examples/*/xcodeproj2bazel_rules
 examples/*/.bazelrc
 examples/*/.bazelversion
-examples/*/BUILD.bazel
 *.xcuserdatad
-
+Pods
+Podfile.lock
+examples/Kingfisher/Kingfisher

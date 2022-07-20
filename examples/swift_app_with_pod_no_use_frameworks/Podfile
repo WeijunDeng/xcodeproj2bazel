@@ -1,0 +1,8 @@
+platform :ios, '9.0'
+
+target 'swift_app_with_pod_no_use_frameworks' do
+
+  pod 'Kingfisher'
+  pod 'MJExtension'
+
+end

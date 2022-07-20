@@ -292,15 +292,28 @@ class XcodeprojParser
         return target_build_settings.flatten
     end
 
-    def parse_build_settings_path(target, path)
+    def format_build_settings_path(target, variable_hash, path)
         unless path.class == String
             binding.pry
         end
-        origin_path = path
-        path = path.strip
-        if path.include? "(" or path.include? ")" or path.include? "=" or path.include? "&" or path.include? "\"" or path.include? "'"
-            binding.pry
+        if path.include? "$"
+            (path.scan(/\$\{(\w+)\}/) + path.scan(/\$\((\w+)\)/)).flatten.uniq.each do | key |
+                values = get_target_build_settings(target, variable_hash, key)
+                if values and values.size == 1
+                    value = values[0]
+                    path = path.gsub("$(#{key})", value).gsub("${#{key}}", value)
+                end
+            end
+            path = format_value(path)
+            binding.pry if path.include? "$"
         end
+        path = path.strip
+        return path
+    end
+
+    def get_exist_build_settings_path(target, variable_hash, path)
+        origin_path = path
+        path = format_build_settings_path(target, variable_hash, path)
 
         recursive = false
         if path.end_with? "/**"
@@ -320,6 +333,12 @@ class XcodeprojParser
                 return dirs
             else
                 return path
+            end
+        end
+
+        if origin_path.start_with? "/usr/"
+            if File.exist? origin_path
+                return origin_path
             end
         end
 
@@ -463,7 +482,7 @@ class XcodeprojParser
         search_paths_settings = get_target_build_settings(target, variable_hash, "HEADER_SEARCH_PATHS") + get_target_build_settings(target, variable_hash, "USER_HEADER_SEARCH_PATHS")
         search_paths = format_strict_value(search_paths_settings).uniq
         search_paths.each do | origin_search_path |
-            search_path = parse_build_settings_path(target, origin_search_path)
+            search_path = get_exist_build_settings_path(target, variable_hash, origin_search_path)
             if search_path and search_path.size > 0
                 if search_path.class == Array
                     target_header_dirs = (target_header_dirs + search_path).uniq
@@ -496,7 +515,7 @@ class XcodeprojParser
             end
         end
         search_paths.uniq.each do | search_path |
-            search_path = parse_build_settings_path(target, search_path)
+            search_path = get_exist_build_settings_path(target, variable_hash, search_path)
             if search_path and search_path.size > 0
                 if search_path.class == Array
                     target_framework_dirs = (target_framework_dirs + search_path).uniq
@@ -525,7 +544,7 @@ class XcodeprojParser
             end
         end
         search_paths.uniq.each do | search_path |
-            search_path = parse_build_settings_path(target, search_path)
+            search_path = get_exist_build_settings_path(target, variable_hash, search_path)
             if search_path and search_path.size > 0
                 if search_path.class == Array
                     target_library_dirs = (target_library_dirs + search_path).uniq
@@ -800,12 +819,15 @@ class XcodeprojParser
         return target_links_hash
     end
 
-    def get_target_defines(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags)
+    def get_target_defines(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags)
         target_defines_settings = get_target_build_settings(target, variable_hash, "GCC_PREPROCESSOR_DEFINITIONS").flatten
         target_c_compile_flags.join(" ").scan(/-D *(\S+)/).flatten.each do | define |
             target_defines_settings.push define
         end
         target_cxx_compile_flags.join(" ").scan(/-D *(\S+)/).flatten.each do | define |
+            target_defines_settings.push define
+        end
+        target_swift_compile_flags.join(" ").scan(/-D *(\S+)/).flatten.each do | define |
             target_defines_settings.push define
         end
         target_defines_settings = target_defines_settings.map{|x|x.split(" ")}.flatten.uniq
@@ -819,15 +841,6 @@ class XcodeprojParser
                 binding.pry
                 raise "unsupported define #{define}"
             else
-                # if define[0] == "'" and define[-1] == "'"
-                #     define = define[1..-2]
-                # end
-
-                if define.include? "'" or define.include? "\"" or define.include? "\n" or define.include? " "
-                    binding.pry
-                    raise "unsupported define #{define}"
-                end
-
                 if define.scan("=").size == 0
                     target_defines[define] = "1"
                 elsif define.scan("=").size == 1
@@ -882,7 +895,14 @@ class XcodeprojParser
             product_file_name = product_name + ".bundle"
         elsif target.product_type == "com.apple.product-type.library.static"
             product_file_name = "lib" + product_name + ".a"
+        elsif target.product_type == "com.apple.product-type.bundle.unit-test"
+            product_file_name = product_name + ".xctest"
+        elsif target.product_type == "com.apple.product-type.application.watchapp2"
+            product_file_name = product_name + ".app"
+        elsif target.product_type == "com.apple.product-type.watchkit2-extension"
+            product_file_name = product_name + ".appex"
         else
+            binding.pry
             raise "unsupported #{target.product_type} #{target.name}"
         end
     
@@ -901,7 +921,7 @@ class XcodeprojParser
 
         info_plist_settings = get_target_build_settings(target, variable_hash, "INFOPLIST_FILE")
         if info_plist_settings.size > 0
-            info_plist = parse_build_settings_path(target, info_plist_settings[0])
+            info_plist = get_exist_build_settings_path(target, variable_hash, info_plist_settings[0])
             if info_plist
                 info_plist_bundle_version = Open3.capture3("/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"#{info_plist}\"")[0].strip
                 if info_plist_bundle_version.size > 0 and not info_plist_bundle_version.include? "$"
@@ -929,6 +949,12 @@ class XcodeprojParser
                 mach_o_type = "mh_bundle"
             elsif target.product_type == "com.apple.product-type.library.static"
                 mach_o_type = "staticlib"
+            elsif target.product_type == "com.apple.product-type.bundle.unit-test"
+                mach_o_type = "mh_bundle"
+            elsif target.product_type == "com.apple.product-type.application.watchapp2"
+                mach_o_type = "mh_execute"
+            elsif target.product_type == "com.apple.product-type.watchkit2-extension"
+                mach_o_type = "mh_execute"
             else
                 raise "unsupported #{target.product_type}"
             end
@@ -958,11 +984,10 @@ class XcodeprojParser
     end
 
     def get_targe_swift_setting(target, variable_hash)
-        # TODO OTHER_SWIFT_FLAGS
         swift_objc_bridging_header = nil
         settings = get_target_build_settings(target, variable_hash, "SWIFT_OBJC_BRIDGING_HEADER")
         if settings.size > 0
-            swift_objc_bridging_header = parse_build_settings_path(target, settings[-1])
+            swift_objc_bridging_header = get_exist_build_settings_path(target, variable_hash, settings[-1])
             unless swift_objc_bridging_header and swift_objc_bridging_header.class == String
                 binding.pry
             end
@@ -970,7 +995,7 @@ class XcodeprojParser
         return swift_objc_bridging_header
     end
 
-    def get_targe_modules_setting(target, variable_hash)
+    def get_targe_modules_setting(target, variable_hash, product_name)
         defines_module = false
         settings = get_target_build_settings(target, variable_hash, "DEFINES_MODULE")
         if settings.size > 0 and settings[-1] == "YES"
@@ -987,12 +1012,23 @@ class XcodeprojParser
         modulemap_file = nil
         settings = get_target_build_settings(target, variable_hash, "MODULEMAP_FILE")
         if settings.size > 0
-            modulemap_file = parse_build_settings_path(target, settings[-1])
+            modulemap_file = get_exist_build_settings_path(target, variable_hash, settings[-1])
             unless modulemap_file and modulemap_file.class == String
                 binding.pry
             end
         end
-        return defines_module, product_module_name, modulemap_file
+        if modulemap_file
+            defines_module = true
+        end
+        if get_target_build_settings(target, variable_hash, "PRODUCT_BUNDLE_PACKAGE_TYPE")[0] == "FMWK"
+            defines_module = true
+        end
+        if defines_module
+            if not product_module_name
+                product_module_name = product_name.gsub("-", "_")
+            end
+        end
+        return product_module_name, modulemap_file
     end
 
     def get_target_targeted_device_family(target, variable_hash)
@@ -1002,11 +1038,22 @@ class XcodeprojParser
         end
         splits = settings[-1].split(",")
         families = []
-        if splits.include? "1"
-            families.push "iphone"
-        end
-        if splits.include? "2"
-            families.push "ipad"
+        splits.each do | split |
+            if split == "1"
+                families.push "iphone"
+            elsif split == "2"
+                families.push "ipad"
+            elsif split == "3"
+                families.push "tv"
+            elsif split == "4"
+                families.push "watch"
+            elsif split == "5"
+                families.push "Apple HomePod"  # TODO
+            elsif split == "6"
+                families.push "mac"
+            else
+                binding.pry
+            end
         end
         return families            
     end
@@ -1057,6 +1104,22 @@ class XcodeprojParser
             next if flag.start_with? "-l"
             next if flag == "-all_load"
 
+            next if flag == "-import-underlying-module"
+
+            if flag.start_with? "-fmodule-map-file="
+                file = flag.strip.sub("-fmodule-map-file=", "")
+                unless File.exist? file
+                    next
+                end
+            end
+
+            if flag == "-Xcc" and flags[flag_i+1] and flags[flag_i+1].start_with? "-fmodule-map-file="
+                file = flags[flag_i+1].sub("-fmodule-map-file=", "")
+                unless File.exist? file
+                    next
+                end
+            end
+
             simple_flags.push flag
             
         end
@@ -1094,7 +1157,7 @@ class XcodeprojParser
                 target_framework_dirs = get_target_framework_dirs(target, variable_hash, target_link_flags)
                 target_library_dirs = get_target_library_dirs(target, variable_hash, target_link_flags)
                 pch = get_target_pch(target, variable_hash)
-                target_defines = get_target_defines(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags)
+                target_defines = get_target_defines(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags)
                 product_name, product_file_name, info_plist, bundle_id, bundle_version, mach_o_type = parse_target_product_info(target, variable_hash)
                 target_links_hash = get_target_links_hash(target, variable_hash, target_library_dirs, target_framework_dirs, target_link_flags, product_file_name)
                 resources_files, dependency_resource_product_file_names = get_target_resources(target)
@@ -1104,13 +1167,7 @@ class XcodeprojParser
                 targeted_device_family = get_target_targeted_device_family(target, variable_hash)
 
                 swift_objc_bridging_header = get_targe_swift_setting(target, variable_hash)
-                defines_module, product_module_name, modulemap_file = get_targe_modules_setting(target, variable_hash)
-                if defines_module and not product_module_name
-                    product_module_name = product_name
-                end
-                if product_module_name and product_module_name != product_name
-                    binding.pry
-                end
+                product_module_name, modulemap_file = get_targe_modules_setting(target, variable_hash, product_name)
 
                 use_headermap = get_target_use_headermap(target, variable_hash)
 

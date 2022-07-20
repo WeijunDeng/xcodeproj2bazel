@@ -61,6 +61,7 @@ class BazelTranslator
                     bazel_target_name = get_bazel_target_name_for_product_file_name_and_extname_and_swift_module_name(product_file_name, extname, product_module_name)
 
                     header_target_name0 = get_bazel_target_name_for_module_map(product_module_name, false)
+                    next unless target_info_hash_for_bazel.has_key? header_target_name0
                     header_target_info0 = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name0)
 
                     header_target_name = get_bazel_target_name_for_module_map(product_module_name, true)
@@ -293,6 +294,9 @@ class BazelTranslator
                 target_info["rule"] = "ios_extension"
             elsif File.extname(product_file_name) == ".bundle"
                 target_info["rule"] = "apple_resource_bundle"
+            elsif File.extname(product_file_name) == ".xctest"
+                # target_info["rule"] = "ios_unit_test"
+                next
             else
                 raise "unsupported product_file_name #{product_file_name}"
             end
@@ -338,7 +342,8 @@ class BazelTranslator
                     elsif target_info["rule"] == "static_library"
                         next
                     else
-                        raise "unexpected #{target_info["rule"]}"
+                        # TODO
+                        # raise "unexpected #{target_info["rule"]}"
                     end
                 end
 
@@ -416,6 +421,7 @@ class BazelTranslator
                 target_info["rule"] == "ios_framework"
                 
                 unless targeted_device_family.size > 0
+                    binding.pry
                     raise "unexpected targeted_device_family null"
                 end
                 unless iphoneos_deployment_target.size > 0
@@ -439,14 +445,15 @@ class BazelTranslator
             end
         end
 
+        # fix up
         target_info_hash_for_bazel.each do | target_name, hash |
             if hash["deps"]
-                hash["deps"].to_a.each do | swift_library |
-                    if swift_library.end_with? "_swift"
-                        unless target_info_hash_for_bazel.has_key? swift_library
-                            hash["deps"].delete swift_library
-                            import_target_name = "import_" + get_bazel_target_name_for_product_file_name(swift_library.sub("_swift", ".framework"))
-                            hash["deps"].add import_target_name
+                hash["deps"].to_a.each do | dep |
+                    unless target_info_hash_for_bazel.has_key? dep
+                        hash["deps"].delete dep
+                        if dep.end_with? "_swift"
+                            import_target_name = "import_" + get_bazel_target_name_for_product_file_name(dep.sub("_swift", ".framework"))
+                            hash["deps"].add import_target_name if target_info_hash_for_bazel.has_key? import_target_name
                         end
                     end
                 end

@@ -1,0 +1,79 @@
+load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
+load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+package(default_visibility = ["//visibility:public"])
+apple_bundle_version(
+    name = "empty_app_storyboard_objc_app_version",
+    build_version = "1",
+)
+header_map(
+    name = "empty_app_storyboard_objc_h_header_map",
+    hdrs = [
+        "empty_app_storyboard_objc/AppDelegate.h",
+        "empty_app_storyboard_objc/SceneDelegate.h",
+        "empty_app_storyboard_objc/ViewController.h",
+    ],
+)
+ios_application(
+    name = "empty_app_storyboard_objc_app",
+    app_icons = glob([
+        "empty_app_storyboard_objc/Assets.xcassets/AppIcon.appiconset/**",
+    ]),
+    bundle_id = "com.dengweijun.empty-app-storyboard-objc",
+    bundle_name = "empty_app_storyboard_objc",
+    deps = [
+        ":empty_app_storyboard_objc_app_m",
+        ":empty_app_storyboard_objc_app_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "empty_app_storyboard_objc/Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    resources = [
+        "empty_app_storyboard_objc/Base.lproj/LaunchScreen.storyboard",
+        "empty_app_storyboard_objc/Base.lproj/Main.storyboard",
+    ] + glob([
+        "empty_app_storyboard_objc/Assets.xcassets/**",
+    ], exclude=[
+        "empty_app_storyboard_objc/Assets.xcassets/*.appiconset/**",
+    ]),
+    version = ":empty_app_storyboard_objc_app_version",
+)
+objc_library(
+    name = "empty_app_storyboard_objc_app_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    header_maps = [
+        ":empty_app_storyboard_objc_h_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "empty_app_storyboard_objc/AppDelegate.m",
+        "empty_app_storyboard_objc/SceneDelegate.m",
+        "empty_app_storyboard_objc/ViewController.m",
+        "empty_app_storyboard_objc/main.m",
+    ],
+)
+system_library(
+    name = "empty_app_storyboard_objc_app_system_library",
+    sdk_frameworks = [
+        "UIKit",
+    ],
+)
