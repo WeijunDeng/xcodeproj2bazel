@@ -41,8 +41,28 @@ class BazelTranslator
             header_target_name = get_bazel_target_name_for_module_map(namespace, false)
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
             header_target_info["rule"] = "module_map"
-            header_target_info["module_name"] = namespace
-            if File.basename(header) == namespace + ".h"
+            unless header_target_info["module_name"]
+                header_target_info["module_name"] = namespace
+                if module_map_file_hash[namespace]
+                    binding.pry unless File.exist? module_map_file_hash[namespace]
+                    match_result = File.read(module_map_file_hash[namespace]).match(/umbrella header \"(.*)\"/)
+                    if match_result
+                        umbrella_header = match_result[1]
+                        if umbrella_header.include? "/"
+                            binding.pry
+                        else
+                            umbrella_header = File.dirname(module_map_file_hash[namespace]) + "/" + umbrella_header
+                            umbrella_header = FileFilter.get_exist_expand_path(umbrella_header)
+                            binding.pry unless umbrella_header
+                            header_target_info["umbrella_header"] = umbrella_header
+                        end
+                    else
+                        binding.pry
+                    end
+                end
+            end
+
+            if not header_target_info["umbrella_header"] and File.basename(header) == namespace + ".h"
                 header_target_info["umbrella_header"] = header
             else
                 header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]

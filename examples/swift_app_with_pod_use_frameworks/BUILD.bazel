@@ -130,22 +130,25 @@ module_map(
         ":Kingfisher_swift",
     ],
     hdrs = [
+        "Pods/Kingfisher/Sources/Kingfisher.h",
         "Pods/Target Support Files/Kingfisher/Kingfisher-umbrella.h",
     ],
     module_name = "Kingfisher",
-    umbrella_header = "Pods/Kingfisher/Sources/Kingfisher.h",
+    umbrella_header = "Pods/Target Support Files/Kingfisher/Kingfisher-umbrella.h",
 )
 module_map(
     name = "Kingfisher_module_map",
     hdrs = [
+        "Pods/Kingfisher/Sources/Kingfisher.h",
         "Pods/Target Support Files/Kingfisher/Kingfisher-umbrella.h",
     ],
     module_name = "Kingfisher",
-    umbrella_header = "Pods/Kingfisher/Sources/Kingfisher.h",
+    umbrella_header = "Pods/Target Support Files/Kingfisher/Kingfisher-umbrella.h",
 )
 module_map(
     name = "MJExtension_module_map",
     hdrs = [
+        "Pods/MJExtension/MJExtension/MJExtension.h",
         "Pods/MJExtension/MJExtension/MJExtensionConst.h",
         "Pods/MJExtension/MJExtension/MJFoundation.h",
         "Pods/MJExtension/MJExtension/MJProperty.h",
@@ -159,7 +162,7 @@ module_map(
         "Pods/Target Support Files/MJExtension/MJExtension-umbrella.h",
     ],
     module_name = "MJExtension",
-    umbrella_header = "Pods/MJExtension/MJExtension/MJExtension.h",
+    umbrella_header = "Pods/Target Support Files/MJExtension/MJExtension-umbrella.h",
 )
 module_map(
     name = "Pods_swift_app_with_pod_use_frameworks_module_map",
@@ -167,6 +170,7 @@ module_map(
         "Pods/Target Support Files/Pods-swift_app_with_pod_use_frameworks/Pods-swift_app_with_pod_use_frameworks-umbrella.h",
     ],
     module_name = "Pods_swift_app_with_pod_use_frameworks",
+    umbrella_header = "Pods/Target Support Files/Pods-swift_app_with_pod_use_frameworks/Pods-swift_app_with_pod_use_frameworks-umbrella.h",
 )
 objc_library(
     name = "Kingfisher_framework_m",

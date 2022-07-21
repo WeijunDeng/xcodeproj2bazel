@@ -1020,7 +1020,7 @@ class XcodeprojParser
         if modulemap_file
             defines_module = true
         end
-        if get_target_build_settings(target, variable_hash, "PRODUCT_BUNDLE_PACKAGE_TYPE")[0] == "FMWK"
+        if target.product_type == "com.apple.product-type.framework"
             defines_module = true
         end
         if defines_module
