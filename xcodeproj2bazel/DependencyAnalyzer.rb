@@ -2,6 +2,7 @@
 class DependencyAnalyzer
 
     def read_source_file(file)
+        binding.pry unless File.exist? file and File.file? file
         content = File.read(file, :encoding => 'bom|utf-8')
         content.encode!('UTF-8', 'UTF-8', :invalid => :replace)
     
@@ -66,7 +67,7 @@ class DependencyAnalyzer
                 if system_framework_name
                     file_extras_hash[file].add system_framework_name
                 else
-                    file_extras_hash[file].add "@import " + system_framework_name
+                    file_extras_hash[file].add "@import " + import_system_framework
                 end
             end
     
@@ -81,6 +82,18 @@ class DependencyAnalyzer
             end
             if line_strip.include? "MTLDevice"
                 file_extras_hash[file].add FileFilter.get_system_framework_by_name("Metal")
+            end
+            if line_strip.include? "CFNetwork"
+                file_extras_hash[file].add FileFilter.get_system_framework_by_name("CFNetwork")
+            end
+            if line_strip.include? "SecPolicy"
+                file_extras_hash[file].add FileFilter.get_system_framework_by_name("Security")
+            end
+            if line_strip.include? "CGContext"
+                file_extras_hash[file].add FileFilter.get_system_framework_by_name("CoreGraphics")
+            end
+            if line_strip.include? "res_9_"
+                file_extras_hash[file].add "libresolv.9.tbd"
             end
     
             import_file_path_match = line_strip.match(/^# *(?:import|include) *([<\"]\S+?[>\"])/)
@@ -114,7 +127,8 @@ class DependencyAnalyzer
     
             match_header = nil
             should_continue_add_header_dir = true
-    
+            file_header_dirs = []
+            
             unless match_header
                 header = import_file_path
                 header = FileFilter.get_exist_expand_path(header)
@@ -128,17 +142,23 @@ class DependencyAnalyzer
                 if total_public_headermap
                     match_header_set = total_public_headermap[import_file_path.downcase]
                     if match_header_set and match_header_set.size == 1
-                        match_header = match_header_set.to_a[0]
-                        # public headermap
-                        FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by public headermap"
-                        should_continue_add_header_dir = false
+                        header = match_header_set.to_a[0]
+                        header = FileFilter.get_exist_expand_path(header)
+                        if header
+                            match_header = header
+                            # public headermap
+                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by public headermap"
+                            should_continue_add_header_dir = false
+                        end
                     end
                 end
             end
             unless match_header
                 if target_private_headermap
-                    match_header = target_private_headermap[import_file_path.downcase]
-                    if match_header
+                    header = target_private_headermap[import_file_path.downcase]
+                    header = FileFilter.get_exist_expand_path(header)
+                    if header
+                        match_header = header
                         # private headermap
                         FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by private headermap"
                         should_continue_add_header_dir = false
@@ -164,7 +184,6 @@ class DependencyAnalyzer
                             # 按搜索路径找到第一个
                             match_header = header
                             FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search framework dir #{dir}"
-                            should_break = true
                             break
                         end
                     end
@@ -178,8 +197,25 @@ class DependencyAnalyzer
                         # 按搜索路径找到第一个
                         match_header = header
                         FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
-                        should_break = true
                         break
+                    end
+                end
+            end
+
+            unless match_header
+                if import_file_path.include? "/" and not import_file_path.include? ".."
+                    target_framework_dirs.each do | dir |
+                        Dir.glob("#{dir}/*.xcframework/#{DynamicConfig.get_xcframework_type}/Headers").each do | xcframework_dir | 
+                            header = xcframework_dir + "/" + import_file_path
+                            header = FileFilter.get_exist_expand_path(header)
+                            if header
+                                # xcframework, need more test
+                                match_header = header
+                                FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search xcframework in dir #{dir}"
+                                file_header_dirs.push xcframework_dir
+                                break
+                            end
+                        end
                     end
                 end
             end
@@ -196,7 +232,12 @@ class DependencyAnalyzer
             if match_header
     
                 if FileFilter.get_exist_expand_path(match_header) != match_header
+                    binding.pry
                     raise "unexpected #{match_header}"
+                end
+
+                unless File.file? match_header
+                    binding.pry
                 end
     
                 header_downcase = match_header.downcase
@@ -214,7 +255,6 @@ class DependencyAnalyzer
                     end
                 end
                 if should_continue_add_header_dir
-                    file_header_dirs = []
                     file_header_dirs = file_header_dirs + target_header_dirs
                     file_header_dirs = file_header_dirs + file_includes_hash[file].sort.to_a
                     if import_file_path.include? "/" and not import_file_path.include? "../" and match_header.end_with? "/" + import_file_path
@@ -396,23 +436,23 @@ class DependencyAnalyzer
                 files_hash.each do | file, file_hash |
                     next unless file_extras_hash[file]
                     file_extras_hash[file].each do | extra |                        
-                        framework_name = nil
-                        module_name = nil
                         if extra.start_with? "@import "
                             module_name = extra.sub("@import ", "")
-                        else
-                            framework_name = extra
-                        end
-
-                        if framework_name
-                            if total_system_weak_frameworks.include? framework_name
-                                target_links_hash[:system_weak_frameworks].add framework_name
-                            else
-                                target_links_hash[:system_frameworks].add framework_name
-                            end
-                        end
-                        if module_name
                             info_hash[:objc_modules].add module_name
+                        else
+                            if File.extname(extra).downcase == ".framework"
+                                framework_name = extra
+                                if total_system_weak_frameworks.include? framework_name
+                                    target_links_hash[:system_weak_frameworks].add framework_name
+                                else
+                                    target_links_hash[:system_frameworks].add framework_name
+                                end
+                            elsif File.extname(extra).downcase == ".tbd"
+                                library_name = extra
+                                target_links_hash[:system_libraries].add library_name
+                            else
+                                binding.pry
+                            end
                         end
                     end
                 end

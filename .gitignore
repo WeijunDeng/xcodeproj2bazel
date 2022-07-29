@@ -8,5 +8,4 @@ examples/*/.bazelrc
 examples/*/.bazelversion
 *.xcuserdatad
 Pods
-Podfile.lock
 examples/Kingfisher/Kingfisher

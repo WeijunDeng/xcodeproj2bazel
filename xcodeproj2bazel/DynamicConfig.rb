@@ -8,6 +8,19 @@ class DynamicConfig
         return "Debug"
     end
 
+    def self.get_xcframework_type
+        return "ios-arm64_x86_64_i386-simulator"
+    end
+
+    def self.get_build_settings_condition
+        # https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project?changes=l_3
+        hash = {}
+        hash["sdk"] = "iphonesimulator15.0" # iphoneos15.0 # macosx12.0
+        hash["arch"] = "arm64" # x86_64
+        hash["config"] = get_build_configuration_name
+        return hash
+    end
+
     def self.filter_content(content)
         content = content.gsub($xcodeproj2bazel_pwd + "/", "").gsub($xcodeproj2bazel_pwd, ".")
         

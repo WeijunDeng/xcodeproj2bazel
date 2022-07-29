@@ -14,7 +14,7 @@ bazel build empty_app_storyboard_swift_app
 popd
 
 pushd examples/swift_app_with_pod_no_use_frameworks
-pod install
+pod update
 popd
 bash xcodeproj2bazel.sh --pwd=examples/swift_app_with_pod_no_use_frameworks --workspace=examples/swift_app_with_pod_no_use_frameworks/swift_app_with_pod_no_use_frameworks.xcworkspace
 pushd examples/swift_app_with_pod_no_use_frameworks
@@ -22,7 +22,7 @@ bazel build swift_app_with_pod_no_use_frameworks_app
 popd
 
 pushd examples/swift_app_with_pod_use_frameworks
-pod install
+pod update
 popd
 bash xcodeproj2bazel.sh --pwd=examples/swift_app_with_pod_use_frameworks --workspace=examples/swift_app_with_pod_use_frameworks/swift_app_with_pod_use_frameworks.xcworkspace
 pushd examples/swift_app_with_pod_use_frameworks

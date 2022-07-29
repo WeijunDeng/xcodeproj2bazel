@@ -17,7 +17,7 @@ def cc_library(
 
     if pch:
         new_hdrs.append(pch)
-        new_copts.append("-include " + pch)
+        new_copts.append("-include '%s'" % pch)
     
     for include in includes:
         new_copts += ["-I%s" % include]

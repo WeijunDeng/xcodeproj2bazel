@@ -1,4 +1,4 @@
-platform :ios, '9.0'
+platform :ios, '11.0'
 
 target 'swift_app_with_pod_no_use_frameworks' do
 

@@ -106,24 +106,43 @@ class XcodeprojParser
             line = line.strip
             next if line.size == 0
             next if line.start_with? "//"
-            import_file_path_match = line.match(/^#include\s*\"(.+?)\"/)
+            # ASSETCATALOG_COMPILER_APPICON_NAME = MyAppIcon // This is a comment. 
+            line = line.gsub(/\/\/.*/, "")
+            line = line.strip
+            next if line.size == 0
+            # #include "MyOtherConfigFile.xcconfig"
+            # #include? "MyOtherConfigFile.xcconfig"
+            # #include "../MyOtherConfigFile.xcconfig"    // In the parent directory.
+            # #include "/Users/MyUserName/Desktop/MyOtherConfigFile.xcconfig" // At the specific path.
+            import_file_path_match = line.match(/^#include\??\s*\"(.+?)\"/)
             if import_file_path_match
                 import_file_path = import_file_path_match[1]
                 unless File.exist? import_file_path
                     file_path = File.dirname(xcconfig_file_path) + "/" + import_file_path
                     import_file_path = file_path if File.exist? file_path
                 end
-                binding.pry unless File.exist? import_file_path
-                parse_xcconfig_variables(import_file_path, variable_hash, xcconfig_file_paths)
+                
+                if File.exist? import_file_path
+                    parse_xcconfig_variables(import_file_path, variable_hash, xcconfig_file_paths)
+                else
+                    unless line.start_with? "#include?"
+                        binding.pry
+                    end
+                end
                 next
             end
             next if line.start_with? "#"
-            splits = line.split("=")
-            binding.pry unless splits.size > 0
-            key = splits[0].strip
-            value = splits[1..-1].join("=").strip
-            binding.pry unless key.match(/^\w+$/)
-            variable_hash[key] = value
+            # https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project?changes=l_3
+            # OTHER_LDFLAGS[arch=x86_64] = -lncurses
+            # OTHER_LDFLAGS[sdk=macos*][arch=x86_64] = -lncurses
+            # CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+            # OTHER_SWIFT_FLAGS = $(inherited) -v
+            match_result = line.match(/(\w+(?:\[[\w\*]+=[\w\*]+\])*)\s*=(.*)/)
+            binding.pry unless match_result
+            key = match_result[1].strip
+            value = match_result[2].strip
+            key = filter_build_settings_condition_key(key)
+            variable_hash[key] = value if key
         end
     end
     
@@ -139,7 +158,8 @@ class XcodeprojParser
         build_configurations.each do | config |
             next unless config.name == DynamicConfig.get_build_configuration_name
             config.build_settings.each do | key, value |
-                variable_hash[key] = value
+                key = filter_build_settings_condition_key(key)
+                variable_hash[key] = value if key
             end
         end
         xcconfig_variable_hash = {}
@@ -209,6 +229,25 @@ class XcodeprojParser
         end
 
         return variable_hash
+    end
+
+    def filter_build_settings_condition_key(key)
+        if key.include? "["
+            build_settings_condition_hash = DynamicConfig.get_build_settings_condition
+            key.split("[")[1..-1].each do | split_item |
+                k = split_item.split("=")[0]
+                v = split_item.split("=")[1][0..-2]
+                binding.pry unless build_settings_condition_hash.has_key? k
+                unless build_settings_condition_hash[k] == v
+                    unless build_settings_condition_hash[k].match(/^#{v.gsub("*", ".*")}$/)
+                        key = nil
+                        break
+                    end
+                end
+            end
+            key = key.split("[")[0] if key
+        end
+        return key
     end
 
     def format_value(value)
@@ -367,46 +406,45 @@ class XcodeprojParser
         target_public_headermap = {}
         target_private_headermap = project_headermap.clone
     
-        if target.headers_build_phase
-            (target.headers_build_phase.files + target.source_build_phase.files).each do | file |
-                file_paths = get_file_paths_from_build_file(file)
-                file_paths.each do | file_path |
-                    extname = File.extname(file_path).downcase
-                    next unless FileFilter.get_header_file_extnames.include? extname
+        (target.headers_build_phase.files + target.source_build_phase.files).each do | file |
+            file_paths = get_file_paths_from_build_file(file)
+            file_paths.each do | file_path |
+                binding.pry unless File.file? file_path
+                extname = File.extname(file_path).downcase
+                next unless FileFilter.get_header_file_extnames.include? extname
 
-                    if file.settings and file.settings["ATTRIBUTES"].include? "Public"
-                        if product_module_name
-                            key = (product_module_name + "/" + File.basename(file_path)).downcase
-                            if target_public_headermap[key] and target_public_headermap[key] != file_path
-                                binding.pry
-                            end
-                            target_public_headermap[key] = file_path
-                        end
-
-                        key = File.basename(file_path).downcase
+                if file.settings and file.settings["ATTRIBUTES"].include? "Public"
+                    if product_module_name
+                        key = (product_module_name + "/" + File.basename(file_path)).downcase
                         if target_public_headermap[key] and target_public_headermap[key] != file_path
                             binding.pry
                         end
                         target_public_headermap[key] = file_path
                     end
-                    
-                    if product_module_name
-                        key = (product_module_name + "/" + File.basename(file_path)).downcase
-                        if target_private_headermap[key] and target_private_headermap[key] != file_path
-                            target_private_headermap[key] = ""
-                        else
-                            target_private_headermap[key] = file_path
-                        end
-                    end
 
                     key = File.basename(file_path).downcase
+                    if target_public_headermap[key] and target_public_headermap[key] != file_path
+                        binding.pry
+                    end
+                    target_public_headermap[key] = file_path
+                end
+                
+                if product_module_name
+                    key = (product_module_name + "/" + File.basename(file_path)).downcase
                     if target_private_headermap[key] and target_private_headermap[key] != file_path
                         target_private_headermap[key] = ""
                     else
                         target_private_headermap[key] = file_path
                     end
-                end           
-            end
+                end
+
+                key = File.basename(file_path).downcase
+                if target_private_headermap[key] and target_private_headermap[key] != file_path
+                    target_private_headermap[key] = ""
+                else
+                    target_private_headermap[key] = file_path
+                end
+            end           
         end
     
         return target_public_headermap, target_private_headermap
@@ -422,6 +460,7 @@ class XcodeprojParser
         target.source_build_phase.files.each do | file |
             file_paths = get_file_paths_from_build_file(file)
             file_paths.each do | file_path |
+                binding.pry unless File.file? file_path
                 extname = File.extname(file_path).downcase
                 next unless FileFilter.get_source_file_extnames.include? extname
                 binding.pry unless file_path and File.exist? file_path and File.file? file_path

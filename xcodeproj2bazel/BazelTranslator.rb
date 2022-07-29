@@ -45,7 +45,10 @@ class BazelTranslator
                 header_target_info["module_name"] = namespace
                 if module_map_file_hash[namespace]
                     binding.pry unless File.exist? module_map_file_hash[namespace]
-                    match_result = File.read(module_map_file_hash[namespace]).match(/umbrella header \"(.*)\"/)
+                    # TODO, use exist module map file
+                    # header_target_info["module_map_file"] = module_map_file_hash[namespace]
+                    module_map_file_content = File.read(module_map_file_hash[namespace])
+                    match_result = module_map_file_content.match(/umbrella header \"(.*)\"/)
                     if match_result
                         umbrella_header = match_result[1]
                         if umbrella_header.include? "/"
@@ -53,12 +56,22 @@ class BazelTranslator
                         else
                             umbrella_header = File.dirname(module_map_file_hash[namespace]) + "/" + umbrella_header
                             umbrella_header = FileFilter.get_exist_expand_path(umbrella_header)
-                            binding.pry unless umbrella_header
-                            header_target_info["umbrella_header"] = umbrella_header
+                            if umbrella_header
+                                header_target_info["umbrella_header"] = umbrella_header
+                            else
+                                header_target_info["umbrella_header_name"] = match_result[1]
+                            end
                         end
                     else
                         binding.pry
                     end
+                end
+            end
+
+            if header_target_info["umbrella_header_name"]
+                if File.basename(header) == header_target_info["umbrella_header_name"]
+                    header_target_info["umbrella_header"] = header
+                    header_target_info.delete "umbrella_header_name"
                 end
             end
 

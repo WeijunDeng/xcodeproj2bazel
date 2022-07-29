@@ -1,0 +1,20 @@
+PODS:
+  - Kingfisher (6.3.1)
+  - MJExtension (3.4.1)
+
+DEPENDENCIES:
+  - Kingfisher
+  - MJExtension
+
+SPEC REPOS:
+  trunk:
+    - Kingfisher
+    - MJExtension
+
+SPEC CHECKSUMS:
+  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  MJExtension: 21c5f6f8c4d5d8844b7ae8fbae08fed0b501f961
+
+PODFILE CHECKSUM: 9c22778f4ed0e6e18709dca3cb657d7f468ff097
+
+COCOAPODS: 1.11.3

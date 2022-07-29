@@ -64,6 +64,9 @@ class FileFilter
         unless origin_path
             return nil
         end
+        unless origin_path.size > 0
+            return nil
+        end
         path = origin_path
         unless origin_path.downcase.start_with? File.dirname($xcodeproj2bazel_pwd).downcase
             path = $xcodeproj2bazel_pwd + "/" + origin_path

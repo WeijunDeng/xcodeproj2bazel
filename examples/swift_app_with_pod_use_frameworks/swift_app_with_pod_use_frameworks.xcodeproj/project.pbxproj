@@ -104,6 +104,7 @@
 				0CAB6DD92887BA000021AB4E /* Frameworks */,
 				0CAB6DDA2887BA000021AB4E /* Resources */,
 				23AD0DB36C500B15F3ADC4FD /* [CP] Embed Pods Frameworks */,
+				335390534A9FF59083E272A7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,6 +177,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_use_frameworks/Pods-swift_app_with_pod_use_frameworks-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		335390534A9FF59083E272A7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_use_frameworks/Pods-swift_app_with_pod_use_frameworks-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_use_frameworks/Pods-swift_app_with_pod_use_frameworks-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_use_frameworks/Pods-swift_app_with_pod_use_frameworks-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E90959EB1AC66AC9508484B7 /* [CP] Check Pods Manifest.lock */ = {

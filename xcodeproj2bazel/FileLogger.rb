@@ -9,4 +9,8 @@ class FileLogger
             File.write("xcodeproj2bazel.log", @@xcodeproj2bazel_logs.join("\n"))
         end
     end
+
+    def self.logs
+        return @@xcodeproj2bazel_logs
+    end
 end

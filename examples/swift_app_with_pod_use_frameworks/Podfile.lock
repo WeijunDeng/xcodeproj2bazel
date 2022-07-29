@@ -1,0 +1,180 @@
+PODS:
+  - AgoraAudio_iOS (3.7.0.3):
+    - AgoraAudio_iOS/AINS (= 3.7.0.3)
+    - AgoraAudio_iOS/FullAudioFormat (= 3.7.0.3)
+    - AgoraAudio_iOS/RtcBasic (= 3.7.0.3)
+    - AgoraAudio_iOS/SpatialAudio (= 3.7.0.3)
+  - AgoraAudio_iOS/AINS (3.7.0.3)
+  - AgoraAudio_iOS/FullAudioFormat (3.7.0.3)
+  - AgoraAudio_iOS/RtcBasic (3.7.0.3)
+  - AgoraAudio_iOS/SpatialAudio (3.7.0.3)
+  - AliyunOSSiOS (2.10.15)
+  - AMPopTip (4.9.0)
+  - Bugly (2.5.91)
+  - CocoaLumberjack/Core (3.7.4)
+  - CocoaLumberjack/Swift (3.7.4):
+    - CocoaLumberjack/Core
+  - FDFullscreenPopGesture (1.1)
+  - FileKit (5.2.0)
+  - InAppPurchase (2.8.0)
+  - JXPagingView/Paging (2.1.2)
+  - JXSegmentedView (1.3.0)
+  - Kingfisher (6.3.1)
+  - Lantern (1.1.4)
+  - Loading (1.1.2)
+  - LookinServer (1.0.6)
+  - MBProgressHUD (1.2.0)
+  - MJExtension (3.4.1)
+  - MonkeyKing (2.2.1)
+  - NSAttributedStringBuilder13 (0.4.1)
+  - PanModal (1.2.7)
+  - Permission (3.1.2):
+    - Permission/Core (= 3.1.2)
+  - Permission/Core (3.1.2)
+  - Permission/Microphone (3.1.2):
+    - Permission/Core
+  - Permission/Photos (3.1.2):
+    - Permission/Core
+  - PPBadgeViewSwift (3.1.0)
+  - R.swift (6.1.0):
+    - R.swift.Library (~> 5.3.0)
+  - R.swift.Library (5.3.0)
+  - Reveal-SDK (36)
+  - SwifterSwift (5.2.0):
+    - SwifterSwift/AppKit (= 5.2.0)
+    - SwifterSwift/CoreAnimation (= 5.2.0)
+    - SwifterSwift/CoreGraphics (= 5.2.0)
+    - SwifterSwift/CoreLocation (= 5.2.0)
+    - SwifterSwift/Dispatch (= 5.2.0)
+    - SwifterSwift/Foundation (= 5.2.0)
+    - SwifterSwift/MapKit (= 5.2.0)
+    - SwifterSwift/SceneKit (= 5.2.0)
+    - SwifterSwift/SpriteKit (= 5.2.0)
+    - SwifterSwift/StoreKit (= 5.2.0)
+    - SwifterSwift/SwiftStdlib (= 5.2.0)
+    - SwifterSwift/UIKit (= 5.2.0)
+  - SwifterSwift/AppKit (5.2.0)
+  - SwifterSwift/CoreAnimation (5.2.0)
+  - SwifterSwift/CoreGraphics (5.2.0)
+  - SwifterSwift/CoreLocation (5.2.0)
+  - SwifterSwift/Dispatch (5.2.0)
+  - SwifterSwift/Foundation (5.2.0)
+  - SwifterSwift/MapKit (5.2.0)
+  - SwifterSwift/SceneKit (5.2.0)
+  - SwifterSwift/SpriteKit (5.2.0)
+  - SwifterSwift/StoreKit (5.2.0)
+  - SwifterSwift/SwiftStdlib (5.2.0)
+  - SwifterSwift/UIKit (5.2.0)
+  - SwiftRichString (3.7.2)
+  - SwipeCellKit (2.7.1)
+  - UMCommon (7.3.7):
+    - UMDevice
+  - UMDevice (2.2.1)
+  - UMPush (4.0.3):
+    - UMCommon
+  - YYText (1.0.7)
+
+DEPENDENCIES:
+  - AgoraAudio_iOS
+  - AliyunOSSiOS
+  - AMPopTip
+  - Bugly
+  - CocoaLumberjack/Swift
+  - FDFullscreenPopGesture
+  - FileKit
+  - InAppPurchase
+  - JXPagingView/Paging
+  - JXSegmentedView
+  - Kingfisher
+  - Lantern
+  - Loading
+  - LookinServer
+  - MBProgressHUD
+  - MJExtension
+  - MonkeyKing
+  - NSAttributedStringBuilder13
+  - PanModal
+  - Permission
+  - Permission/Microphone
+  - Permission/Photos
+  - PPBadgeViewSwift
+  - R.swift
+  - Reveal-SDK
+  - SwifterSwift
+  - SwiftRichString
+  - SwipeCellKit
+  - UMCommon
+  - UMDevice
+  - UMPush
+  - YYText
+
+SPEC REPOS:
+  trunk:
+    - AgoraAudio_iOS
+    - AliyunOSSiOS
+    - AMPopTip
+    - Bugly
+    - CocoaLumberjack
+    - FDFullscreenPopGesture
+    - FileKit
+    - InAppPurchase
+    - JXPagingView
+    - JXSegmentedView
+    - Kingfisher
+    - Lantern
+    - Loading
+    - LookinServer
+    - MBProgressHUD
+    - MJExtension
+    - MonkeyKing
+    - NSAttributedStringBuilder13
+    - PanModal
+    - Permission
+    - PPBadgeViewSwift
+    - R.swift
+    - R.swift.Library
+    - Reveal-SDK
+    - SwifterSwift
+    - SwiftRichString
+    - SwipeCellKit
+    - UMCommon
+    - UMDevice
+    - UMPush
+    - YYText
+
+SPEC CHECKSUMS:
+  AgoraAudio_iOS: 0bdacafbe54a65ddb2f4d9b59945d145c0db86a5
+  AliyunOSSiOS: 5d7c50ce7b39b2b0b10f603a5971cccb0f25eee2
+  AMPopTip: a715485b0338575a01fb7d255a100642e10bb48d
+  Bugly: afe841bba2ea6de6d432a3c125240a5e75949c55
+  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
+  FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
+  FileKit: 10bfd8a3023a0b09f24c9f49546cbbddf43fd464
+  InAppPurchase: 439e4bf7f5eb46b70bd8d46f5f09a882d1031cd5
+  JXPagingView: 90924b364a2ff7e94db534fad1fa50925ff69ee4
+  JXSegmentedView: fec0d335355b6e019c494fe2e030bde8a36d2df6
+  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  Lantern: 26ed71b2d9ace5073ecf53521e316ed8b95acdb0
+  Loading: 2b6313aec5819f190cae382bb872cd5b4f689cd3
+  LookinServer: 18155b1e4a08213c236a1dd6b7ca52328a70a1e3
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  MJExtension: 21c5f6f8c4d5d8844b7ae8fbae08fed0b501f961
+  MonkeyKing: 196838a3b4c97e95915f3e7046fb2d6044f06101
+  NSAttributedStringBuilder13: 8231a2b55499515bc6b260d1cd82e1274fe5a2e1
+  PanModal: 3e16ead1a907fb06f4df3f13492fd00149fa4974
+  Permission: 4821359fb4d4367fb59aa16df38fbba5722ac842
+  PPBadgeViewSwift: 18a219a9897f418342c22dd1a54f7b18ac56546b
+  R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
+  R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
+  Reveal-SDK: 2dd3ad8b66d4e05af485206f8904b2e5c8ffe060
+  SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
+  SwiftRichString: d61b807db1f8834c26fee92b6dd3e1be2dc5af03
+  SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
+  UMCommon: 37fe35f498e92cf57bbb06a086f02915fc35f211
+  UMDevice: 053478c4b4d7292f31f0a275c227d3c4007a5571
+  UMPush: a517cd5907eb10669ce6cf2e6c0dfe40be84b6b5
+  YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
+
+PODFILE CHECKSUM: 7306c682eabd57725d37c589a9429204d57ee647
+
+COCOAPODS: 1.11.3
