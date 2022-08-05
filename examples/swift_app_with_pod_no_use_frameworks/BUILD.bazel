@@ -171,6 +171,57 @@ apple_resource_bundle(
         "Pods/QMUIKit/QMUIKit/QMUIResources/Images.xcassets/*.appiconset/**",
     ]),
 )
+apple_resource_bundle(
+    name = "SwiftMessages_bundle",
+    bundle_id = "org.cocoapods.SwiftMessages",
+    bundle_name = "SwiftMessages",
+    infoplists = [
+        "Pods/Target Support Files/SwiftMessages/ResourceBundle-SwiftMessages-SwiftMessages-Info.plist",
+    ],
+    resources = [
+        "Pods/SwiftMessages/SwiftMessages/Resources/CardView.xib",
+        "Pods/SwiftMessages/SwiftMessages/Resources/CenteredView.xib",
+        "Pods/SwiftMessages/SwiftMessages/Resources/MessageView.xib",
+        "Pods/SwiftMessages/SwiftMessages/Resources/StatusLine.xib",
+        "Pods/SwiftMessages/SwiftMessages/Resources/TabView.xib",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIcon.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIcon@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIcon@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIconLight.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIconLight@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIconLight@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIconSubtle.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIconSubtle@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/errorIconSubtle@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIcon.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIcon@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIcon@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIconLight.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIconLight@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIconLight@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIconSubtle.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIconSubtle@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/infoIconSubtle@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIcon.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIcon@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIcon@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIconLight.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIconLight@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIconLight@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIconSubtle.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIconSubtle@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/successIconSubtle@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIcon.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIcon@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIcon@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIconLight.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIconLight@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIconLight@3x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIconSubtle.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIconSubtle@2x.png",
+        "Pods/SwiftMessages/SwiftMessages/Resources/warningIconSubtle@3x.png",
+    ],
+)
 apple_static_framework_import(
     name = "import_Bugly_framework",
     framework_imports = glob(["Pods/Bugly/Bugly.framework/**"]),
@@ -339,6 +390,19 @@ cc_header(
         "Pods/MMKVCore/Core/MMKVLog.h",
         "Pods/MMKVCore/Core/MMKVPredef.h",
         "Pods/MMKVCore/Core/MemoryFile.h",
+    ],
+)
+cc_header(
+    name = "pods_promisekit_sources_h_header",
+    hdrs = [
+        "Pods/PromiseKit/Sources/AnyPromise+Private.h",
+    ],
+)
+cc_header(
+    name = "pods_promisekit_sources_m_header",
+    hdrs = [
+        "Pods/PromiseKit/Sources/NSMethodSignatureForBlock.m",
+        "Pods/PromiseKit/Sources/PMKCallVariadicBlock.m",
     ],
 )
 cc_header(
@@ -530,6 +594,94 @@ cc_library(
     srcs = [
         "Pods/MMKVCore/Core/aes/openssl/openssl_aes-armv4.S",
         "Pods/MMKVCore/Core/aes/openssl/openssl_aesv8-armx.S",
+    ],
+)
+cc_library(
+    name = "libSentry_a_c",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":Sentry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/Sentry/Sentry-prefix.pch",
+    srcs = [
+        "Pods/Sentry/Sources/Sentry/SentryScopeSyncC.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitorType.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_AppState.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_MachException.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_Signal.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_User.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_Zombie.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashC.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashCachedData.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReport.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportFixer.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportStore.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU_arm.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU_arm64.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU_x86_32.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU_x86_64.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashDate.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashDebug.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashDynamicLinker.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashFileUtils.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashID.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashJSONCodec.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashLogger.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMach.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMachineContext.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMemory.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashObjC.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashSignalInfo.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor_Backtrace.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor_MachineContext.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor_SelfThread.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashString.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashSymbolicator.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashSysCtl.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashThread.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashUUIDConversion.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryHook.c",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/fishhook.c",
+    ],
+)
+cc_library(
+    name = "libSentry_a_cpp",
+    copts = [
+        "-std=c++14",
+        "-stdlib=libc++",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":Sentry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/Sentry/Sentry-prefix.pch",
+    srcs = [
+        "Pods/Sentry/Sources/Sentry/SentryBacktrace.cpp",
+        "Pods/Sentry/Sources/Sentry/SentryMachLogging.cpp",
+        "Pods/Sentry/Sources/Sentry/SentrySamplingProfiler.cpp",
+        "Pods/Sentry/Sources/Sentry/SentryThreadHandle.cpp",
+        "Pods/Sentry/Sources/Sentry/SentryThreadMetadataCache.cpp",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_CPPException.cpp",
     ],
 )
 cc_library(
@@ -1520,11 +1672,45 @@ header_map(
     namespace = "Permission",
 )
 header_map(
+    name = "PhoneNumberKit_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit-umbrella.h",
+    ],
+    namespace = "PhoneNumberKit",
+)
+header_map(
+    name = "PhoneNumberKit_swift_header_map",
+    direct_hdr_providers = [":PhoneNumberKit_swift"],
+    namespace = "PhoneNumberKit",
+)
+header_map(
     name = "Pods_swift_app_with_pod_no_use_frameworks_private_header_map",
     hdrs = [
         "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-umbrella.h",
     ],
     namespace = "Pods_swift_app_with_pod_no_use_frameworks",
+)
+header_map(
+    name = "PromiseKit_private_header_map",
+    hdrs = [
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+AnyPromise.h",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSTask+AnyPromise.h",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+AnyPromise.h",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/PMKFoundation.h",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/PMKUIKit.h",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/UIView+AnyPromise.h",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/UIViewController+AnyPromise.h",
+        "Pods/PromiseKit/Sources/AnyPromise.h",
+        "Pods/PromiseKit/Sources/PromiseKit.h",
+        "Pods/PromiseKit/Sources/fwd.h",
+        "Pods/Target Support Files/PromiseKit/PromiseKit-umbrella.h",
+    ],
+    namespace = "PromiseKit",
+)
+header_map(
+    name = "PromiseKit_swift_header_map",
+    direct_hdr_providers = [":PromiseKit_swift"],
+    namespace = "PromiseKit",
 )
 header_map(
     name = "QMUIKit_private_header_map",
@@ -1969,6 +2155,390 @@ header_map(
     namespace = "RxSwift",
 )
 header_map(
+    name = "SDWebImage_private_header_map",
+    hdrs = [
+        "Pods/SDWebImage/SDWebImage/Core/NSButton+WebCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/NSData+ImageContentType.h",
+        "Pods/SDWebImage/SDWebImage/Core/NSImage+Compatibility.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImage.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImagePlayer.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImageRep.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImageView+WebCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImageView.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDDiskCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDGraphicsImageRenderer.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageAPNGCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageAWebPCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCacheConfig.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCacheDefine.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCachesManager.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCoderHelper.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCodersManager.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageFrame.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageGIFCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageGraphics.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageHEICCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageIOAnimatedCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageIOCoder.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageLoader.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageLoadersManager.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageTransformer.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDMemoryCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageCacheKeyFilter.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageCacheSerializer.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageCompat.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDefine.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloader.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderConfig.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderDecryptor.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderOperation.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderRequestModifier.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderResponseModifier.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageError.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageIndicator.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageManager.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageOperation.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageOptionsProcessor.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImagePrefetcher.h",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageTransition.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIButton+WebCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+ExtendedCacheData.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+ForceDecode.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+GIF.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+MemoryCacheCost.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+Metadata.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+MultiFormat.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+Transform.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImageView+HighlightedWebCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIImageView+WebCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIView+WebCache.h",
+        "Pods/SDWebImage/SDWebImage/Core/UIView+WebCacheOperation.h",
+        "Pods/SDWebImage/SDWebImage/Private/NSBezierPath+SDRoundedCorners.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDAssociatedObject.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDAsyncBlockOperation.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDDeviceHelper.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDDisplayLink.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDFileAttributeHelper.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDImageAssetManager.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDImageCachesManagerOperation.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDImageIOAnimatedCoderInternal.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDInternalMacros.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDWeakProxy.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDWebImageTransitionInternal.h",
+        "Pods/SDWebImage/SDWebImage/Private/SDmetamacros.h",
+        "Pods/SDWebImage/SDWebImage/Private/UIColor+SDHexString.h",
+        "Pods/SDWebImage/WebImage/SDWebImage.h",
+        "Pods/Target Support Files/SDWebImage/SDWebImage-umbrella.h",
+    ],
+    namespace = "SDWebImage",
+)
+header_map(
+    name = "SQLite_swift_header_map",
+    direct_hdr_providers = [":SQLite_swift"],
+    namespace = "SQLite",
+)
+header_map(
+    name = "SQLite_swift_private_header_map",
+    hdrs = [
+        "Pods/SQLite.swift/Sources/SQLite/SQLite.h",
+        "Pods/SQLite.swift/Sources/SQLiteObjc/fts3_tokenizer.h",
+        "Pods/SQLite.swift/Sources/SQLiteObjc/include/SQLiteObjc.h",
+        "Pods/Target Support Files/SQLite.swift/SQLite.swift-umbrella.h",
+    ],
+    namespace = "SQLite",
+)
+header_map(
+    name = "SVProgressHUD_private_header_map",
+    hdrs = [
+        "Pods/SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.h",
+        "Pods/SVProgressHUD/SVProgressHUD/SVProgressAnimatedView.h",
+        "Pods/SVProgressHUD/SVProgressHUD/SVProgressHUD.h",
+        "Pods/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.h",
+        "Pods/Target Support Files/SVProgressHUD/SVProgressHUD-umbrella.h",
+    ],
+    namespace = "SVProgressHUD",
+)
+header_map(
+    name = "Sentry_private_header_map",
+    hdrs = [
+        "Pods/Sentry/Sources/Sentry/Public/PrivateSentrySDKOnly.h",
+        "Pods/Sentry/Sources/Sentry/Public/Sentry.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryAppStartMeasurement.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryAttachment.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryBreadcrumb.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryClient.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryCrashExceptionApplication.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryDebugImageProvider.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryDebugMeta.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryDefines.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryDsn.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryEnvelope.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryEnvelopeItemType.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryError.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryEvent.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryException.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryFrame.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryHub.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryId.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryIntegrationProtocol.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryMechanism.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryMechanismMeta.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryMessage.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryNSError.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryOptions.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryProfilingConditionals.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySDK.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySampleDecision.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySamplingContext.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryScope.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryScreenFrames.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySdkInfo.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySerializable.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySession.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySpanContext.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySpanId.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySpanProtocol.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentrySpanStatus.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryStacktrace.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryThread.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryTraceHeader.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryTransactionContext.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryUser.h",
+        "Pods/Sentry/Sources/Sentry/Public/SentryUserFeedback.h",
+        "Pods/Sentry/Sources/Sentry/SentryDefaultObjCRuntimeWrapper.h",
+        "Pods/Sentry/Sources/Sentry/SentryNoOpSpan.h",
+        "Pods/Sentry/Sources/Sentry/SentryProfilesSampler.h",
+        "Pods/Sentry/Sources/Sentry/SentrySubClassFinder.h",
+        "Pods/Sentry/Sources/Sentry/include/NSArray+SentrySanitize.h",
+        "Pods/Sentry/Sources/Sentry/include/NSData+Sentry.h",
+        "Pods/Sentry/Sources/Sentry/include/NSData+SentryCompression.h",
+        "Pods/Sentry/Sources/Sentry/include/NSDate+SentryExtras.h",
+        "Pods/Sentry/Sources/Sentry/include/NSDictionary+SentrySanitize.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryANRTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryANRTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAppStartTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAppStartTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAppState.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAppStateManager.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAsyncSafeLogging.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAsynchronousOperation.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAutoBreadcrumbTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryAutoSessionTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryBacktrace.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryBaggage.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryBreadcrumbTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryByteCountFormatter.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCPU.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryClient+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryClientReport.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCompiler.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryConcurrentRateLimitsDictionary.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCoreDataSwizzling.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCoreDataTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCoreDataTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashBinaryImageProvider.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashDefaultBinaryImageProvider.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashDefaultMachineContextWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashInstallationReporter.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashIsAppImage.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashMachineContextWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashReportConverter.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashReportSink.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashScopeObserver.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashStackEntryMapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCrashWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCurrentDate.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryCurrentDateProvider.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDataCategory.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDataCategoryMapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDateUtil.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDefaultCurrentDateProvider.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDefaultRateLimits.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDependencyContainer.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDiscardReason.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDiscardReasonMapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDiscardedEvent.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDispatchQueueWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryDisplayLinkWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryEnvelope+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryEnvelopeRateLimit.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryEvent+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryFileContents.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryFileIOTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryFileManager.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryFrameRemover.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryFramesTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryFramesTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryGlobalEventProcessor.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryHexAddressFormatter.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryHttpDateParser.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryHttpTransport.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryHub+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryInAppLogic.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryInstallation.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryInternalNotificationNames.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryLevelMapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryLog.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryLogOutput.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryMachLogging.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryMeta.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryMigrateSessionInit.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNSDataSwizzling.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNSDataTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNSURLRequest.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNSURLRequestBuilder.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNSURLSessionTaskSearch.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNetworkTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryNetworkTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryObjCRuntimeWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryOptions+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryOutOfMemoryLogic.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryOutOfMemoryTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryOutOfMemoryTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryPerformanceTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryPerformanceTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryPredicateDescriptor.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryProfiler.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryProfilingLogging.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryQueueableRequestManager.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryRandom.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryRateLimitParser.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryRateLimits.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryRequestManager.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryRequestOperation.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryRetryAfterHeaderParser.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySDK+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySamplingProfiler.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryScope+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryScopeObserver.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryScopeSyncC.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryScreenshot.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryScreenshotIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySerialization.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySession+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySessionCrashedHandler.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySessionTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySpan.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySpanOperations.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryStackBounds.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryStackFrame.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryStacktraceBuilder.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySwizzle.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySwizzleWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySysctl.h",
+        "Pods/Sentry/Sources/Sentry/include/SentrySystemEventBreadcrumbs.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryThreadHandle.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryThreadInspector.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryThreadMetadataCache.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryThreadState.hpp",
+        "Pods/Sentry/Sources/Sentry/include/SentryThreadWrapper.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTime.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTraceContext.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTracer.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTracesSampler.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTransaction+Private.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTransaction.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTransport.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTransportAdapter.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryTransportFactory.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryUIApplication.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryUIEventTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryUIEventTrackingIntegration.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryUIViewControllerPerformanceTracker.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryUIViewControllerSanitizer.h",
+        "Pods/Sentry/Sources/Sentry/include/SentryUIViewControllerSwizzling.h",
+        "Pods/Sentry/Sources/Sentry/include/UIViewController+Sentry.h",
+        "Pods/Sentry/Sources/SentryCrash/Installations/SentryCrashInstallation+Private.h",
+        "Pods/Sentry/Sources/SentryCrash/Installations/SentryCrashInstallation.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitorContext.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitorType.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_AppState.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_CPPException.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_MachException.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_NSException.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_Signal.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_System.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_User.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_Zombie.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrash.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashC.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashCachedData.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashDoctor.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReport.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportFields.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportFixer.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportStore.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportVersion.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashReportWriter.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashSystemCapabilities.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/NSError+SentrySimpleConstructor.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashCPU_Apple.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashDate.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashDebug.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashDynamicLinker.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashFileUtils.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashID.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashJSONCodec.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashJSONCodecObjC.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashLogger.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMach.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMachineContext.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMachineContext_Apple.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashMemory.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashObjC.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashObjCApple.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashPlatformSpecificDefines.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashSignalInfo.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor_Backtrace.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor_MachineContext.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashStackCursor_SelfThread.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashString.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashSymbolicator.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashSysCtl.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashThread.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashUUIDConversion.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryHook.h",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/fishhook.h",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Filters/SentryCrashReportFilter.h",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Filters/SentryCrashReportFilterBasic.h",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Filters/Tools/Container+SentryDeepSearch.h",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Filters/Tools/SentryCrashVarArgs.h",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Tools/SentryCrashCString.h",
+        "Pods/Target Support Files/Sentry/Sentry-umbrella.h",
+    ],
+    namespace = "Sentry",
+)
+header_map(
+    name = "SideMenu_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SideMenu/SideMenu-umbrella.h",
+    ],
+    namespace = "SideMenu",
+)
+header_map(
+    name = "SideMenu_swift_header_map",
+    direct_hdr_providers = [":SideMenu_swift"],
+    namespace = "SideMenu",
+)
+header_map(
+    name = "SkeletonView_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SkeletonView/SkeletonView-umbrella.h",
+    ],
+    namespace = "SkeletonView",
+)
+header_map(
+    name = "SkeletonView_swift_header_map",
+    direct_hdr_providers = [":SkeletonView_swift"],
+    namespace = "SkeletonView",
+)
+header_map(
     name = "SnapKit_private_header_map",
     hdrs = [
         "Pods/Target Support Files/SnapKit/SnapKit-umbrella.h",
@@ -1979,6 +2549,66 @@ header_map(
     name = "SnapKit_swift_header_map",
     direct_hdr_providers = [":SnapKit_swift"],
     namespace = "SnapKit",
+)
+header_map(
+    name = "Starscream_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Starscream/Starscream-umbrella.h",
+    ],
+    namespace = "Starscream",
+)
+header_map(
+    name = "Starscream_swift_header_map",
+    direct_hdr_providers = [":Starscream_swift"],
+    namespace = "Starscream",
+)
+header_map(
+    name = "Surge_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Surge/Surge-umbrella.h",
+    ],
+    namespace = "Surge",
+)
+header_map(
+    name = "Surge_swift_header_map",
+    direct_hdr_providers = [":Surge_swift"],
+    namespace = "Surge",
+)
+header_map(
+    name = "SwiftDate_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftDate/SwiftDate-umbrella.h",
+    ],
+    namespace = "SwiftDate",
+)
+header_map(
+    name = "SwiftDate_swift_header_map",
+    direct_hdr_providers = [":SwiftDate_swift"],
+    namespace = "SwiftDate",
+)
+header_map(
+    name = "SwiftEntryKit_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit-umbrella.h",
+    ],
+    namespace = "SwiftEntryKit",
+)
+header_map(
+    name = "SwiftEntryKit_swift_header_map",
+    direct_hdr_providers = [":SwiftEntryKit_swift"],
+    namespace = "SwiftEntryKit",
+)
+header_map(
+    name = "SwiftMessages_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftMessages/SwiftMessages-umbrella.h",
+    ],
+    namespace = "SwiftMessages",
+)
+header_map(
+    name = "SwiftMessages_swift_header_map",
+    direct_hdr_providers = [":SwiftMessages_swift"],
+    namespace = "SwiftMessages",
 )
 header_map(
     name = "SwiftRichString_private_header_map",
@@ -2003,6 +2633,42 @@ header_map(
     name = "SwifterSwift_swift_header_map",
     direct_hdr_providers = [":SwifterSwift_swift"],
     namespace = "SwifterSwift",
+)
+header_map(
+    name = "SwiftyBeaver_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver-umbrella.h",
+    ],
+    namespace = "SwiftyBeaver",
+)
+header_map(
+    name = "SwiftyBeaver_swift_header_map",
+    direct_hdr_providers = [":SwiftyBeaver_swift"],
+    namespace = "SwiftyBeaver",
+)
+header_map(
+    name = "SwiftyJSON_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftyJSON/SwiftyJSON-umbrella.h",
+    ],
+    namespace = "SwiftyJSON",
+)
+header_map(
+    name = "SwiftyJSON_swift_header_map",
+    direct_hdr_providers = [":SwiftyJSON_swift"],
+    namespace = "SwiftyJSON",
+)
+header_map(
+    name = "SwiftyStoreKit_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit-umbrella.h",
+    ],
+    namespace = "SwiftyStoreKit",
+)
+header_map(
+    name = "SwiftyStoreKit_swift_header_map",
+    direct_hdr_providers = [":SwiftyStoreKit_swift"],
+    namespace = "SwiftyStoreKit",
 )
 header_map(
     name = "SwipeCellKit_private_header_map",
@@ -2172,7 +2838,9 @@ ios_application(
         ":libPPBadgeViewSwift_a",
         ":libPanModal_a",
         ":libPermission_a",
+        ":libPhoneNumberKit_a",
         ":libPods_swift_app_with_pod_no_use_frameworks_a",
+        ":libPromiseKit_a",
         ":libQMUIKit_a",
         ":libR_swift_Library_a",
         ":libReSwift_a",
@@ -2183,9 +2851,23 @@ ios_application(
         ":libRxCocoa_a",
         ":libRxRelay_a",
         ":libRxSwift_a",
+        ":libSDWebImage_a",
+        ":libSQLite_swift_a",
+        ":libSVProgressHUD_a",
+        ":libSentry_a",
+        ":libSideMenu_a",
+        ":libSkeletonView_a",
         ":libSnapKit_a",
+        ":libStarscream_a",
+        ":libSurge_a",
+        ":libSwiftDate_a",
+        ":libSwiftEntryKit_a",
+        ":libSwiftMessages_a",
         ":libSwiftRichString_a",
         ":libSwifterSwift_a",
+        ":libSwiftyBeaver_a",
+        ":libSwiftyJSON_a",
+        ":libSwiftyStoreKit_a",
         ":libSwipeCellKit_a",
         ":libWKWebViewJavascriptBridge_a",
         ":libYYText_a",
@@ -2788,12 +3470,50 @@ module_map(
     module_name = "Permission",
 )
 module_map(
+    name = "PhoneNumberKit_mixed_module_map",
+    deps = [
+        ":PhoneNumberKit_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit.modulemap",
+    module_name = "PhoneNumberKit",
+)
+module_map(
+    name = "PhoneNumberKit_module_map",
+    hdrs = [
+        "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit.modulemap",
+    module_name = "PhoneNumberKit",
+)
+module_map(
     name = "Pods_swift_app_with_pod_no_use_frameworks_module_map",
     hdrs = [
         "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-umbrella.h",
     ],
     module_map_file = "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks.modulemap",
     module_name = "Pods_swift_app_with_pod_no_use_frameworks",
+)
+module_map(
+    name = "PromiseKit_mixed_module_map",
+    deps = [
+        ":PromiseKit_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/PromiseKit/PromiseKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/PromiseKit/PromiseKit.modulemap",
+    module_name = "PromiseKit",
+)
+module_map(
+    name = "PromiseKit_module_map",
+    hdrs = [
+        "Pods/Target Support Files/PromiseKit/PromiseKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/PromiseKit/PromiseKit.modulemap",
+    module_name = "PromiseKit",
 )
 module_map(
     name = "QMUIKit_module_map",
@@ -2978,6 +3698,87 @@ module_map(
     module_name = "RxSwift",
 )
 module_map(
+    name = "SDWebImage_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SDWebImage/SDWebImage-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SDWebImage/SDWebImage.modulemap",
+    module_name = "SDWebImage",
+)
+module_map(
+    name = "SQLite_mixed_module_map",
+    deps = [
+        ":SQLite_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SQLite.swift/SQLite.swift-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SQLite.swift/SQLite.swift.modulemap",
+    module_name = "SQLite",
+)
+module_map(
+    name = "SQLite_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SQLite.swift/SQLite.swift-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SQLite.swift/SQLite.swift.modulemap",
+    module_name = "SQLite",
+)
+module_map(
+    name = "SVProgressHUD_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SVProgressHUD/SVProgressHUD-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SVProgressHUD/SVProgressHUD.modulemap",
+    module_name = "SVProgressHUD",
+)
+module_map(
+    name = "Sentry_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Sentry/Sentry-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Sentry/Sentry.modulemap",
+    module_name = "Sentry",
+)
+module_map(
+    name = "SideMenu_mixed_module_map",
+    deps = [
+        ":SideMenu_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SideMenu/SideMenu-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SideMenu/SideMenu.modulemap",
+    module_name = "SideMenu",
+)
+module_map(
+    name = "SideMenu_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SideMenu/SideMenu-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SideMenu/SideMenu.modulemap",
+    module_name = "SideMenu",
+)
+module_map(
+    name = "SkeletonView_mixed_module_map",
+    deps = [
+        ":SkeletonView_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SkeletonView/SkeletonView-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SkeletonView/SkeletonView.modulemap",
+    module_name = "SkeletonView",
+)
+module_map(
+    name = "SkeletonView_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SkeletonView/SkeletonView-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SkeletonView/SkeletonView.modulemap",
+    module_name = "SkeletonView",
+)
+module_map(
     name = "SnapKit_mixed_module_map",
     deps = [
         ":SnapKit_swift",
@@ -2995,6 +3796,101 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/SnapKit/SnapKit.modulemap",
     module_name = "SnapKit",
+)
+module_map(
+    name = "Starscream_mixed_module_map",
+    deps = [
+        ":Starscream_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/Starscream/Starscream-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Starscream/Starscream.modulemap",
+    module_name = "Starscream",
+)
+module_map(
+    name = "Starscream_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Starscream/Starscream-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Starscream/Starscream.modulemap",
+    module_name = "Starscream",
+)
+module_map(
+    name = "Surge_mixed_module_map",
+    deps = [
+        ":Surge_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/Surge/Surge-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Surge/Surge.modulemap",
+    module_name = "Surge",
+)
+module_map(
+    name = "Surge_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Surge/Surge-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Surge/Surge.modulemap",
+    module_name = "Surge",
+)
+module_map(
+    name = "SwiftDate_mixed_module_map",
+    deps = [
+        ":SwiftDate_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftDate/SwiftDate-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftDate/SwiftDate.modulemap",
+    module_name = "SwiftDate",
+)
+module_map(
+    name = "SwiftDate_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftDate/SwiftDate-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftDate/SwiftDate.modulemap",
+    module_name = "SwiftDate",
+)
+module_map(
+    name = "SwiftEntryKit_mixed_module_map",
+    deps = [
+        ":SwiftEntryKit_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit.modulemap",
+    module_name = "SwiftEntryKit",
+)
+module_map(
+    name = "SwiftEntryKit_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit.modulemap",
+    module_name = "SwiftEntryKit",
+)
+module_map(
+    name = "SwiftMessages_mixed_module_map",
+    deps = [
+        ":SwiftMessages_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftMessages/SwiftMessages-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftMessages/SwiftMessages.modulemap",
+    module_name = "SwiftMessages",
+)
+module_map(
+    name = "SwiftMessages_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftMessages/SwiftMessages-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftMessages/SwiftMessages.modulemap",
+    module_name = "SwiftMessages",
 )
 module_map(
     name = "SwiftRichString_mixed_module_map",
@@ -3033,6 +3929,63 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/SwifterSwift/SwifterSwift.modulemap",
     module_name = "SwifterSwift",
+)
+module_map(
+    name = "SwiftyBeaver_mixed_module_map",
+    deps = [
+        ":SwiftyBeaver_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver.modulemap",
+    module_name = "SwiftyBeaver",
+)
+module_map(
+    name = "SwiftyBeaver_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver.modulemap",
+    module_name = "SwiftyBeaver",
+)
+module_map(
+    name = "SwiftyJSON_mixed_module_map",
+    deps = [
+        ":SwiftyJSON_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftyJSON/SwiftyJSON-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftyJSON/SwiftyJSON.modulemap",
+    module_name = "SwiftyJSON",
+)
+module_map(
+    name = "SwiftyJSON_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftyJSON/SwiftyJSON-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftyJSON/SwiftyJSON.modulemap",
+    module_name = "SwiftyJSON",
+)
+module_map(
+    name = "SwiftyStoreKit_mixed_module_map",
+    deps = [
+        ":SwiftyStoreKit_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit.modulemap",
+    module_name = "SwiftyStoreKit",
+)
+module_map(
+    name = "SwiftyStoreKit_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit.modulemap",
+    module_name = "SwiftyStoreKit",
 )
 module_map(
     name = "SwipeCellKit_mixed_module_map",
@@ -4394,6 +5347,28 @@ objc_library(
     ],
 )
 objc_library(
+    name = "libPhoneNumberKit_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":PhoneNumberKit_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/PhoneNumberKit/PhoneNumberKit-dummy.m",
+    ],
+)
+objc_library(
     name = "libPods_swift_app_with_pod_no_use_frameworks_a_m",
     copts = [
         "-std=gnu11",
@@ -4412,6 +5387,48 @@ objc_library(
     ],
     srcs = [
         "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-dummy.m",
+    ],
+)
+objc_library(
+    name = "libPromiseKit_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    deps = [
+        ":PromiseKit_swift_header_map",
+        ":pods_promisekit_sources_h_header",
+        ":pods_promisekit_sources_m_header",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":PromiseKit_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":PromiseKit_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/PromiseKit/PromiseKit-prefix.pch",
+    srcs = [
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+AnyPromise.m",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSTask+AnyPromise.m",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+AnyPromise.m",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/UIView+AnyPromise.m",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/UIViewController+AnyPromise.m",
+        "Pods/PromiseKit/Sources/AnyPromise.m",
+        "Pods/PromiseKit/Sources/after.m",
+        "Pods/PromiseKit/Sources/dispatch_promise.m",
+        "Pods/PromiseKit/Sources/hang.m",
+        "Pods/PromiseKit/Sources/join.m",
+        "Pods/PromiseKit/Sources/race.m",
+        "Pods/PromiseKit/Sources/when.m",
+        "Pods/Target Support Files/PromiseKit/PromiseKit-dummy.m",
     ],
 )
 objc_library(
@@ -5018,6 +6035,403 @@ objc_library(
     ],
 )
 objc_library(
+    name = "libSDWebImage_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":SDWebImage_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SDWebImage_module_map",
+    ],
+    pch = "Pods/Target Support Files/SDWebImage/SDWebImage-prefix.pch",
+    srcs = [
+        "Pods/SDWebImage/SDWebImage/Core/NSButton+WebCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/NSData+ImageContentType.m",
+        "Pods/SDWebImage/SDWebImage/Core/NSImage+Compatibility.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImage.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImagePlayer.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImageRep.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImageView+WebCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDAnimatedImageView.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDDiskCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDGraphicsImageRenderer.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageAPNGCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageAWebPCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCacheConfig.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCacheDefine.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCachesManager.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCoderHelper.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageCodersManager.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageFrame.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageGIFCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageGraphics.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageHEICCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageIOAnimatedCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageIOCoder.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageLoader.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageLoadersManager.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDImageTransformer.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDMemoryCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageCacheKeyFilter.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageCacheSerializer.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageCompat.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDefine.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloader.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderConfig.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderDecryptor.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderOperation.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderRequestModifier.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageDownloaderResponseModifier.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageError.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageIndicator.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageManager.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageOperation.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageOptionsProcessor.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImagePrefetcher.m",
+        "Pods/SDWebImage/SDWebImage/Core/SDWebImageTransition.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIButton+WebCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+ExtendedCacheData.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+ForceDecode.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+GIF.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+MemoryCacheCost.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+Metadata.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+MultiFormat.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImage+Transform.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImageView+HighlightedWebCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIImageView+WebCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIView+WebCache.m",
+        "Pods/SDWebImage/SDWebImage/Core/UIView+WebCacheOperation.m",
+        "Pods/SDWebImage/SDWebImage/Private/NSBezierPath+SDRoundedCorners.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDAssociatedObject.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDAsyncBlockOperation.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDDeviceHelper.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDDisplayLink.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDFileAttributeHelper.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDImageAssetManager.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDImageCachesManagerOperation.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDInternalMacros.m",
+        "Pods/SDWebImage/SDWebImage/Private/SDWeakProxy.m",
+        "Pods/SDWebImage/SDWebImage/Private/UIColor+SDHexString.m",
+        "Pods/Target Support Files/SDWebImage/SDWebImage-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSQLite_swift_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":SQLite_swift_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SQLite_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SQLite.swift/SQLite.swift-prefix.pch",
+    srcs = [
+        "Pods/SQLite.swift/Sources/SQLiteObjc/SQLiteObjc.m",
+        "Pods/Target Support Files/SQLite.swift/SQLite.swift-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSVProgressHUD_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":SVProgressHUD_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SVProgressHUD_module_map",
+    ],
+    pch = "Pods/Target Support Files/SVProgressHUD/SVProgressHUD-prefix.pch",
+    srcs = [
+        "Pods/SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.m",
+        "Pods/SVProgressHUD/SVProgressHUD/SVProgressAnimatedView.m",
+        "Pods/SVProgressHUD/SVProgressHUD/SVProgressHUD.m",
+        "Pods/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.m",
+        "Pods/Target Support Files/SVProgressHUD/SVProgressHUD-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSentry_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":Sentry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":Sentry_module_map",
+    ],
+    pch = "Pods/Target Support Files/Sentry/Sentry-prefix.pch",
+    srcs = [
+        "Pods/Sentry/Sources/Sentry/NSArray+SentrySanitize.m",
+        "Pods/Sentry/Sources/Sentry/NSData+Sentry.m",
+        "Pods/Sentry/Sources/Sentry/NSData+SentryCompression.m",
+        "Pods/Sentry/Sources/Sentry/NSDate+SentryExtras.m",
+        "Pods/Sentry/Sources/Sentry/NSDictionary+SentrySanitize.m",
+        "Pods/Sentry/Sources/Sentry/PrivateSentrySDKOnly.m",
+        "Pods/Sentry/Sources/Sentry/SentryANRTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryANRTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryAppStartMeasurement.m",
+        "Pods/Sentry/Sources/Sentry/SentryAppStartTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryAppStartTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryAppState.m",
+        "Pods/Sentry/Sources/Sentry/SentryAppStateManager.m",
+        "Pods/Sentry/Sources/Sentry/SentryAsynchronousOperation.m",
+        "Pods/Sentry/Sources/Sentry/SentryAttachment.m",
+        "Pods/Sentry/Sources/Sentry/SentryAutoBreadcrumbTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryAutoSessionTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryBaggage.m",
+        "Pods/Sentry/Sources/Sentry/SentryBreadcrumb.m",
+        "Pods/Sentry/Sources/Sentry/SentryBreadcrumbTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryByteCountFormatter.m",
+        "Pods/Sentry/Sources/Sentry/SentryClient.m",
+        "Pods/Sentry/Sources/Sentry/SentryClientReport.m",
+        "Pods/Sentry/Sources/Sentry/SentryConcurrentRateLimitsDictionary.m",
+        "Pods/Sentry/Sources/Sentry/SentryCoreDataSwizzling.m",
+        "Pods/Sentry/Sources/Sentry/SentryCoreDataTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryCoreDataTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashDefaultBinaryImageProvider.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashDefaultMachineContextWrapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashExceptionApplication.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashInstallationReporter.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashReportConverter.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashReportSink.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashScopeObserver.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashStackEntryMapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryCrashWrapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryCurrentDate.m",
+        "Pods/Sentry/Sources/Sentry/SentryDataCategoryMapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryDateUtil.m",
+        "Pods/Sentry/Sources/Sentry/SentryDebugImageProvider.m",
+        "Pods/Sentry/Sources/Sentry/SentryDebugMeta.m",
+        "Pods/Sentry/Sources/Sentry/SentryDefaultCurrentDateProvider.m",
+        "Pods/Sentry/Sources/Sentry/SentryDefaultObjCRuntimeWrapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryDefaultRateLimits.m",
+        "Pods/Sentry/Sources/Sentry/SentryDependencyContainer.m",
+        "Pods/Sentry/Sources/Sentry/SentryDiscardReasonMapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryDiscardedEvent.m",
+        "Pods/Sentry/Sources/Sentry/SentryDispatchQueueWrapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryDsn.m",
+        "Pods/Sentry/Sources/Sentry/SentryEnvelope.m",
+        "Pods/Sentry/Sources/Sentry/SentryEnvelopeRateLimit.m",
+        "Pods/Sentry/Sources/Sentry/SentryError.m",
+        "Pods/Sentry/Sources/Sentry/SentryEvent.m",
+        "Pods/Sentry/Sources/Sentry/SentryException.m",
+        "Pods/Sentry/Sources/Sentry/SentryFileContents.m",
+        "Pods/Sentry/Sources/Sentry/SentryFileIOTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryFileManager.m",
+        "Pods/Sentry/Sources/Sentry/SentryFrame.m",
+        "Pods/Sentry/Sources/Sentry/SentryFrameRemover.m",
+        "Pods/Sentry/Sources/Sentry/SentryFramesTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryFramesTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryGlobalEventProcessor.m",
+        "Pods/Sentry/Sources/Sentry/SentryHttpDateParser.m",
+        "Pods/Sentry/Sources/Sentry/SentryHttpTransport.m",
+        "Pods/Sentry/Sources/Sentry/SentryHub.m",
+        "Pods/Sentry/Sources/Sentry/SentryId.m",
+        "Pods/Sentry/Sources/Sentry/SentryInAppLogic.m",
+        "Pods/Sentry/Sources/Sentry/SentryInstallation.m",
+        "Pods/Sentry/Sources/Sentry/SentryLevelMapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryLog.m",
+        "Pods/Sentry/Sources/Sentry/SentryLogOutput.m",
+        "Pods/Sentry/Sources/Sentry/SentryMechanism.m",
+        "Pods/Sentry/Sources/Sentry/SentryMechanismMeta.m",
+        "Pods/Sentry/Sources/Sentry/SentryMessage.m",
+        "Pods/Sentry/Sources/Sentry/SentryMeta.m",
+        "Pods/Sentry/Sources/Sentry/SentryMigrateSessionInit.m",
+        "Pods/Sentry/Sources/Sentry/SentryNSDataSwizzling.m",
+        "Pods/Sentry/Sources/Sentry/SentryNSDataTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryNSError.m",
+        "Pods/Sentry/Sources/Sentry/SentryNSURLRequest.m",
+        "Pods/Sentry/Sources/Sentry/SentryNSURLRequestBuilder.m",
+        "Pods/Sentry/Sources/Sentry/SentryNSURLSessionTaskSearch.m",
+        "Pods/Sentry/Sources/Sentry/SentryNetworkTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryNetworkTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryNoOpSpan.m",
+        "Pods/Sentry/Sources/Sentry/SentryOptions.m",
+        "Pods/Sentry/Sources/Sentry/SentryOutOfMemoryLogic.m",
+        "Pods/Sentry/Sources/Sentry/SentryOutOfMemoryTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryOutOfMemoryTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryPerformanceTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryPerformanceTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryPredicateDescriptor.m",
+        "Pods/Sentry/Sources/Sentry/SentryProfilesSampler.m",
+        "Pods/Sentry/Sources/Sentry/SentryQueueableRequestManager.m",
+        "Pods/Sentry/Sources/Sentry/SentryRandom.m",
+        "Pods/Sentry/Sources/Sentry/SentryRateLimitParser.m",
+        "Pods/Sentry/Sources/Sentry/SentryRequestOperation.m",
+        "Pods/Sentry/Sources/Sentry/SentryRetryAfterHeaderParser.m",
+        "Pods/Sentry/Sources/Sentry/SentrySDK.m",
+        "Pods/Sentry/Sources/Sentry/SentrySamplingContext.m",
+        "Pods/Sentry/Sources/Sentry/SentryScope.m",
+        "Pods/Sentry/Sources/Sentry/SentryScreenFrames.m",
+        "Pods/Sentry/Sources/Sentry/SentryScreenshot.m",
+        "Pods/Sentry/Sources/Sentry/SentryScreenshotIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentrySdkInfo.m",
+        "Pods/Sentry/Sources/Sentry/SentrySerialization.m",
+        "Pods/Sentry/Sources/Sentry/SentrySession.m",
+        "Pods/Sentry/Sources/Sentry/SentrySessionCrashedHandler.m",
+        "Pods/Sentry/Sources/Sentry/SentrySessionTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentrySpan.m",
+        "Pods/Sentry/Sources/Sentry/SentrySpanContext.m",
+        "Pods/Sentry/Sources/Sentry/SentrySpanId.m",
+        "Pods/Sentry/Sources/Sentry/SentryStacktrace.m",
+        "Pods/Sentry/Sources/Sentry/SentryStacktraceBuilder.m",
+        "Pods/Sentry/Sources/Sentry/SentrySubClassFinder.m",
+        "Pods/Sentry/Sources/Sentry/SentrySwizzle.m",
+        "Pods/Sentry/Sources/Sentry/SentrySwizzleWrapper.m",
+        "Pods/Sentry/Sources/Sentry/SentrySysctl.m",
+        "Pods/Sentry/Sources/Sentry/SentrySystemEventBreadcrumbs.m",
+        "Pods/Sentry/Sources/Sentry/SentryThread.m",
+        "Pods/Sentry/Sources/Sentry/SentryThreadInspector.m",
+        "Pods/Sentry/Sources/Sentry/SentryThreadWrapper.m",
+        "Pods/Sentry/Sources/Sentry/SentryTraceContext.m",
+        "Pods/Sentry/Sources/Sentry/SentryTraceHeader.m",
+        "Pods/Sentry/Sources/Sentry/SentryTracer.m",
+        "Pods/Sentry/Sources/Sentry/SentryTracesSampler.m",
+        "Pods/Sentry/Sources/Sentry/SentryTransaction.m",
+        "Pods/Sentry/Sources/Sentry/SentryTransactionContext.m",
+        "Pods/Sentry/Sources/Sentry/SentryTransportAdapter.m",
+        "Pods/Sentry/Sources/Sentry/SentryTransportFactory.m",
+        "Pods/Sentry/Sources/Sentry/SentryUIApplication.m",
+        "Pods/Sentry/Sources/Sentry/SentryUIEventTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryUIEventTrackingIntegration.m",
+        "Pods/Sentry/Sources/Sentry/SentryUIViewControllerPerformanceTracker.m",
+        "Pods/Sentry/Sources/Sentry/SentryUIViewControllerSanitizer.m",
+        "Pods/Sentry/Sources/Sentry/SentryUIViewControllerSwizzling.m",
+        "Pods/Sentry/Sources/Sentry/SentryUser.m",
+        "Pods/Sentry/Sources/Sentry/SentryUserFeedback.m",
+        "Pods/Sentry/Sources/Sentry/UIViewController+Sentry.m",
+        "Pods/Sentry/Sources/Sentry/include/SentryDisplayLinkWrapper.m",
+        "Pods/Sentry/Sources/SentryCrash/Installations/SentryCrashInstallation.m",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_NSException.m",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Monitors/SentryCrashMonitor_System.m",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrash.m",
+        "Pods/Sentry/Sources/SentryCrash/Recording/SentryCrashDoctor.m",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/NSError+SentrySimpleConstructor.m",
+        "Pods/Sentry/Sources/SentryCrash/Recording/Tools/SentryCrashJSONCodecObjC.m",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Filters/SentryCrashReportFilterBasic.m",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Filters/Tools/Container+SentryDeepSearch.m",
+        "Pods/Sentry/Sources/SentryCrash/Reporting/Tools/SentryCrashCString.m",
+        "Pods/Target Support Files/Sentry/Sentry-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSentry_a_mm",
+    copts = [
+        "-std=c++14",
+        "-stdlib=libc++",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":Sentry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":Sentry_module_map",
+    ],
+    pch = "Pods/Target Support Files/Sentry/Sentry-prefix.pch",
+    srcs = [
+        "Pods/Sentry/Sources/Sentry/SentryProfiler.mm",
+        "Pods/Sentry/Sources/Sentry/SentryProfilingLogging.mm",
+        "Pods/Sentry/Sources/Sentry/SentryTime.mm",
+    ],
+)
+objc_library(
+    name = "libSideMenu_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SideMenu_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SideMenu/SideMenu-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SideMenu/SideMenu-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSkeletonView_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SkeletonView_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SkeletonView/SkeletonView-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SkeletonView/SkeletonView-dummy.m",
+    ],
+)
+objc_library(
     name = "libSnapKit_a_m",
     copts = [
         "-std=gnu11",
@@ -5037,6 +6451,116 @@ objc_library(
     pch = "Pods/Target Support Files/SnapKit/SnapKit-prefix.pch",
     srcs = [
         "Pods/Target Support Files/SnapKit/SnapKit-dummy.m",
+    ],
+)
+objc_library(
+    name = "libStarscream_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":Starscream_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/Starscream/Starscream-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Starscream/Starscream-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSurge_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":Surge_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/Surge/Surge-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Surge/Surge-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftDate_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SwiftDate_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftDate/SwiftDate-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftDate/SwiftDate-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftEntryKit_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SwiftEntryKit_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftEntryKit/SwiftEntryKit-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftMessages_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SwiftMessages_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftMessages/SwiftMessages-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftMessages/SwiftMessages-dummy.m",
     ],
 )
 objc_library(
@@ -5081,6 +6605,72 @@ objc_library(
     pch = "Pods/Target Support Files/SwifterSwift/SwifterSwift-prefix.pch",
     srcs = [
         "Pods/Target Support Files/SwifterSwift/SwifterSwift-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftyBeaver_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SwiftyBeaver_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftyBeaver/SwiftyBeaver-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftyJSON_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SwiftyJSON_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftyJSON/SwiftyJSON-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftyJSON/SwiftyJSON-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftyStoreKit_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":SwiftyStoreKit_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftyStoreKit/SwiftyStoreKit-dummy.m",
     ],
 )
 objc_library(
@@ -5505,10 +7095,26 @@ static_library(
     ],
 )
 static_library(
+    name = "libPhoneNumberKit_a",
+    deps = [
+        ":PhoneNumberKit_swift",
+        ":libPhoneNumberKit_a_m",
+        ":libPhoneNumberKit_a_system_library",
+    ],
+)
+static_library(
     name = "libPods_swift_app_with_pod_no_use_frameworks_a",
     deps = [
         ":libPods_swift_app_with_pod_no_use_frameworks_a_m",
         ":libPods_swift_app_with_pod_no_use_frameworks_a_system_library",
+    ],
+)
+static_library(
+    name = "libPromiseKit_a",
+    deps = [
+        ":PromiseKit_swift",
+        ":libPromiseKit_a_m",
+        ":libPromiseKit_a_system_library",
     ],
 )
 static_library(
@@ -5591,11 +7197,99 @@ static_library(
     ],
 )
 static_library(
+    name = "libSDWebImage_a",
+    deps = [
+        ":libSDWebImage_a_m",
+        ":libSDWebImage_a_system_library",
+    ],
+)
+static_library(
+    name = "libSQLite_swift_a",
+    deps = [
+        ":SQLite_swift",
+        ":libSQLite_swift_a_m",
+        ":libSQLite_swift_a_system_library",
+    ],
+)
+static_library(
+    name = "libSVProgressHUD_a",
+    deps = [
+        ":libSVProgressHUD_a_m",
+        ":libSVProgressHUD_a_system_library",
+    ],
+)
+static_library(
+    name = "libSentry_a",
+    deps = [
+        ":libSentry_a_c",
+        ":libSentry_a_cpp",
+        ":libSentry_a_m",
+        ":libSentry_a_mm",
+        ":libSentry_a_system_library",
+    ],
+)
+static_library(
+    name = "libSideMenu_a",
+    deps = [
+        ":SideMenu_swift",
+        ":libSideMenu_a_m",
+        ":libSideMenu_a_system_library",
+    ],
+)
+static_library(
+    name = "libSkeletonView_a",
+    deps = [
+        ":SkeletonView_swift",
+        ":libSkeletonView_a_m",
+        ":libSkeletonView_a_system_library",
+    ],
+)
+static_library(
     name = "libSnapKit_a",
     deps = [
         ":SnapKit_swift",
         ":libSnapKit_a_m",
         ":libSnapKit_a_system_library",
+    ],
+)
+static_library(
+    name = "libStarscream_a",
+    deps = [
+        ":Starscream_swift",
+        ":libStarscream_a_m",
+        ":libStarscream_a_system_library",
+    ],
+)
+static_library(
+    name = "libSurge_a",
+    deps = [
+        ":Surge_swift",
+        ":libSurge_a_m",
+        ":libSurge_a_system_library",
+    ],
+)
+static_library(
+    name = "libSwiftDate_a",
+    deps = [
+        ":SwiftDate_swift",
+        ":libSwiftDate_a_m",
+        ":libSwiftDate_a_system_library",
+    ],
+)
+static_library(
+    name = "libSwiftEntryKit_a",
+    deps = [
+        ":SwiftEntryKit_swift",
+        ":libSwiftEntryKit_a_m",
+        ":libSwiftEntryKit_a_system_library",
+    ],
+)
+static_library(
+    name = "libSwiftMessages_a",
+    deps = [
+        ":SwiftMessages_swift",
+        ":libSwiftMessages_a_m",
+        ":libSwiftMessages_a_system_library",
     ],
 )
 static_library(
@@ -5612,6 +7306,30 @@ static_library(
         ":SwifterSwift_swift",
         ":libSwifterSwift_a_m",
         ":libSwifterSwift_a_system_library",
+    ],
+)
+static_library(
+    name = "libSwiftyBeaver_a",
+    deps = [
+        ":SwiftyBeaver_swift",
+        ":libSwiftyBeaver_a_m",
+        ":libSwiftyBeaver_a_system_library",
+    ],
+)
+static_library(
+    name = "libSwiftyJSON_a",
+    deps = [
+        ":SwiftyJSON_swift",
+        ":libSwiftyJSON_a_m",
+        ":libSwiftyJSON_a_system_library",
+    ],
+)
+static_library(
+    name = "libSwiftyStoreKit_a",
+    deps = [
+        ":SwiftyStoreKit_swift",
+        ":libSwiftyStoreKit_a_m",
+        ":libSwiftyStoreKit_a_system_library",
     ],
 )
 static_library(
@@ -7073,6 +8791,95 @@ swift_library(
     ],
 )
 swift_library(
+    name = "PhoneNumberKit_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "PhoneNumberKit",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":PhoneNumberKit_module_map",
+    ],
+    srcs = [
+        "Pods/PhoneNumberKit/PhoneNumberKit/Bundle+Resources.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/Constants.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/Formatter.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/MetadataManager.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/MetadataParsing.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/MetadataTypes.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/NSRegularExpression+Swift.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/ParseManager.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/PartialFormatter.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/PhoneNumber.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/PhoneNumberFormatter.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/PhoneNumberKit.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/PhoneNumberParser.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/RegexManager.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/UI/CountryCodePickerViewController.swift",
+        "Pods/PhoneNumberKit/PhoneNumberKit/UI/PhoneNumberTextField.swift",
+    ],
+)
+swift_library(
+    name = "PromiseKit_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+        "PMKCocoaPods",
+    ],
+    module_name = "PromiseKit",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":PromiseKit_private_header_map",
+    ],
+    objc_module_maps = [
+        ":PromiseKit_module_map",
+    ],
+    srcs = [
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSNotificationCenter+Promise.swift",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSObject+Promise.swift",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/NSURLSession+Promise.swift",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/Process+Promise.swift",
+        "Pods/PromiseKit/Extensions/Foundation/Sources/afterlife.swift",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/UIView+Promise.swift",
+        "Pods/PromiseKit/Extensions/UIKit/Sources/UIViewPropertyAnimator+Promise.swift",
+        "Pods/PromiseKit/Sources/AnyPromise.swift",
+        "Pods/PromiseKit/Sources/Async.swift",
+        "Pods/PromiseKit/Sources/Box.swift",
+        "Pods/PromiseKit/Sources/Catchable.swift",
+        "Pods/PromiseKit/Sources/Configuration.swift",
+        "Pods/PromiseKit/Sources/CustomStringConvertible.swift",
+        "Pods/PromiseKit/Sources/Deprecations.swift",
+        "Pods/PromiseKit/Sources/Error.swift",
+        "Pods/PromiseKit/Sources/Guarantee.swift",
+        "Pods/PromiseKit/Sources/LogEvent.swift",
+        "Pods/PromiseKit/Sources/Promise.swift",
+        "Pods/PromiseKit/Sources/Resolver.swift",
+        "Pods/PromiseKit/Sources/Thenable.swift",
+        "Pods/PromiseKit/Sources/after.swift",
+        "Pods/PromiseKit/Sources/firstly.swift",
+        "Pods/PromiseKit/Sources/hang.swift",
+        "Pods/PromiseKit/Sources/race.swift",
+        "Pods/PromiseKit/Sources/when.swift",
+    ],
+)
+swift_library(
     name = "ReSwift_swift",
     alwayslink = True,
     copts = [
@@ -7601,6 +9408,174 @@ swift_library(
     ],
 )
 swift_library(
+    name = "SQLite_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SQLite",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":SQLite_swift_private_header_map",
+    ],
+    objc_module_maps = [
+        ":SQLite_module_map",
+    ],
+    srcs = [
+        "Pods/SQLite.swift/Sources/SQLite/Core/Backup.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Blob.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Connection+Aggregation.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Connection.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Errors.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Result.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Statement.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Core/Value.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Extensions/FTS4.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Extensions/FTS5.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Extensions/RTree.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Foundation.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Helpers.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/AggregateFunctions.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Coding.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Collation.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/CoreFunctions.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/CustomFunctions.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/DateAndTimeFunctions.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Expression.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Operators.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Query.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Schema.swift",
+        "Pods/SQLite.swift/Sources/SQLite/Typed/Setter.swift",
+    ],
+)
+swift_library(
+    name = "SideMenu_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SideMenu",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SideMenu_module_map",
+    ],
+    srcs = [
+        "Pods/SideMenu/Pod/Classes/Deprecations.swift",
+        "Pods/SideMenu/Pod/Classes/Extensions.swift",
+        "Pods/SideMenu/Pod/Classes/Initializable.swift",
+        "Pods/SideMenu/Pod/Classes/Print.swift",
+        "Pods/SideMenu/Pod/Classes/Protected.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuAnimationController.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuInteractionController.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuManager.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuNavigationController.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuPresentationController.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuPresentationStyle.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuPushCoordinator.swift",
+        "Pods/SideMenu/Pod/Classes/SideMenuTransitionController.swift",
+        "Pods/SideMenu/Pod/Classes/UITableViewVibrantCell.swift",
+    ],
+)
+swift_library(
+    name = "SkeletonView_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SkeletonView",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SkeletonView_module_map",
+    ],
+    srcs = [
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/AnimationBuilder/SkeletonAnimationBuilder.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Appearance/SkeletonAppearance.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Collections/CollectionViews/SkeletonCollectionViewProtocols.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Collections/TableViews/SkeletonTableViewProtocols.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Deprecated.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/FoundationExtensions/Notification+SkeletonFlow.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Models/GradientDirection.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Models/SkeletonGradient.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Models/SkeletonTextLineHeight.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Models/SkeletonTextNumberOfLines.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Models/SkeletonTransitionStyle.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/Models/SkeletonType.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/SkeletonExtended.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/SkeletonView.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/CALayer+Animations.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UICollectionView+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UILabel+IBInspectable.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UILabel+SKExtensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UITextView+IBInspectable.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UITextView+SKExtensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UIView+IBInspectable.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/API/UIKitExtensions/UIView+SKExtensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Collections/CollectionSkeleton.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Collections/SkeletonCollectionDataSource.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Collections/SkeletonCollectionDelegate.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Collections/SkeletonReusableCell.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Debug/SkeletonDebug.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/FoundationExtensions/DispatchQueue+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/FoundationExtensions/Int+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/FoundationExtensions/Notification+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/FoundationExtensions/ProcessInfo+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Helpers/AssociationPolicy.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Helpers/Recursive.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Helpers/Swizzling.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Models/RecoverableViewState.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/Models/SkeletonLayer.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonConfigs/SkeletonConfig.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonConfigs/SkeletonMultilinesLayerConfig.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonExtensions/GradientDirection+Animations.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonExtensions/PrepareViewForSkeleton.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonExtensions/Recoverable.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonExtensions/SkeletonTextNode.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonExtensions/SubviewsSkeletonables.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonFlowHandler.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonLayerBuilders/SkeletonLayerBuilder.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonLayerBuilders/SkeletonMultilineLayerBuilder.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/SkeletonTree/SkeletonTreeNode.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/CALayer+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/SkeletonTreeNode+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UICollectionView+CollectionSkeleton.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIColor+Skeleton.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UILabel+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UITableView+CollectionSkeleton.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UITableView+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+AppLifecycleNotifications.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+AssociatedObjects.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+CollectionSkeleton.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+Extensions.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+SkeletonView.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+Swizzling.swift",
+        "Pods/SkeletonView/SkeletonViewCore/Sources/Internal/UIKitExtensions/UIView+Transitions.swift",
+    ],
+)
+swift_library(
     name = "SnapKit_swift",
     alwayslink = True,
     copts = [
@@ -7657,6 +9632,288 @@ swift_library(
         "Pods/SnapKit/Sources/LayoutConstraintItem.swift",
         "Pods/SnapKit/Sources/Typealiases.swift",
         "Pods/SnapKit/Sources/UILayoutSupport+Extensions.swift",
+    ],
+)
+swift_library(
+    name = "Starscream_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "Starscream",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":Starscream_module_map",
+    ],
+    srcs = [
+        "Pods/Starscream/Sources/Compression/Compression.swift",
+        "Pods/Starscream/Sources/Compression/WSCompression.swift",
+        "Pods/Starscream/Sources/DataBytes/Data+Extensions.swift",
+        "Pods/Starscream/Sources/Engine/Engine.swift",
+        "Pods/Starscream/Sources/Engine/NativeEngine.swift",
+        "Pods/Starscream/Sources/Engine/WSEngine.swift",
+        "Pods/Starscream/Sources/Framer/FoundationHTTPHandler.swift",
+        "Pods/Starscream/Sources/Framer/FoundationHTTPServerHandler.swift",
+        "Pods/Starscream/Sources/Framer/FrameCollector.swift",
+        "Pods/Starscream/Sources/Framer/Framer.swift",
+        "Pods/Starscream/Sources/Framer/HTTPHandler.swift",
+        "Pods/Starscream/Sources/Framer/StringHTTPHandler.swift",
+        "Pods/Starscream/Sources/Security/FoundationSecurity.swift",
+        "Pods/Starscream/Sources/Security/Security.swift",
+        "Pods/Starscream/Sources/Server/Server.swift",
+        "Pods/Starscream/Sources/Server/WebSocketServer.swift",
+        "Pods/Starscream/Sources/Starscream/WebSocket.swift",
+        "Pods/Starscream/Sources/Transport/FoundationTransport.swift",
+        "Pods/Starscream/Sources/Transport/TCPTransport.swift",
+        "Pods/Starscream/Sources/Transport/Transport.swift",
+    ],
+)
+swift_library(
+    name = "Surge_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "Surge",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":Surge_module_map",
+    ],
+    srcs = [
+        "Pods/Surge/Sources/Surge/Arithmetic/Arithmetic.swift",
+        "Pods/Surge/Sources/Surge/Auxiliary Functions/Auxiliary.swift",
+        "Pods/Surge/Sources/Surge/Digital Signal Processing/Convolution.swift",
+        "Pods/Surge/Sources/Surge/Digital Signal Processing/FFT.swift",
+        "Pods/Surge/Sources/Surge/Linear Algebra/Matrix.swift",
+        "Pods/Surge/Sources/Surge/Linear Algebra/Scalar.swift",
+        "Pods/Surge/Sources/Surge/Linear Algebra/Vector.swift",
+        "Pods/Surge/Sources/Surge/Logarithm/Logarithm.swift",
+        "Pods/Surge/Sources/Surge/Random/Random.swift",
+        "Pods/Surge/Sources/Surge/Statistics/Statistics.swift",
+        "Pods/Surge/Sources/Surge/Trigonometry/Trigonometric.swift",
+        "Pods/Surge/Sources/Surge/Utilities/Array+Extensions.swift",
+        "Pods/Surge/Sources/Surge/Utilities/ArraySlice+Extensions.swift",
+        "Pods/Surge/Sources/Surge/Utilities/OperatorPrecedences.swift",
+        "Pods/Surge/Sources/Surge/Utilities/Pointers.swift",
+        "Pods/Surge/Sources/Surge/Utilities/UnsafeMemory.swift",
+        "Pods/Surge/Sources/Surge/Utilities/UnsafeMutableMemory.swift",
+    ],
+)
+swift_library(
+    name = "SwiftDate_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SwiftDate",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SwiftDate_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftDate/Sources/SwiftDate/Date/Date+Compare.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Date/Date+Components.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Date/Date+Create.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Date/Date+Math.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Date/Date.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateInRegion/DateInRegion+Compare.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateInRegion/DateInRegion+Components.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateInRegion/DateInRegion+Create.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateInRegion/DateInRegion+Math.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateInRegion/DateInRegion.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateInRegion/Region.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/DateRepresentable.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/DotNetParserFormatter.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/Formatter+Protocols.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/ISOFormatter.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/ISOParser.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/RelativeFormatter/RelativeFormatter+Style.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/RelativeFormatter/RelativeFormatter.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Formatters/RelativeFormatter/RelativeFormatterLanguage.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Foundation+Extras/DateComponents+Extras.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Foundation+Extras/Int+DateComponents.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Foundation+Extras/String+Parser.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Foundation+Extras/TimeInterval+Formatter.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Supports/AssociatedValues.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Supports/Calendars.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Supports/Commons.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Supports/Locales.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Supports/TimeStructures.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/Supports/Zones.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/SwiftDate.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/TimePeriod/Groups/TimePeriodChain.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/TimePeriod/Groups/TimePeriodCollection.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/TimePeriod/Groups/TimePeriodGroup.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/TimePeriod/TimePeriod+Support.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/TimePeriod/TimePeriod.swift",
+        "Pods/SwiftDate/Sources/SwiftDate/TimePeriod/TimePeriodProtocol.swift",
+    ],
+)
+swift_library(
+    name = "SwiftEntryKit_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SwiftEntryKit",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SwiftEntryKit_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftEntryKit/Source/Extensions/QuickLayout/QLCompatibility.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/QuickLayout/QLUtils.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/QuickLayout/UIView+QLContentWrap.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/QuickLayout/UIView+QuickLayout.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/QuickLayout/UIViewArray+QuickLayout.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/UIApplication+EKAppearance.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/UIColor+Utils.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/UIEdgeInsets+Utils.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/UIRectCorner+Short.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/UIView+Shadow.swift",
+        "Pods/SwiftEntryKit/Source/Extensions/UIView+Utils.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKBackgroundView.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKContentView.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKEntryView.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKRootViewController.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKStyleView.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKWindow.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKWindowProvider.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EKWrapperView.swift",
+        "Pods/SwiftEntryKit/Source/Infra/EntryCachingHeuristic.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKAlertMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKFormMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKMessageContentView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKNotificationMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKPopUpMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKRatingMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/EKSimpleMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/MessagesUtils/EKButtonBarView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/MessagesUtils/EKButtonView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/MessagesUtils/EKRatingSymbolView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/MessagesUtils/EKRatingSymbolsContainerView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/MessagesUtils/EKTextField.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/MessagesUtils/EntryAppearanceDescriptor.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/Notes/EKAccessoryNoteMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/Notes/EKImageNoteMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/Notes/EKNoteMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/Notes/EKProcessingNoteMessageView.swift",
+        "Pods/SwiftEntryKit/Source/MessageViews/Notes/EKXStatusBarMessageView.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKAlertMessage.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKColor.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKNotificationMessage.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKPopUpMessage.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKProperty.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKRatingMessage.swift",
+        "Pods/SwiftEntryKit/Source/Model/EKSimpleMessage.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Animation.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+BackgroundStyle.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+DisplayMode.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Duration.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+FrameStyle.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+HapticFeedback.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+LifecycleActions.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+PopBehavior.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Position.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+PositionConstraints.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Precedence.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Presets.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Scroll.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Shadow.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+StatusBar.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+UserInteraction.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+Validations.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes+WindowLevel.swift",
+        "Pods/SwiftEntryKit/Source/Model/EntryAttributes/EKAttributes.swift",
+        "Pods/SwiftEntryKit/Source/SwiftEntryKit.swift",
+        "Pods/SwiftEntryKit/Source/Utils/GradientView.swift",
+        "Pods/SwiftEntryKit/Source/Utils/HapticFeedbackGenerator.swift",
+        "Pods/SwiftEntryKit/Source/Utils/UIView+Responder.swift",
+    ],
+)
+swift_library(
+    name = "SwiftMessages_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SwiftMessages",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SwiftMessages_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftMessages/SwiftMessages/AccessibleMessage.swift",
+        "Pods/SwiftMessages/SwiftMessages/Animator.swift",
+        "Pods/SwiftMessages/SwiftMessages/BackgroundViewable.swift",
+        "Pods/SwiftMessages/SwiftMessages/BaseView.swift",
+        "Pods/SwiftMessages/SwiftMessages/CALayer+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/CornerRoundingView.swift",
+        "Pods/SwiftMessages/SwiftMessages/Error.swift",
+        "Pods/SwiftMessages/SwiftMessages/Identifiable.swift",
+        "Pods/SwiftMessages/SwiftMessages/KeyboardTrackingView.swift",
+        "Pods/SwiftMessages/SwiftMessages/MarginAdjustable+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/MarginAdjustable.swift",
+        "Pods/SwiftMessages/SwiftMessages/MaskingView.swift",
+        "Pods/SwiftMessages/SwiftMessages/MessageView.swift",
+        "Pods/SwiftMessages/SwiftMessages/NSBundle+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/NSLayoutConstraint+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/PassthroughView.swift",
+        "Pods/SwiftMessages/SwiftMessages/PassthroughWindow.swift",
+        "Pods/SwiftMessages/SwiftMessages/PhysicsAnimation.swift",
+        "Pods/SwiftMessages/SwiftMessages/PhysicsPanHandler.swift",
+        "Pods/SwiftMessages/SwiftMessages/Presenter.swift",
+        "Pods/SwiftMessages/SwiftMessages/SwiftMessages.Config+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/SwiftMessages.swift",
+        "Pods/SwiftMessages/SwiftMessages/SwiftMessagesSegue.swift",
+        "Pods/SwiftMessages/SwiftMessages/Theme.swift",
+        "Pods/SwiftMessages/SwiftMessages/TopBottomAnimation.swift",
+        "Pods/SwiftMessages/SwiftMessages/UIEdgeInsets+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/UIViewController+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/UIWindow+Extensions.swift",
+        "Pods/SwiftMessages/SwiftMessages/Weak.swift",
+        "Pods/SwiftMessages/SwiftMessages/WindowScene.swift",
+        "Pods/SwiftMessages/SwiftMessages/WindowViewController.swift",
     ],
 )
 swift_library(
@@ -7829,6 +10086,99 @@ swift_library(
         "Pods/SwifterSwift/Sources/SwifterSwift/UIKit/UIViewControllerExtensions.swift",
         "Pods/SwifterSwift/Sources/SwifterSwift/UIKit/UIViewExtensions.swift",
         "Pods/SwifterSwift/Sources/SwifterSwift/UIKit/UIWindowExtensions.swift",
+    ],
+)
+swift_library(
+    name = "SwiftyBeaver_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SwiftyBeaver",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SwiftyBeaver_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftyBeaver/Sources/AES256CBC.swift",
+        "Pods/SwiftyBeaver/Sources/Base64.swift",
+        "Pods/SwiftyBeaver/Sources/BaseDestination.swift",
+        "Pods/SwiftyBeaver/Sources/ConsoleDestination.swift",
+        "Pods/SwiftyBeaver/Sources/Extensions.swift",
+        "Pods/SwiftyBeaver/Sources/FileDestination.swift",
+        "Pods/SwiftyBeaver/Sources/Filter.swift",
+        "Pods/SwiftyBeaver/Sources/FilterValidator.swift",
+        "Pods/SwiftyBeaver/Sources/GoogleCloudDestination.swift",
+        "Pods/SwiftyBeaver/Sources/SBPlatformDestination.swift",
+        "Pods/SwiftyBeaver/Sources/SwiftyBeaver.swift",
+    ],
+)
+swift_library(
+    name = "SwiftyJSON_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SwiftyJSON",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SwiftyJSON_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift",
+    ],
+)
+swift_library(
+    name = "SwiftyStoreKit_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SwiftyStoreKit",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SwiftyStoreKit_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/AppleReceiptValidator.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/CompleteTransactionsController.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/InAppProductQueryRequest.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/InAppReceipt.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/InAppReceiptRefreshRequest.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/InAppReceiptVerificator.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/OS.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/PaymentQueueController.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/PaymentsController.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/ProductsInfoController.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/RestorePurchasesController.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/SKProduct+LocalizedPrice.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/SKProductDiscount+LocalizedPrice.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/SwiftyStoreKit+Types.swift",
+        "Pods/SwiftyStoreKit/Sources/SwiftyStoreKit/SwiftyStoreKit.swift",
     ],
 )
 swift_library(
@@ -8293,8 +10643,24 @@ system_library(
     ],
 )
 system_library(
+    name = "libPhoneNumberKit_a_system_library",
+    sdk_frameworks = [
+        "CoreTelephony",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
     name = "libPods_swift_app_with_pod_no_use_frameworks_a_system_library",
     sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libPromiseKit_a_system_library",
+    sdk_frameworks = [
+        "CoreFoundation",
         "Foundation",
         "UIKit",
     ],
@@ -8394,9 +10760,103 @@ system_library(
     ],
 )
 system_library(
+    name = "libSDWebImage_a_system_library",
+    sdk_frameworks = [
+        "Accelerate",
+        "CoreGraphics",
+        "CoreImage",
+        "CoreServices",
+        "CoreVideo",
+        "Foundation",
+        "ImageIO",
+        "MobileCoreServices",
+        "QuartzCore",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSQLite_swift_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSVProgressHUD_a_system_library",
+    sdk_frameworks = [
+        "CoreGraphics",
+        "Foundation",
+        "QuartzCore",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSentry_a_system_library",
+    sdk_frameworks = [
+        "CoreData",
+        "CoreFoundation",
+        "CoreGraphics",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSideMenu_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSkeletonView_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
     name = "libSnapKit_a_system_library",
     sdk_frameworks = [
         "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libStarscream_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "Network",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSurge_a_system_library",
+    sdk_frameworks = [
+        "Accelerate",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSwiftDate_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSwiftEntryKit_a_system_library",
+    sdk_frameworks = [
+        "CoreGraphics",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSwiftMessages_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "QuartzCore",
         "UIKit",
     ],
 )
@@ -8423,6 +10883,28 @@ system_library(
         "QuartzCore",
         "SceneKit",
         "SpriteKit",
+        "StoreKit",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSwiftyBeaver_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSwiftyJSON_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libSwiftyStoreKit_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
         "StoreKit",
         "UIKit",
     ],
