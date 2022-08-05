@@ -4,6 +4,7 @@ def swift_library(
         objc_module_maps = [],
         objc_header_maps = [],
         objc_includes = [],
+        objc_defines = [],
         copts = [],
         private_deps = [],
         swiftc_inputs = [],
@@ -18,6 +19,8 @@ def swift_library(
     new_deps = []
 
     new_copts = []
+    for define in objc_defines:
+        new_copts += ["-Xcc", "-D%s" % define]
     for include in objc_includes:
         new_copts += ["-Xcc", "-I%s" % include]
     for module_map in objc_module_maps:

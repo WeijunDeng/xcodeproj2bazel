@@ -1,6 +1,7 @@
 require 'open3'
 require 'set'
 require 'find'
+require 'json'
 
 class FileFilter
 
@@ -23,9 +24,9 @@ class FileFilter
             name = framework.split(File.extname(framework))[0].downcase
             @@xcode_developer_name_framework_hash[name] = framework
         end
-        Dir.glob("#{$xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/lib*.tbd").each do | path |
+        Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/lib*.tbd").each do | path |
             library = File.basename(path)
-            name = framework.split(File.extname(framework))[0].downcase[3..-1]
+            name = library.split(File.extname(library))[0].downcase[3..-1]
             @@xcode_developer_name_library_hash[name] = library
         end
     end
@@ -59,6 +60,28 @@ class FileFilter
         return origin_path
     end
 
+    def self.get_exist_expand_path_file(origin_path)
+        path = get_exist_expand_path(origin_path)
+        if path
+            unless File.file? path
+                binding.pry
+                path = nil
+            end
+        end
+        return path
+    end
+
+    def self.get_exist_expand_path_dir(origin_path)
+        path = get_exist_expand_path(origin_path)
+        if path
+            if File.file? path
+                binding.pry
+                path = nil
+            end
+        end
+        return path
+    end
+
     @@expand_path_downcase_hash = {}
     def self.get_exist_expand_path(origin_path)
         unless origin_path
@@ -68,7 +91,7 @@ class FileFilter
             return nil
         end
         path = origin_path
-        unless origin_path.downcase.start_with? File.dirname($xcodeproj2bazel_pwd).downcase
+        unless origin_path.downcase.start_with? $xcodeproj2bazel_pwd.downcase
             path = $xcodeproj2bazel_pwd + "/" + origin_path
         end
         unless File.exist? path
@@ -89,7 +112,7 @@ class FileFilter
 
     @@recursive_dirs_hash = {}
     def self.get_recursive_dirs(path)
-        path = get_exist_expand_path(path)
+        path = get_exist_expand_path_dir(path)
         dirs = @@recursive_dirs_hash[path]
         unless dirs
             dirs = []
@@ -99,36 +122,97 @@ class FileFilter
         return dirs
     end
 
-    def self.get_source_file_extnames_without_swift
-        return [".cc", ".c", ".m", ".mm", ".s", ".cpp"]
+    @@xcframework_path_info_hash = {}
+    def self.get_match_xcframework_info(xcframework_path)
+        return nil unless xcframework_path
+        origin_xcframework_path = xcframework_path
+        hash = @@xcframework_path_info_hash[origin_xcframework_path]
+        return hash if hash
+        binding.pry unless File.exist? xcframework_path
+        xcframework_path = get_exist_expand_path_dir xcframework_path
+        binding.pry unless File.exist? xcframework_path
+        info_plist_path = xcframework_path + "/Info.plist"
+        binding.pry unless File.exist? info_plist_path
+        convert_result = Open3.capture3("plutil -convert json \"#{info_plist_path}\" -o -")
+        binding.pry unless convert_result[2] == 0
+        json_content = convert_result[0]
+        json_object = JSON.parse(json_content)
+        match_libraries = []
+        json_object["AvailableLibraries"].each do | x |
+            next unless x["SupportedPlatform"] == DynamicConfig.get_build_platform
+            next if DynamicConfig.get_build_platform_variant.size > 0 and x["SupportedPlatformVariant"] != DynamicConfig.get_build_platform_variant
+            next if DynamicConfig.get_build_arch.size > 0 and not x["SupportedArchitectures"].include? DynamicConfig.get_build_arch
+            match_libraries.push x
+        end
+        binding.pry unless match_libraries.size == 1
+        path = xcframework_path + "/" + match_libraries[0]["LibraryIdentifier"]
+        hash = {}
+        hash[:LibraryPath] = path + "/" + match_libraries[0]["LibraryPath"]
+        hash[:HeadersPath] = path + "/" + match_libraries[0]["HeadersPath"]
+        @@xcframework_path_info_hash[origin_xcframework_path] = hash
+        return hash
     end
 
-    def self.get_source_file_extnames
-        return [".cc", ".c", ".m", ".mm", ".s", ".cpp", ".swift"]
+    def self.get_source_file_extnames_all
+        return get_source_file_extnames_swift + 
+        get_source_file_extnames_cpp + 
+        get_source_file_extnames_objective_c + 
+        get_source_file_extnames_objective_cpp + 
+        get_source_file_extnames_c + 
+        get_source_file_extnames_d
     end
 
-    def self.get_swift_source_file_extnames
+    def self.get_source_file_extnames_c_type
+        return get_source_file_extnames_cpp + 
+        get_source_file_extnames_objective_c + 
+        get_source_file_extnames_objective_cpp + 
+        get_source_file_extnames_c
+    end
+
+
+    def self.get_source_file_extnames_mixed_objective_c
+        return get_source_file_extnames_objective_c + get_source_file_extnames_objective_cpp
+    end
+
+    def self.get_source_file_extnames_mixed_cpp
+        return get_source_file_extnames_objective_cpp + get_source_file_extnames_cpp
+    end
+
+    def self.get_source_file_extnames_mixed_c
+        return get_source_file_extnames_objective_c + get_source_file_extnames_c
+    end
+
+    def self.get_source_file_extnames_ignore
+        return [".docc", ".metal"]
+    end
+
+    def self.get_source_file_extnames_swift
         return [".swift"]
     end
 
-    def self.get_objc_source_file_extnames
-        return [".m", ".mm"]
+    def self.get_source_file_extnames_cpp
+        return [".cc", ".cpp"]
     end
 
-    def self.get_cpp_source_file_extnames
-        return [".mm", ".cc", ".cpp"]
-    end
-
-    def self.get_pure_objc_source_file_extnames
+    def self.get_source_file_extnames_objective_c
         return [".m"]
     end
 
-    def self.get_c_source_file_extnames
-        return [".m", ".c"]
+    def self.get_source_file_extnames_objective_cpp
+        return [".mm"]
+    end
+
+    def self.get_source_file_extnames_c
+        return [".c", ".s"]
+    end
+
+    def self.get_source_file_extnames_d
+        # https://github.com/bazelbuild/rules_apple/blob/master/doc/rules-dtrace.md
+        return [".d"]
     end
 
     def self.get_header_file_extnames
-        return [".h", ".hxx", ".pch", ".hh"]
+        return [".h", ".hxx", ".pch", ".hh", ".hpp", ".inc"]
     end
 
 end

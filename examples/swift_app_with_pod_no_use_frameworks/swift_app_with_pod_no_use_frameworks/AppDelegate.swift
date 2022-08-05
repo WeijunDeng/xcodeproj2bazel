@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  swift_app_with_pod_no_use_frameworks
 //
-//  Created by wage on 2022/7/20.
+//  Created by dengweijun on 2022/7/20.
 //
 
 import UIKit

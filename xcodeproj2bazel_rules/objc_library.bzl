@@ -5,7 +5,6 @@ def objc_library(
         includes = [],
         copts = [],
         deps = [],
-        enable_modules = False,
         **kwargs):
 
     new_deps = []
@@ -26,5 +25,4 @@ def objc_library(
     native.objc_library(
         copts = copts + new_copts,
         deps = deps + new_deps,
-        enable_modules = enable_modules,
         **kwargs)

@@ -1,23 +1,24 @@
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import", "apple_static_xcframework_import")
+load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
 load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
-load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
-load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
-load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
-load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
-load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
-load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
 load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
-load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
-load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
-load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
 package(default_visibility = ["//visibility:public"])
 apple_bundle_version(
     name = "empty_app_storyboard_objc_app_version",
     build_version = "1",
 )
 header_map(
-    name = "empty_app_storyboard_objc_h_header_map",
+    name = "empty_app_storyboard_objc_project_header_map",
     hdrs = [
         "empty_app_storyboard_objc/AppDelegate.h",
         "empty_app_storyboard_objc/SceneDelegate.h",
@@ -58,8 +59,9 @@ objc_library(
     defines = [
         "DEBUG=1",
     ],
+    enable_modules = True,
     header_maps = [
-        ":empty_app_storyboard_objc_h_header_map",
+        ":empty_app_storyboard_objc_project_header_map",
     ],
     linkopts = [
         "-dead_strip",

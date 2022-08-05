@@ -1,7 +1,6 @@
 build --features=debug_prefix_map_pwd_is_dot
 build --verbose_failures --apple_platform_type=ios
 
-build "--per_file_copt=.*\.(m|mm)\$@-fmodules"
 # shared _objc_module_cache when using sandboxed
 build "--per_file_copt=.*\.(m|mm)\$@-fmodules-cache-path=/private/var/tmp/_objc_module_cache"
-build "--per_file_copt=.*\.(m|mm)\$@-Wno-incomplete-umbrella"
+build "--copt=-Wno-incomplete-umbrella"

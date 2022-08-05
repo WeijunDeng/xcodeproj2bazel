@@ -6,7 +6,7 @@ class FileLogger
 
     def self.write
         if @@xcodeproj2bazel_logs.size > 0
-            File.write("xcodeproj2bazel.log", @@xcodeproj2bazel_logs.join("\n"))
+            File.write("#{$xcodeproj2bazel_pwd}/xcodeproj2bazel.log", @@xcodeproj2bazel_logs.join("\n"))
         end
     end
 

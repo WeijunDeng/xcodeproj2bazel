@@ -36,8 +36,23 @@ bash test.sh
 - Support mixed objc and swift
 - Support header map
 - Support module map
-- Support .c, .cc, .m, .mm, .s, .swift, .pch, .h, .hxx, .hh
-- Support .bundle, .xib, .storyboard, .metal, .xcassets, .appiconset
+- Support compile file extname
+    - .c
+    - .cc
+    - .cpp
+    - .d
+    - .h
+    - .hh
+    - .hpp
+    - .hxx
+    - .inc
+    - .m
+    - .mm
+    - .pch
+    - .pch
+    - .s
+    - .swift
+- Support .bundle, .xib, .storyboard, .metal, .xcassets, .appiconset and more
 - Support import header dependency simulation
 - Support objc modules
 - Support objc auto link framework
@@ -47,12 +62,16 @@ bash test.sh
 - Support iOS app and extension
 - Support major xcode build settings
     - ASSETCATALOG_COMPILER_APPICON_NAME
+    - ATTRIBUTES
     - CLANG_CXX_LANGUAGE_STANDARD
     - CLANG_CXX_LIBRARY
     - CLANG_ENABLE_OBJC_ARC
+    - COMPILER_FLAGS
+    - CONFIGURATION
     - CURRENT_PROJECT_VERSION
     - DEAD_CODE_STRIPPING
     - DEFINES_MODULE
+    - EFFECTIVE_PLATFORM_NAME
     - FRAMEWORK_SEARCH_PATHS
     - GCC_C_LANGUAGE_STANDARD
     - GCC_PREFIX_HEADER
@@ -70,12 +89,17 @@ bash test.sh
     - PRODUCT_BUNDLE_IDENTIFIER
     - PRODUCT_MODULE_NAME
     - PRODUCT_NAME
+    - PROJECT_DIR
     - PROVISIONING_PROFILE_SPECIFIER
+    - SRCROOT
+    - SWIFT_ACTIVE_COMPILATION_CONDITIONS
     - SWIFT_OBJC_BRIDGING_HEADER
+    - TARGET_NAME
     - TARGETED_DEVICE_FAMILY
     - USE_HEADERMAP
     - USER_HEADER_SEARCH_PATHS
     - WARNING_CFLAGS
+
 # Todo
 
 Too much ...
@@ -91,3 +115,5 @@ Doing or Planning:
 - test for xcode 14 (xcode 13 now)
 - more examples
 - support xcframework
+- static framework with mixed swift and objc
+

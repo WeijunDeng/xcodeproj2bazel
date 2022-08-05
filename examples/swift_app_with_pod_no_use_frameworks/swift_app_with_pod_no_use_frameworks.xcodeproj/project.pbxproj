@@ -103,6 +103,8 @@
 				0CAB6DD82887BA000021AB4E /* Sources */,
 				0CAB6DD92887BA000021AB4E /* Frameworks */,
 				0CAB6DDA2887BA000021AB4E /* Resources */,
+				294466D86D63A3635B4F59EE /* [CP] Embed Pods Frameworks */,
+				27DB98F27A59A7FD2F0B208A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -160,6 +162,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		27DB98F27A59A7FD2F0B208A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		294466D86D63A3635B4F59EE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E90959EB1AC66AC9508484B7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

@@ -1,16 +1,17 @@
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import", "apple_static_xcframework_import")
+load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
 load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
-load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
-load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
-load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
-load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
-load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
-load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
 load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
-load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
-load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
-load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
 package(default_visibility = ["//visibility:public"])
 apple_bundle_version(
     name = "Kingfisher_Demo_app_version",
@@ -18,7 +19,7 @@ apple_bundle_version(
 )
 apple_bundle_version(
     name = "Kingfisher_framework_version",
-    build_version = "2507",
+    build_version = "2510",
 )
 apple_bundle_version(
     name = "Kingfisher_macOS_Demo_app_version",
@@ -37,65 +38,24 @@ apple_bundle_version(
     build_version = "1244",
 )
 header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_categories_h_header_map",
+    name = "KingfisherTests_project_header_map",
     hdrs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSData+Nocilla.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSString+Nocilla.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_diff_h_header_map",
-    hdrs = [
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Diff/LSHTTPRequestDiff.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_dsl_h_header_map",
-    hdrs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSHTTPRequestDSLRepresentation.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSStubRequestDSL.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSStubResponseDSL.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_h_header_map",
-    hdrs = [
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/LSNocilla.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Nocilla.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_hooks_asihttprequest_h_header_map",
-    hdrs = [
+        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Diff/LSHTTPRequestDiff.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/ASIHTTPRequestStub.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestAdapter.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestHook.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_hooks_h_header_map",
-    hdrs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/LSHTTPClientHook.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_hooks_nsurlrequest_h_header_map",
-    hdrs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/LSHTTPStubURLProtocol.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/LSNSURLHook.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/NSURLRequest+DSL.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/NSURLRequest+LSHTTPRequest.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_hooks_nsurlsession_h_header_map",
-    hdrs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLSession/LSNSURLSessionHook.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_matchers_h_header_map",
-    hdrs = [
+        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/LSNocilla.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSDataMatcher.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSMatcheable.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSMatcher.h",
@@ -104,28 +64,43 @@ header_map(
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSData+Matcheable.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSRegularExpression+Matcheable.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSString+Matcheable.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_model_h_header_map",
-    hdrs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Model/LSHTTPBody.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Model/LSHTTPRequest.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Model/LSHTTPResponse.h",
-    ],
-)
-header_map(
-    name = "kingfisher_tests_dependency_nocilla_nocilla_stubs_h_header_map",
-    hdrs = [
+        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Nocilla.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Stubs/LSStubRequest.h",
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Stubs/LSStubResponse.h",
     ],
 )
 header_map(
-    name = "kingfisher_tests_kingfishertests_h_header_map",
-    hdrs = [
-        "Kingfisher/Tests/KingfisherTests/KingfisherTests-Bridging-Header.h",
-    ],
+    name = "KingfisherTests_swift_header_map",
+    direct_hdr_providers = [":KingfisherTests_swift"],
+    namespace = "KingfisherTests",
+)
+header_map(
+    name = "Kingfisher_Demo_swift_header_map",
+    direct_hdr_providers = [":Kingfisher_Demo_swift"],
+    namespace = "Kingfisher_Demo",
+)
+header_map(
+    name = "Kingfisher_macOS_Demo_swift_header_map",
+    direct_hdr_providers = [":Kingfisher_macOS_Demo_swift"],
+    namespace = "Kingfisher_macOS_Demo",
+)
+header_map(
+    name = "Kingfisher_swift_header_map",
+    direct_hdr_providers = [":Kingfisher_swift"],
+    namespace = "Kingfisher",
+)
+header_map(
+    name = "Kingfisher_tvOS_Demo_swift_header_map",
+    direct_hdr_providers = [":Kingfisher_tvOS_Demo_swift"],
+    namespace = "Kingfisher_tvOS_Demo",
+)
+header_map(
+    name = "Kingfisher_watchOS_Demo_Extension_swift_header_map",
+    direct_hdr_providers = [":Kingfisher_watchOS_Demo_Extension_swift"],
+    namespace = "Kingfisher_watchOS_Demo_Extension",
 )
 ios_application(
     name = "Kingfisher_Demo_app",
@@ -135,8 +110,8 @@ ios_application(
     bundle_id = "com.onevcat.Kingfisher-Demo",
     bundle_name = "Kingfisher-Demo",
     deps = [
-        ":Kingfisher_Demo_app_swift",
         ":Kingfisher_Demo_app_system_library",
+        ":Kingfisher_Demo_swift",
     ],
     families = ["iphone", "ipad"],
     frameworks = [
@@ -165,7 +140,7 @@ ios_application(
     bundle_id = "com.onevcat.Kingfisher-OSX-Demo",
     bundle_name = "Kingfisher-macOS-Demo",
     deps = [
-        ":Kingfisher_macOS_Demo_app_swift",
+        ":Kingfisher_macOS_Demo_swift",
     ],
     families = ["iphone", "ipad"],
     frameworks = [
@@ -191,8 +166,8 @@ ios_application(
     bundle_id = "com.onevcat.Kingfisher-tvOS-Demo",
     bundle_name = "Kingfisher-tvOS-Demo",
     deps = [
-        ":Kingfisher_tvOS_Demo_app_swift",
         ":Kingfisher_tvOS_Demo_app_system_library",
+        ":Kingfisher_tvOS_Demo_swift",
     ],
     families = ["tv"],
     frameworks = [
@@ -242,8 +217,8 @@ ios_extension(
     bundle_name = "Kingfisher-watchOS-Demo Extension",
     deps = [
         ":Kingfisher_framework",
-        ":Kingfisher_watchOS_Demo_Extension_appex_swift",
         ":Kingfisher_watchOS_Demo_Extension_appex_system_library",
+        ":Kingfisher_watchOS_Demo_Extension_swift",
     ],
     families = ["watch"],
     infoplists = [
@@ -280,18 +255,9 @@ objc_library(
     defines = [
         "DEBUG=1",
     ],
+    enable_modules = True,
     header_maps = [
-        ":kingfisher_tests_dependency_nocilla_nocilla_categories_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_diff_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_dsl_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_hooks_asihttprequest_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_hooks_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_hooks_nsurlrequest_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_hooks_nsurlsession_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_matchers_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_model_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_stubs_h_header_map",
+        ":KingfisherTests_project_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -325,24 +291,18 @@ objc_library(
     ],
 )
 swift_library(
-    name = "KingfisherTests_xctest_swift",
+    name = "KingfisherTests_swift",
     alwayslink = True,
-    defines = [
-        "DEBUG=1",
-    ],
     deps = [
         ":Kingfisher_swift",
     ],
+    module_name = "KingfisherTests",
     objc_bridging_header = "Kingfisher/Tests/KingfisherTests/KingfisherTests-Bridging-Header.h",
-    objc_header_maps = [
-        ":kingfisher_tests_dependency_nocilla_nocilla_categories_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_dsl_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_matchers_h_header_map",
-        ":kingfisher_tests_dependency_nocilla_nocilla_model_h_header_map",
-        ":kingfisher_tests_kingfishertests_h_header_map",
+    objc_defines = [
+        "DEBUG=1",
     ],
-    objc_includes = [
+    objc_header_maps = [
+        ":KingfisherTests_project_header_map",
     ],
     srcs = [
         "Kingfisher/Tests/KingfisherTests/DataReceivingSideEffectTests.swift",
@@ -369,13 +329,14 @@ swift_library(
     ],
 )
 swift_library(
-    name = "Kingfisher_Demo_app_swift",
+    name = "Kingfisher_Demo_swift",
     alwayslink = True,
-    defines = [
-        "DEBUG=1",
-    ],
     deps = [
         ":Kingfisher_swift",
+    ],
+    module_name = "Kingfisher_Demo",
+    objc_defines = [
+        "DEBUG=1",
     ],
     srcs = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/AppDelegate.swift",
@@ -411,13 +372,14 @@ swift_library(
     ],
 )
 swift_library(
-    name = "Kingfisher_macOS_Demo_app_swift",
+    name = "Kingfisher_macOS_Demo_swift",
     alwayslink = True,
-    defines = [
-        "DEBUG=1",
-    ],
     deps = [
         ":Kingfisher_swift",
+    ],
+    module_name = "Kingfisher_macOS_Demo",
+    objc_defines = [
+        "DEBUG=1",
     ],
     srcs = [
         "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/AppDelegate.swift",
@@ -432,9 +394,12 @@ swift_library(
         "-warn-long-expression-type-checking=150",
     ],
     defines = [
-        "DEBUG=1",
+        "DEBUG",
     ],
     module_name = "Kingfisher",
+    objc_defines = [
+        "DEBUG=1",
+    ],
     srcs = [
         "Kingfisher/Sources/Cache/CacheSerializer.swift",
         "Kingfisher/Sources/Cache/DiskStorage.swift",
@@ -500,13 +465,14 @@ swift_library(
     ],
 )
 swift_library(
-    name = "Kingfisher_tvOS_Demo_app_swift",
+    name = "Kingfisher_tvOS_Demo_swift",
     alwayslink = True,
-    defines = [
-        "DEBUG=1",
-    ],
     deps = [
         ":Kingfisher_swift",
+    ],
+    module_name = "Kingfisher_tvOS_Demo",
+    objc_defines = [
+        "DEBUG=1",
     ],
     srcs = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Extensions/UIViewController+KingfisherOperation.swift",
@@ -518,13 +484,14 @@ swift_library(
     ],
 )
 swift_library(
-    name = "Kingfisher_watchOS_Demo_Extension_appex_swift",
+    name = "Kingfisher_watchOS_Demo_Extension_swift",
     alwayslink = True,
-    defines = [
-        "DEBUG=1",
-    ],
     deps = [
         ":Kingfisher_swift",
+    ],
+    module_name = "Kingfisher_watchOS_Demo_Extension",
+    objc_defines = [
+        "DEBUG=1",
     ],
     srcs = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/ExtensionDelegate.swift",

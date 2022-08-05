@@ -18,41 +18,38 @@ class DependencyAnalyzer
         return content
     end
 
-    def parse_import_for_swift_file(file, total_user_modules)
+    def parse_import_for_swift_file(file, user_module_hash, file_deps_hash)
         content = read_source_file(file)
         modules = content.scan(/import (\w+)/).flatten
-        system_modules = Set.new
-        user_modules = Set.new
+        file_deps_hash[file] = Set.new unless file_deps_hash[file]
+        
         modules.each do | module_name |
-            system_module = FileFilter.get_system_framework_by_name(module_name)
-            if system_module
-                system_modules.add system_module
+            system_framework = FileFilter.get_system_framework_by_name(module_name)
+            if system_framework
+                file_deps_hash[file].add [:system_framework, system_framework]
                 next
             end
-            user_modules.add module_name
+            if user_module_hash.has_key? module_name
+                file_deps_hash[file].add [:user_module, module_name]
+            end
         end
-        return system_modules, user_modules
     end
 
-    def parse_dependency_for_file(file, pch, file_headers_hash, file_includes_hash, file_extras_hash, total_public_headermap, target_private_headermap, target_header_dirs, target_framework_dirs)
-        if file_headers_hash.has_key? file
-            file_headers_hash[file].sort.each do | header |
-                file_headers_hash[file].merge file_headers_hash[header] if file_headers_hash[header]
-                file_includes_hash[file].merge file_includes_hash[header] if file_includes_hash[header]
-                file_extras_hash[file].merge file_extras_hash[header] if file_extras_hash[header]
+    def parse_dependency_for_file(file, pch, target_name, file_deps_hash, total_public_headermap, target_private_headermap, project_headermap, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+        if file_deps_hash.has_key? file
+            file_deps_hash[file].sort.each do | dep_info |
+                header = dep_info[1]
+                next unless header
+                next unless file_deps_hash[header]
+                file_deps_hash[file].merge file_deps_hash[header]
             end
             return
         end
-        raise "unexpected" if file_includes_hash.has_key? file
-    
-        file_headers_hash[file] = Set.new unless file_headers_hash[file]
-        file_includes_hash[file] = Set.new unless file_includes_hash[file]
-        file_extras_hash[file] = Set.new unless file_extras_hash[file]
     
         if pch
-            file_headers_hash[file] = file_headers_hash[pch].clone
-            file_includes_hash[file] = file_includes_hash[pch].clone
-            file_extras_hash[file].merge file_extras_hash[pch]
+            file_deps_hash[file] = file_deps_hash[pch].clone
+        else
+            file_deps_hash[file] = Set.new
         end
     
         content = read_source_file(file)
@@ -60,40 +57,46 @@ class DependencyAnalyzer
         content.each_line do | line |
             line_strip = line.strip
             
-            import_system_framework_match = line_strip.match(/@import\s+(\w+)/)
-            if import_system_framework_match
-                import_system_framework = import_system_framework_match[1]
-                system_framework_name = FileFilter.get_system_framework_by_name(import_system_framework)
-                if system_framework_name
-                    file_extras_hash[file].add system_framework_name
-                else
-                    file_extras_hash[file].add "@import " + import_system_framework
+            import_module_match = line_strip.match(/@import\s+(\w+)/)
+            if import_module_match
+                import_module = import_module_match[1]
+                system_framework = FileFilter.get_system_framework_by_name(import_module)
+                if system_framework
+                    file_deps_hash[file].add [:system_framework, system_framework]
+                elsif user_module_hash.has_key? import_module
+                    file_deps_hash[file].add [:user_module, import_module]
                 end
             end
     
+            # beta
+            # CLANG_MODULES_AUTOLINK
             if line_strip.include? "CGImageSource"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("ImageIO")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("ImageIO")]
             end
             if line_strip.include? "CMSampleBuffer"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("CoreMedia")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CoreMedia")]
             end
             if line_strip.include? "CVPixelBuffer"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("CoreVideo")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CoreVideo")]
             end
             if line_strip.include? "MTLDevice"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("Metal")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("Metal")]
             end
             if line_strip.include? "CFNetwork"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("CFNetwork")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CFNetwork")]
             end
             if line_strip.include? "SecPolicy"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("Security")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("Security")]
             end
             if line_strip.include? "CGContext"
-                file_extras_hash[file].add FileFilter.get_system_framework_by_name("CoreGraphics")
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CoreGraphics")]
             end
+            if line_strip.include? "CATransform"
+                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("QuartzCore")]
+            end
+            
             if line_strip.include? "res_9_"
-                file_extras_hash[file].add "libresolv.9.tbd"
+                file_deps_hash[file].add [:system_library,  "libresolv.9.tbd"]
             end
     
             import_file_path_match = line_strip.match(/^# *(?:import|include) *([<\"]\S+?[>\"])/)
@@ -113,77 +116,99 @@ class DependencyAnalyzer
             end
 
             if is_angled_import
-                system_framework_name = FileFilter.get_system_framework_by_name(import_file_path.split("/")[0])
-                if system_framework_name
-                    file_extras_hash[file].add system_framework_name
+                system_framework = FileFilter.get_system_framework_by_name(import_file_path.split("/")[0])
+                if system_framework
+                    file_deps_hash[file].add [:system_framework, system_framework]
                 end
             end
     
             next unless import_file_path.include? "."
             next if FileFilter.is_system_header(import_file_path, is_angled_import)
 
-            import_file_path = import_file_path.gsub("//", "/")
+            import_file_path = import_file_path.gsub(/\/+/, "/")
             header_name_downcase = File.basename(import_file_path).downcase
     
             match_header = nil
-            should_continue_add_header_dir = true
-            file_header_dirs = []
             
             unless match_header
                 header = import_file_path
-                header = FileFilter.get_exist_expand_path(header)
+                header = FileFilter.get_exist_expand_path_file(header)
                 if header
                     match_header = header
                     FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by current dir"
-                    should_continue_add_header_dir = false
+                    file_deps_hash[file].add [:headers, match_header]
                 end
             end
             unless match_header
                 if total_public_headermap
                     match_header_set = total_public_headermap[import_file_path.downcase]
                     if match_header_set and match_header_set.size == 1
-                        header = match_header_set.to_a[0]
-                        header = FileFilter.get_exist_expand_path(header)
+                        a = match_header_set.to_a[0]
+                        header = a[0]
+                        other_target_name = a[1]
+                        header = FileFilter.get_exist_expand_path_file(header)
                         if header
                             match_header = header
                             # public headermap
                             FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by public headermap"
-                            should_continue_add_header_dir = false
+                            file_deps_hash[file].add [:public_headermap, match_header, other_target_name]
                         end
                     end
                 end
             end
             unless match_header
                 if target_private_headermap
-                    header = target_private_headermap[import_file_path.downcase]
-                    header = FileFilter.get_exist_expand_path(header)
-                    if header
-                        match_header = header
-                        # private headermap
-                        FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by private headermap"
-                        should_continue_add_header_dir = false
+                    match_header_set = target_private_headermap[import_file_path.downcase]
+                    if match_header_set and match_header_set.size == 1
+                        header = match_header_set.to_a[0]
+                        header = FileFilter.get_exist_expand_path_file(header)
+                        if header
+                            match_header = header
+                            # private headermap
+                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by private headermap"
+                            file_deps_hash[file].add [:private_headermap, match_header, target_name]
+                        end
                     end
                 end
             end
-
+            unless match_header
+                if project_headermap
+                    match_header_set = project_headermap[import_file_path.downcase]
+                    if match_header_set and match_header_set.size == 1
+                        header = match_header_set.to_a[0]
+                        header = FileFilter.get_exist_expand_path_file(header)
+                        if header
+                            match_header = header
+                            # project headermap
+                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by project headermap"
+                            file_deps_hash[file].add [:project_headermap, match_header, target_name]
+                        end
+                    end
+                end
+            end
             unless match_header
                 header = File.dirname(file) + "/" + import_file_path
-                header = FileFilter.get_exist_expand_path(header)
+                header = FileFilter.get_exist_expand_path_file(header)
                 if header
                     match_header = header
                     FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by current file dir"
-                    should_continue_add_header_dir = false unless is_angled_import
+                    if is_angled_import
+                        file_deps_hash[file].add [:headers, match_header, File.dirname(file)]
+                    else
+                        file_deps_hash[file].add [:headers, match_header]
+                    end
                 end
             end
             unless match_header
                 if import_file_path.scan("/").size == 1
                     target_framework_dirs.each do | dir |
                         header = dir + "/" + import_file_path.split("/")[0] + ".framework/Headers/" + import_file_path.split("/")[1]
-                        header = FileFilter.get_exist_expand_path(header)
+                        header = FileFilter.get_exist_expand_path_file(header)
                         if header
                             # 按搜索路径找到第一个
                             match_header = header
                             FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search framework dir #{dir}"
+                            file_deps_hash[file].add [:headers, match_header]
                             break
                         end
                     end
@@ -191,13 +216,27 @@ class DependencyAnalyzer
             end
             unless match_header
                 target_header_dirs.each do | dir |
+                    next unless dir.class == String
                     header = dir + "/" + import_file_path
-                    header = FileFilter.get_exist_expand_path(header)
+                    header = FileFilter.get_exist_expand_path_file(header)
                     if header
                         # 按搜索路径找到第一个
                         match_header = header
                         FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
+                        file_deps_hash[file].add [:headers, match_header, dir]
                         break
+                    end
+                end
+            end
+
+            unless match_header
+                if import_file_path.end_with? ".h" and not import_file_path.include? ".." and not import_file_path.include? "/"
+                    d_file_path = import_file_path.sub(/\.h$/, ".d").downcase
+                    target_dtrace_files.each do | target_dtrace_file |
+                        if target_dtrace_file.downcase.end_with? d_file_path
+                            file_deps_hash[file].add [:dtrace_header, target_dtrace_file, target_name]
+                            break
+                        end
                     end
                 end
             end
@@ -205,24 +244,28 @@ class DependencyAnalyzer
             unless match_header
                 if import_file_path.include? "/" and not import_file_path.include? ".."
                     target_framework_dirs.each do | dir |
-                        Dir.glob("#{dir}/*.xcframework/#{DynamicConfig.get_xcframework_type}/Headers").each do | xcframework_dir | 
-                            header = xcframework_dir + "/" + import_file_path
-                            header = FileFilter.get_exist_expand_path(header)
+                        Dir.glob("#{dir}/*.xcframework").sort.each do | xcframework_path | 
+                            xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
+                            next unless xcframework_info
+                            header_dir = xcframework_info[:HeadersPath]
+                            header = header_dir + "/" + import_file_path
+                            header = FileFilter.get_exist_expand_path_file(header)
                             if header
                                 # xcframework, need more test
                                 match_header = header
                                 FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search xcframework in dir #{dir}"
-                                file_header_dirs.push xcframework_dir
+                                file_deps_hash[file].add [:headers, match_header, header_dir]
                                 break
                             end
                         end
+                        break if match_header
                     end
                 end
             end
 
             unless match_header
                 if import_file_path.end_with? "-Swift.h"
-                    file_headers_hash[file].add import_file_path
+                    file_deps_hash[file].add [:swift_header, import_file_path]
                 else
                     log = "unexpected #{file} (#{import_file_path}) not found"
                     FileLogger.add_verbose_log log
@@ -231,7 +274,7 @@ class DependencyAnalyzer
     
             if match_header
     
-                if FileFilter.get_exist_expand_path(match_header) != match_header
+                if FileFilter.get_exist_expand_path_file(match_header) != match_header
                     binding.pry
                     raise "unexpected #{match_header}"
                 end
@@ -239,227 +282,168 @@ class DependencyAnalyzer
                 unless File.file? match_header
                     binding.pry
                 end
-    
-                header_downcase = match_header.downcase
-                if should_continue_add_header_dir
-                    if header_downcase.include? ".framework/"
-                        framework_name = File.basename(header_downcase.split(".framework/")[0])
-                        if import_file_path.downcase == framework_name + "/" + File.basename(header_downcase)
-                            should_continue_add_header_dir = false
-                        end
-                    end
-                end
-                if should_continue_add_header_dir
-                    if header_downcase == import_file_path.downcase
-                        should_continue_add_header_dir = false
-                    end
-                end
-                if should_continue_add_header_dir
-                    file_header_dirs = file_header_dirs + target_header_dirs
-                    file_header_dirs = file_header_dirs + file_includes_hash[file].sort.to_a
-                    if import_file_path.include? "/" and not import_file_path.include? "../" and match_header.end_with? "/" + import_file_path
-                        header_dir = match_header.gsub(/\/#{import_file_path}$/, "")
-                        file_header_dirs.push header_dir
-                    end
-                    file_header_dirs.uniq.each do | header_dir |
-                        header = header_dir + "/" + import_file_path
-                        header = FileFilter.get_exist_expand_path(header)
-                        if header
-                            next unless match_header.downcase == header.downcase
-                            
-                            break if header_dir.downcase == File.dirname(file).downcase and not is_angled_import
-    
-                            if import_file_path.start_with? "../" and import_file_path.scan("../").size == 1 and import_file_path.scan("/").size > 1
-                                header_dir = File.dirname(header_dir) + "/" + import_file_path.split("../")[1].split("/")[0]
-                            end
-    
-                            header_dir = FileFilter.get_exist_expand_path(header_dir)
 
-                            FileLogger.add_verbose_log "#{file} add header_dir: #{header_dir} for #{match_header} #{import_file_path}"
-                            file_includes_hash[file].add header_dir 
-    
-                            should_continue_add_header_dir = false
+                parse_dependency_for_file(match_header, nil, target_name, file_deps_hash, total_public_headermap, target_private_headermap, project_headermap, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+            end
+        end
+        file_deps_hash[file].sort.each do | dep_info |
+            header = dep_info[1]
+            next unless header
+            next unless file_deps_hash[header]
+            file_deps_hash[file].merge file_deps_hash[header]
+        end
+    end
+
+    def analyze_modules(target_info_hash_for_xcode)
+        user_module_hash = {}
+
+        module_map_file_hash = {}
+
+        total_module_map_files = (target_info_hash_for_xcode.map{|x|x[1][:dep_module_map_files].to_a} + target_info_hash_for_xcode.map{|x|x[1][:module_map_file]}).flatten.select{|x|x and File.exist? x and File.file? x}.map{|x|File.realpath(x)}.uniq
+
+        total_module_map_files.each do | module_map_file |
+            binding.pry unless File.extname(module_map_file).downcase == ".modulemap"
+            binding.pry unless File.exist? module_map_file
+            module_map_file_content = File.read(module_map_file)
+            if module_map_file_content != DynamicConfig.filter_content(module_map_file_content)
+                binding.pry
+            end
+            module_name = module_map_file_content.scan(/module +(\w+)/).flatten[0]
+            binding.pry unless module_name
+            module_map_file_hash[module_name] = Set.new unless module_map_file_hash[module_name]
+            module_map_file_hash[module_name].add module_map_file
+            binding.pry if module_map_file_hash[module_name].size > 1
+        end
+
+        target_info_hash_for_xcode.each do | target_name, info_hash |
+            has_swift = false
+            flags_sources_hash = info_hash[:flags_sources_hash]
+            flags_sources_hash.each do | flags, source_files |
+                extname = flags[0]
+                if FileFilter.get_source_file_extnames_swift.include? extname
+                    has_swift = true
+                end
+            end
+            product_module_name = info_hash[:product_module_name]
+            binding.pry if has_swift and not product_module_name
+            next unless product_module_name
+            target_headers = info_hash[:target_headers]
+
+            umbrella_header = nil
+            moduel_map_headers = Set.new
+            module_map_file = nil
+            if module_map_file_hash[product_module_name] and module_map_file_hash[product_module_name].size == 1
+                module_map_file = module_map_file_hash[product_module_name].to_a[0]
+            end
+            if module_map_file
+                module_map_file_content = File.read(module_map_file)
+                module_map_header_files = module_map_file_content.scan(/header \"(.*)\"/).flatten
+                binding.pry unless module_map_header_files.size > 0
+                module_map_header_files.each do | module_map_header |
+                    has_match_header = false
+                    target_headers.each do | header |
+                        if header.end_with? module_map_header
+                            moduel_map_headers.add header
+                            has_match_header = true
                             break
                         end
                     end
+                    binding.pry unless has_match_header
                 end
-
-                if should_continue_add_header_dir
-                    binding.pry
-                    raise "unexpected #{file} (#{import_file_path}) not found dir"
+            else
+                target_headers.each do | header |
+                    if not umbrella_header and File.basename(header) == product_module_name + ".h"
+                        moduel_map_headers.add header
+                        umbrella_header = header
+                        break
+                    end
                 end
+            end
 
-                file_headers_hash[file].add match_header
+            user_module_hash[product_module_name] = {}
+            user_module_hash[product_module_name][:umbrella_header] = umbrella_header
+            user_module_hash[product_module_name][:moduel_map_headers] = moduel_map_headers
+            user_module_hash[product_module_name][:module_map_file] = module_map_file
+            user_module_hash[product_module_name][:has_swift] = has_swift
+        end
 
-                parse_dependency_for_file(match_header, nil, file_headers_hash, file_includes_hash, file_extras_hash, total_public_headermap, target_private_headermap, target_header_dirs, target_framework_dirs)
+        return user_module_hash
+    end
+
+    def merge_public_headermap(target_info_hash_for_xcode)
+        total_public_headermap = {}
+        
+        target_info_hash_for_xcode.each do | target_name, info_hash |
+            target_public_headermap = info_hash[:target_public_headermap]
+            target_public_headermap.each do | key, headers |
+                total_public_headermap[key] = Set.new unless total_public_headermap[key]
+                headers.each do | header |
+                    total_public_headermap[key].add [header, target_name]
+                end
+                binding.pry if total_public_headermap[key].size > 1
             end
         end
-        file_headers_hash[file].sort.each do | header |
-            file_headers_hash[file].merge file_headers_hash[header] if file_headers_hash[header]
-            file_includes_hash[file].merge file_includes_hash[header] if file_includes_hash[header]
-            file_extras_hash[file].merge file_extras_hash[header] if file_extras_hash[header]
-        end
+        return total_public_headermap
     end
 
     def analyze(target_info_hash_for_xcode)
 
         analyze_result = {}
 
-        total_public_headermap = {}
-        total_header_namspace_hash = {}
-        total_header_module_hash = {}
-        total_user_modules = Set.new
+        user_module_hash = analyze_modules(target_info_hash_for_xcode)
+        total_public_headermap = merge_public_headermap(target_info_hash_for_xcode)
         
-        target_info_hash_for_xcode.each do | target_name, info_hash |
-            product_module_name = info_hash[:product_module_name]
-            next unless product_module_name
-            total_user_modules.add product_module_name
-            target_public_headermap = info_hash[:target_public_headermap]
-            if target_public_headermap
-                target_public_headermap.each do | key, file_path |
-                    next unless file_path and file_path.size > 0
-                    total_public_headermap[key] = Set.new unless total_public_headermap[key]
-                    total_public_headermap[key].add file_path
-                    if key.split("/")[0] == product_module_name.downcase
-                        if total_header_namspace_hash[file_path] and total_header_namspace_hash[file_path] != product_module_name
-                            binding.pry
-                        end
-                        total_header_namspace_hash[file_path] = product_module_name
-                        total_header_module_hash[file_path] = product_module_name
-                    end
-                end
-            end
-        end
-        target_info_hash_for_xcode.each do | target_name, info_hash |
-            target_private_headermap = info_hash[:target_private_headermap]
-            product_module_name = info_hash[:product_module_name]
-            if target_private_headermap
-                target_private_headermap.each do | key, file_path |
-                    next unless file_path and file_path.size > 0
-                    if total_header_namspace_hash[file_path]
-                        next
-                    end
-                    if product_module_name and key.split("/")[0] == product_module_name.downcase
-                        total_header_namspace_hash[file_path] = product_module_name
-                    end
-                end
-            end
-        end
-        target_info_hash_for_xcode.each do | target_name, info_hash |
-            target_private_headermap = info_hash[:target_private_headermap]
-            if target_private_headermap
-                target_private_headermap.each do | key, file_path |
-                    next unless file_path and file_path.size > 0
-                    if total_header_namspace_hash[file_path]
-                        next
-                    end
-                    total_header_namspace_hash[file_path] = ""
-                end
-            end
-        end
-        analyze_result[:total_header_namspace_hash] = total_header_namspace_hash
-        analyze_result[:total_header_module_hash] = total_header_module_hash
-        analyze_result[:total_user_modules] = total_user_modules
-
-        total_system_weak_frameworks = target_info_hash_for_xcode.map{|e|e[1][:target_links_hash][:system_weak_frameworks].to_a}.flatten.to_set
+        analyze_result[:user_module_hash] = user_module_hash
 
         target_info_hash_for_xcode.each do | target_name, info_hash |
             pch = info_hash[:pch]
-            extname_sources_hash = info_hash[:extname_sources_hash]
+            flags_sources_hash = info_hash[:flags_sources_hash]
+            product_module_name = info_hash[:product_module_name]
 
             target_private_headermap = info_hash[:target_private_headermap]
-
+            use_headermap = info_hash[:use_headermap]
             target_header_dirs = info_hash[:target_header_dirs]
             target_framework_dirs = info_hash[:target_framework_dirs]
+            project_headermap = info_hash[:project_headermap]
 
-            extname_sources_hash.each do | extname, files_hash |
-                extname_analyze_result = KeyValueStore.get_key_value_store_in_container(analyze_result, extname)
-                file_headers_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_headers_hash)
-                file_includes_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_includes_hash)
-                file_extras_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_extras_hash)
-                file_swift_system_modules_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_swift_system_modules_hash)
-                file_swift_user_modules_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_swift_user_modules_hash)
+            target_public_headermap = nil
+            target_public_headermap = total_public_headermap if use_headermap
 
-                if FileFilter.get_source_file_extnames_without_swift.include? extname
-                    file_pch = nil
-                    if FileFilter.get_objc_source_file_extnames.include? extname or FileFilter.get_cpp_source_file_extnames.include? extname
-                        file_pch = pch
-                    end
-                    if file_pch
-                        parse_dependency_for_file(file_pch, nil, file_headers_hash, file_includes_hash, file_extras_hash, total_public_headermap, target_private_headermap, target_header_dirs, target_framework_dirs)
-                    end
-                    files_hash.each do | file, file_hash |
-                        parse_dependency_for_file(file, file_pch, file_headers_hash, file_includes_hash, file_extras_hash, total_public_headermap, target_private_headermap, target_header_dirs, target_framework_dirs)
-                    end
-
-                    if FileFilter.get_pure_objc_source_file_extnames.include? extname
-                        if info_hash[:swift_objc_bridging_header]
-                            file = info_hash[:swift_objc_bridging_header]
-                            if not file_headers_hash.has_key? file
-                                parse_dependency_for_file(file, nil, file_headers_hash, file_includes_hash, file_extras_hash, total_public_headermap, target_private_headermap, target_header_dirs, target_framework_dirs)
-                            end
-                        end
-                    end
-                end
-
-                if FileFilter.get_swift_source_file_extnames.include? extname
-                    files_hash.each do | file, file_hash |
-                        swift_system_modules, swift_user_modules = parse_import_for_swift_file(file, total_user_modules)
-                        file_swift_system_modules_hash[file] = Set.new unless file_swift_system_modules_hash[file]
-                        file_swift_system_modules_hash[file].merge swift_system_modules
-
-                        file_swift_user_modules_hash[file] = Set.new unless file_swift_user_modules_hash[file]
-                        file_swift_user_modules_hash[file].merge swift_user_modules
-                    end
+            target_dtrace_files = Set.new
+            flags_sources_hash.each do | flags, source_files |
+                extname = flags[0]
+                if FileFilter.get_source_file_extnames_d.include? extname
+                    target_dtrace_files.merge source_files
                 end
             end
 
-            target_links_hash = info_hash[:target_links_hash]
-            info_hash[:objc_modules] = Set.new
-            extname_sources_hash.each do | extname, files_hash |
-                extname_analyze_result = KeyValueStore.get_key_value_store_in_container(analyze_result, extname)
-
-                if FileFilter.get_swift_source_file_extnames.include? extname
-                    file_swift_system_modules_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_swift_system_modules_hash)
-                    files_hash.each do | file, file_hash |
-                        file_swift_system_modules_hash[file].each do | framework_name |
-                            if total_system_weak_frameworks.include? framework_name
-                                target_links_hash[:system_weak_frameworks].add framework_name
-                            else
-                                target_links_hash[:system_frameworks].add framework_name
-                            end
-                        end
+            file_deps_hash = KeyValueStore.get_key_value_store_in_container(analyze_result, target_name)
+            if pch
+                parse_dependency_for_file(pch, nil, target_name, file_deps_hash, target_public_headermap, target_private_headermap, project_headermap, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+            end
+            if product_module_name and user_module_hash[product_module_name]
+                user_module_hash[product_module_name][:moduel_map_headers].each do | file |
+                    parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_headermap, target_private_headermap, project_headermap, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                end
+            end
+            if info_hash[:swift_objc_bridging_header]
+                file = info_hash[:swift_objc_bridging_header]
+                parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_headermap, target_private_headermap, project_headermap, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+            end
+            flags_sources_hash.each do | flags, source_files |
+                extname = flags[0]
+                if FileFilter.get_source_file_extnames_c_type.include? extname
+                    source_files.each do | file |
+                        parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_headermap, target_private_headermap, project_headermap, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                    end   
+                elsif FileFilter.get_source_file_extnames_swift.include? extname
+                    source_files.each do | file |
+                        parse_import_for_swift_file(file, user_module_hash, file_deps_hash)
                     end
                 end
-                
-                file_extras_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_extras_hash)
-                files_hash.each do | file, file_hash |
-                    next unless file_extras_hash[file]
-                    file_extras_hash[file].each do | extra |                        
-                        if extra.start_with? "@import "
-                            module_name = extra.sub("@import ", "")
-                            info_hash[:objc_modules].add module_name
-                        else
-                            if File.extname(extra).downcase == ".framework"
-                                framework_name = extra
-                                if total_system_weak_frameworks.include? framework_name
-                                    target_links_hash[:system_weak_frameworks].add framework_name
-                                else
-                                    target_links_hash[:system_frameworks].add framework_name
-                                end
-                            elsif File.extname(extra).downcase == ".tbd"
-                                library_name = extra
-                                target_links_hash[:system_libraries].add library_name
-                            else
-                                binding.pry
-                            end
-                        end
-                    end
-                end
-                
             end
         end
-
+        
         return analyze_result
     end
 end

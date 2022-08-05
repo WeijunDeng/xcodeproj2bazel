@@ -50,7 +50,8 @@ def _module_map_content(
 
     return content
 
-def _impl(ctx):
+
+def _module_map_impl(ctx):
     hdrs = []
     hdrs += ctx.files.hdrs
     swift_generated_header = None
@@ -69,22 +70,46 @@ def _impl(ctx):
     if len(ctx.files.umbrella_header) == 1:
         umbrella_header = ctx.files.umbrella_header[0]
 
-    module_map = ctx.outputs.out
+    output_module_map = ctx.outputs.out
+    if len(ctx.files.module_map_file) == 1:
+        module_map_file = ctx.files.module_map_file[0]
 
-    ctx.actions.write(
-        content = _module_map_content(
-            module_name = ctx.attr.module_name,
-            umbrella_header = umbrella_header,
-            hdrs = hdrs,
-            swift_generated_header = swift_generated_header,
-            module_map_path = module_map.path,
-        ),
-        output = module_map,
-    )
+        slashes_count = output_module_map.path.count("/") - 1
+        relative_path = "".join(["../"] * slashes_count)
+
+        args = ctx.actions.args()
+        args.add(module_map_file)
+        args.add(output_module_map)
+        args.add(relative_path)
+        if swift_generated_header:
+            args.add(swift_generated_header)
+        else:
+            args.add("empty")
+        args.add(ctx.attr.module_name)
+        args.add_all(hdrs)
+
+        ctx.actions.run(
+            mnemonic = "ModifyModuleMap",
+            arguments = [args],
+            executable = ctx.executable._module_map_builder,
+            inputs = [module_map_file] + hdrs,
+            outputs = [output_module_map],
+        )
+    else:
+        ctx.actions.write(
+            content = _module_map_content(
+                module_name = ctx.attr.module_name,
+                umbrella_header = umbrella_header,
+                hdrs = hdrs,
+                swift_generated_header = swift_generated_header,
+                module_map_path = output_module_map.path,
+            ),
+            output = output_module_map,
+        )
 
     outputs = []
     outputs += hdrs
-    outputs += [module_map]
+    outputs += [output_module_map]
     if umbrella_header:
         outputs += [umbrella_header]
 
@@ -102,7 +127,7 @@ def _impl(ctx):
     return struct(
         providers = [
             DefaultInfo(
-                files = depset([module_map]),
+                files = depset([output_module_map]),
             ),
             objc_provider,
             cc_info,
@@ -110,7 +135,7 @@ def _impl(ctx):
     )
 
 _module_map = rule(
-    implementation = _impl,
+    implementation = _module_map_impl,
     attrs = {
         "module_name": attr.string(
             mandatory = True,
@@ -125,22 +150,34 @@ _module_map = rule(
         "umbrella_header": attr.label(
             allow_files = [".h"],
         ),
+        "module_map_file": attr.label(
+            allow_files = [".modulemap"],
+        ),
         "out": attr.output(
             doc = "The name of the output module map file.",
+        ),
+        "_module_map_builder": attr.label(
+            executable = True,
+            cfg = "host",
+            allow_files = [".sh"],
+            default = "xcodeproj2bazel_rules/modify_module_map.sh",
         ),
     },
     doc = "Generates a module map given a list of header files.",
 )
 
-def module_map(name, hdrs = [], module_name = None, **kwargs):
+def module_map(name, hdrs = [], module_name = None, module_map_file = None, deps = [], **kwargs):
     native.cc_library(
         name = name + "_headers",
         hdrs = hdrs,
     )
+     
     _module_map(
         name = name,
         hdrs = hdrs,
+        deps = deps,
         module_name = module_name,
+        module_map_file = module_map_file,
         out = name + "/" + module_name + ".framework/Modules/module.modulemap",
         **kwargs
     )

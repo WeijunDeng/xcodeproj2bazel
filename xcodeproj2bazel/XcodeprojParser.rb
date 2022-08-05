@@ -1,5 +1,6 @@
 require 'xcodeproj'
 require 'pry'
+require 'i18n'
 
 class XcodeprojParser
     def get_project(project_path)
@@ -14,7 +15,7 @@ class XcodeprojParser
             workspace = Xcodeproj::Workspace::new_from_xcworkspace(workspace_path)    
             workspace.file_references.each do | project_ref |
                 path = File.dirname(workspace_path) + "/" + project_ref.path
-                path = FileFilter.get_exist_expand_path(path)
+                path = FileFilter.get_exist_expand_path_dir(path)
                 next unless path
                 next if project_paths.include? path
                 project_paths.add path
@@ -22,7 +23,7 @@ class XcodeprojParser
                 input_projects.push project
             end
         elsif input_project_path
-            path = FileFilter.get_exist_expand_path(input_project_path)
+            path = FileFilter.get_exist_expand_path_dir(input_project_path)
             binding.pry unless path
             project_paths.add path
             project = get_project(path)
@@ -35,7 +36,7 @@ class XcodeprojParser
         input_projects.each do | input_project |
             wrapper_project_paths = get_wrapper_project_paths(input_project)
             wrapper_project_paths.each do | path |
-                path = FileFilter.get_exist_expand_path(path)
+                path = FileFilter.get_exist_expand_path_dir(path)
                 next unless path
                 next if project_paths.include? path
                 project_paths.add path
@@ -79,11 +80,7 @@ class XcodeprojParser
         file_paths = []
         get_file_refs_from_file_ref(file_ref).each do | ref |
             file_path = nil
-            begin
-                file_path = ref.real_path.to_s
-            rescue
-                next
-            end
+            file_path = ref.real_path.to_s
             if ref.parent.class == Xcodeproj::Project::Object::PBXGroup
                 new_file_path = ref.parent.real_path.to_s + "/" + ref.path.to_s
                 if File.exist? new_file_path
@@ -217,15 +214,34 @@ class XcodeprojParser
             variable_hash[key] = value
         end
 
-        variable_hash["SRCROOT"] = File.dirname(project.path.to_s)
-        variable_hash["PROJECT_DIR"] = File.dirname(project.path.to_s)
-        variable_hash["CONFIGURATION"] = DynamicConfig.get_build_configuration_name
         if target
-            variable_hash["TARGET_NAME"] = target.name
-            variable_hash["TARGET_NAME:c99extidentifier"] = variable_hash["TARGET_NAME"].gsub("-", "_").gsub(" ", "_")
-        end
-        if variable_hash["PRODUCT_NAME"]
-            variable_hash["PRODUCT_NAME:rfc1034identifier"] = variable_hash["PRODUCT_NAME"].gsub("-", "_").gsub(" ", "_")
+            unless variable_hash["CONFIGURATION"]
+                variable_hash["CONFIGURATION"] = DynamicConfig.get_build_configuration_name
+            end
+            unless variable_hash["EFFECTIVE_PLATFORM_NAME"]
+                variable_hash["EFFECTIVE_PLATFORM_NAME"] = DynamicConfig.get_build_effective_platform_name
+            end
+            unless variable_hash["TARGET_NAME"]
+                variable_hash["TARGET_NAME"] = target.name
+            end
+            unless variable_hash["OTHER_CFLAGS"]
+                variable_hash["OTHER_CFLAGS"] = ""
+            end
+            unless variable_hash["OTHER_CPLUSPLUSFLAGS"]
+                variable_hash["OTHER_CPLUSPLUSFLAGS"] = ""
+            end
+            unless variable_hash["WARNING_CFLAGS"]
+                variable_hash["WARNING_CFLAGS"] = ""
+            end
+            unless variable_hash["OTHER_SWIFT_FLAGS"]
+                variable_hash["OTHER_SWIFT_FLAGS"] = ""
+            end
+            unless variable_hash["SRCROOT"]
+                variable_hash["SRCROOT"] = File.dirname(project.path.to_s)
+            end
+            unless variable_hash["PROJECT_DIR"]
+                variable_hash["PROJECT_DIR"] = File.dirname(project.path.to_s)
+            end
         end
 
         return variable_hash
@@ -251,8 +267,7 @@ class XcodeprojParser
     end
 
     def format_value(value)
-        value = value.gsub(/\$\(\w+\)/, "").gsub(/\$\{\w+\}/, "")
-        binding.pry if value.include? "\\\""
+        binding.pry if value.include? "\\\"" # TODO
         binding.pry if value.include? "\\'"
         value = value.gsub("\"", "").gsub("'", "")
         return value.strip
@@ -262,20 +277,28 @@ class XcodeprojParser
         newValue = value
         if newValue.class == Array
             newValue.each do | v |
-                binding.pry if v.include? "\\\n"
+                binding.pry if v.include? "\\\n" # TODO
                 binding.pry if v.include? "\\ "
                 binding.pry if v.class == Array
             end
             newValue = newValue.map{|v| v.split("\n").flatten.map{|x|x.split(" ")} }.flatten.map{|x|x.strip}.select{|x|x.size>0}
-        elsif newValue.class == String
-            binding.pry
-            binding.pry if newValue.include? "\\\n"
-            binding.pry if newValue.include? "\\ "
-            newValue = newValue.split("\n").flatten.map{|x|x.split(" ")}.flatten.map{|x|x.strip}.select{|x|x.size>0}
         else
             binding.pry
         end
         return newValue
+    end
+
+    # https://github.com/CocoaPods/Core/blob/c6ac388ee43f0782fdb8e32386f41f96dbe29082/lib/cocoapods-core/specification.rb#L205
+    def c99ext_identifier(name)
+        return nil if name.nil?
+        I18n.config.available_locales = :en
+        I18n.transliterate(name).gsub(/^([0-9])/, '_\1').
+          gsub(/[^a-zA-Z0-9_]/, '_').gsub(/_+/, '_')
+    end
+
+    # http://codeworkshop.net/posts/xcode-build-setting-transformations
+    def rfc1034_identifier(name)
+        return name.gsub(/\s+/, "-")
     end
 
     def get_target_build_settings(target, variable_hash, key)
@@ -296,8 +319,16 @@ class XcodeprojParser
                     if value2.class == String
                         if value.class == Array
                             value = value.map { | x | x.gsub("$(#{key2})", value2).gsub("${#{key2}}", value2) }
+                            unless value2.include? "$"
+                                value = value.map { | x | x.gsub("$(#{key2}:c99extidentifier)", c99ext_identifier(value2)).gsub("${#{key2}:c99extidentifier}", c99ext_identifier(value2)) }
+                                value = value.map { | x | x.gsub("$(#{key2}:rfc1034identifier)", rfc1034_identifier(value2)).gsub("${#{key2}:rfc1034identifier}", rfc1034_identifier(value2)) }
+                            end
                         elsif value.class == String
                             value = value.gsub("$(#{key2})", value2).gsub("${#{key2}}", value2)
+                            unless value2.include? "$"
+                                value = value.gsub("$(#{key2}:c99extidentifier)", c99ext_identifier(value2)).gsub("${#{key2}:c99extidentifier}", c99ext_identifier(value2))
+                                value = value.gsub("$(#{key2}:rfc1034identifier)", rfc1034_identifier(value2)).gsub("${#{key2}:rfc1034identifier}", rfc1034_identifier(value2))
+                            end
                         else
                             binding.pry
                         end
@@ -322,12 +353,12 @@ class XcodeprojParser
             else
                 binding.pry
             end
-            if variable_hash[key].size == 0
-                variable_hash.delete(key)
-            else
+            if variable_hash[key].size > 0
                 target_build_settings.push variable_hash[key]
             end
         end
+        binding.pry if target_build_settings.to_s.include? ":rfc1034identifier"
+        binding.pry if target_build_settings.to_s.include? ":c99extidentifier"
         return target_build_settings.flatten
     end
 
@@ -344,7 +375,7 @@ class XcodeprojParser
                 end
             end
             path = format_value(path)
-            binding.pry if path.include? "$"
+            # binding.pry if path.include? "$" # TODO
         end
         path = path.strip
         return path
@@ -360,7 +391,7 @@ class XcodeprojParser
             path = File.dirname(path)
         end
 
-        new_path = File.dirname(target.project.path.to_s) + "/" + path
+        new_path = get_target_src_root(target, variable_hash) + "/" + path
         if File.exist? new_path
             path = new_path
         end
@@ -368,6 +399,7 @@ class XcodeprojParser
         path = FileFilter.get_exist_expand_path(path)
         if path
             if recursive
+                # FIXME, support EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES
                 dirs = FileFilter.get_recursive_dirs(path)
                 return dirs
             else
@@ -381,6 +413,10 @@ class XcodeprojParser
             end
         end
 
+        if File.exist? origin_path
+            binding.pry # FIXME
+        end
+
         return nil
     end
 
@@ -392,102 +428,99 @@ class XcodeprojParser
                 next unless FileFilter.get_header_file_extnames.include? File.extname(file_path).downcase
 
                 key = File.basename(file_path).downcase
-                if project_headermap[key] and project_headermap[key] != file_path
-                    project_headermap[key] = ""
-                    next
-                end
-                project_headermap[key] = file_path
+                project_headermap[key] = Set.new unless project_headermap[key]
+                project_headermap[key].add file_path
             end
         end
         return project_headermap
     end
 
-    def get_target_headermap(target, product_module_name, project_headermap)
+    def get_target_headermap(target, use_headermap, product_module_name)
         target_public_headermap = {}
-        target_private_headermap = project_headermap.clone
-    
-        (target.headers_build_phase.files + target.source_build_phase.files).each do | file |
+        target_private_headermap = {}
+        target_headers = []
+        namespace = nil
+        if use_headermap
+            namespace = product_module_name
+            namespace = c99ext_identifier(target.name) unless namespace
+        end
+        target.headers_build_phase.files.each do | file |
             file_paths = get_file_paths_from_build_file(file)
             file_paths.each do | file_path |
                 binding.pry unless File.file? file_path
                 extname = File.extname(file_path).downcase
-                next unless FileFilter.get_header_file_extnames.include? extname
-
-                if file.settings and file.settings["ATTRIBUTES"].include? "Public"
-                    if product_module_name
-                        key = (product_module_name + "/" + File.basename(file_path)).downcase
-                        if target_public_headermap[key] and target_public_headermap[key] != file_path
-                            binding.pry
+                unless FileFilter.get_header_file_extnames.include? extname
+                    binding.pry
+                end
+                target_headers.push file_path
+                is_public = false
+                if file.settings
+                    file.settings.each do | k, v |
+                        binding.pry if k != "ATTRIBUTES"
+                        if v and v.include? "Public"
+                            is_public = true
                         end
-                        target_public_headermap[key] = file_path
-                    end
-
-                    key = File.basename(file_path).downcase
-                    if target_public_headermap[key] and target_public_headermap[key] != file_path
-                        binding.pry
-                    end
-                    target_public_headermap[key] = file_path
-                end
-                
-                if product_module_name
-                    key = (product_module_name + "/" + File.basename(file_path)).downcase
-                    if target_private_headermap[key] and target_private_headermap[key] != file_path
-                        target_private_headermap[key] = ""
-                    else
-                        target_private_headermap[key] = file_path
                     end
                 end
 
-                key = File.basename(file_path).downcase
-                if target_private_headermap[key] and target_private_headermap[key] != file_path
-                    target_private_headermap[key] = ""
-                else
-                    target_private_headermap[key] = file_path
+                if use_headermap
+                    if is_public
+                        key = (namespace + "/" + File.basename(file_path)).downcase
+                        target_public_headermap[key] = Set.new unless target_public_headermap[key]
+                        target_public_headermap[key].add file_path
+                        binding.pry if target_public_headermap[key].size > 1
+                    end
+
+                    key = (namespace + "/" + File.basename(file_path)).downcase
+                    target_private_headermap[key] = Set.new unless target_private_headermap[key]
+                    target_private_headermap[key].add file_path
+
+                    key = (File.basename(file_path)).downcase
+                    target_private_headermap[key] = Set.new unless target_private_headermap[key]
+                    target_private_headermap[key].add file_path
                 end
             end           
         end
-    
-        return target_public_headermap, target_private_headermap
+
+        return target_headers.uniq, namespace, target_public_headermap, target_private_headermap
     end
 
     def get_target_source_files(target, variable_hash)
-        files_hash = {}
-        target_non_arc = nil
+        flags_sources_hash = {}
+        clang_enable_objc_arc = false
         clang_enable_objc_arc_settings = get_target_build_settings(target, variable_hash, "CLANG_ENABLE_OBJC_ARC")
         if clang_enable_objc_arc_settings == ["YES"]
-            target_non_arc = false
+            clang_enable_objc_arc = true
         end
         target.source_build_phase.files.each do | file |
             file_paths = get_file_paths_from_build_file(file)
             file_paths.each do | file_path |
-                binding.pry unless File.file? file_path
                 extname = File.extname(file_path).downcase
-                next unless FileFilter.get_source_file_extnames.include? extname
+                next if FileFilter.get_source_file_extnames_ignore.include? extname
+                binding.pry unless FileFilter.get_source_file_extnames_all.include? extname
                 binding.pry unless file_path and File.exist? file_path and File.file? file_path
-                files_hash[file_path] = {} unless files_hash[file_path]
-    
-                non_arc = nil
+
+                compiler_flags = ""
                 if file.settings
-                    file_settings = file.settings["COMPILER_FLAGS"]
-                    if file_settings and file_settings.include? "-fobjc-arc"
-                        non_arc = false
-                    elsif file_settings and file_settings.include? "-fno-objc-arc"
-                        non_arc = true
+                    file.settings.each do | k, v |
+                        if k == "COMPILER_FLAGS"
+                            binding.pry unless v.class == String
+                            compiler_flags = v
+                        else
+                            binding.pry
+                        end
                     end
                 end
-                if non_arc == nil
-                    if target_non_arc == false
-                        non_arc = false
-                    elsif FileFilter.get_cpp_source_file_extnames.include? extname
-                        non_arc = true
-                    end
-                end
-                if non_arc == true
-                    files_hash[file_path]["non_arc"] = true
-                end
+                compiler_flags = compiler_flags.gsub("$(inherited)", "").strip
+                binding.pry if compiler_flags.include? "\n"
+                binding.pry if compiler_flags.include? "$"
+                compiler_flags = compiler_flags.gsub("\"", "\\\"")
+                fileflags = [extname, compiler_flags]
+                flags_sources_hash[fileflags] = Set.new unless flags_sources_hash[fileflags]
+                flags_sources_hash[fileflags].add file_path
             end
         end
-        return files_hash
+        return clang_enable_objc_arc, flags_sources_hash
     end
 
     def get_target_resources(target)
@@ -499,7 +532,7 @@ class XcodeprojParser
             if file_paths.size > 0
                 file_paths.each do | file_path |
                     extname = File.extname(file_path).downcase
-                    next if FileFilter.get_source_file_extnames.include? extname
+                    next if FileFilter.get_source_file_extnames_all.include? extname
                     next if FileFilter.get_header_file_extnames.include? extname
                     resources_files.add file_path
                 end
@@ -518,20 +551,43 @@ class XcodeprojParser
 
     def get_target_header_dirs(target, variable_hash)
         target_header_dirs = []
+        # TODO, split HEADER_SEARCH_PATHS and USER_HEADER_SEARCH_PATHS
         search_paths_settings = get_target_build_settings(target, variable_hash, "HEADER_SEARCH_PATHS") + get_target_build_settings(target, variable_hash, "USER_HEADER_SEARCH_PATHS")
         search_paths = format_strict_value(search_paths_settings).uniq
         search_paths.each do | origin_search_path |
             search_path = get_exist_build_settings_path(target, variable_hash, origin_search_path)
             if search_path and search_path.size > 0
                 if search_path.class == Array
-                    target_header_dirs = (target_header_dirs + search_path).uniq
+                    target_header_dirs = target_header_dirs + search_path
                 else
-                    target_header_dirs.push search_path unless target_header_dirs.include? search_path
+                    target_header_dirs.push search_path
                 end
+                next
             end
+            # beta
+
+            target_header_dirs.push [:unknown, origin_search_path]
+
+            # match_result = origin_search_path.match(/.+\/(.+\.framework.*)/)
+            # if match_result
+            #     target_header_dirs.push [:framework, match_result[1]]
+            #     next
+            # end
+            # match_result = origin_search_path.match(/.+\/(.+\.xcframework.*)/)
+            # if match_result
+            #     binding.pry
+            #     target_header_dirs.push [:xcframework, match_result[1]]
+            #     next
+            # end
+            # match_result = origin_search_path.match(/.+\/XCFrameworkIntermediates\/(.+\/Headers.*)/)
+            # if match_result
+            #     target_header_dirs.push [:xcframework, match_result[1]]
+            #     next
+            # end
+            # binding.pry if origin_search_path.include? "$" # TODO
         end
 
-        return target_header_dirs
+        return target_header_dirs.uniq
     end
     
     def get_target_framework_dirs(target, variable_hash, target_link_flags)
@@ -602,8 +658,8 @@ class XcodeprojParser
             return true
         end
         if target_build_settings.size == 1
-            return false if target_build_settings[0] == "NO"
-            return true if target_build_settings[0] == "YES"
+            return false if target_build_settings[0].upcase == "NO"
+            return true if target_build_settings[0].upcase == "YES"
         end
         raise "unexpected USE_HEADERMAP #{target_build_settings}"
         return true
@@ -689,11 +745,7 @@ class XcodeprojParser
                     end
                 end
             else
-                begin
-                    file_path = file.file_ref.real_path.to_s
-                rescue
-                    next
-                end
+                file_path = file.file_ref.real_path.to_s
                 file_dir = File.dirname(file_path)
                 extname = File.extname(file_path).downcase
     
@@ -716,7 +768,7 @@ class XcodeprojParser
                         found = false
                         target_framework_dirs.each do | dir |
                             framework_path = dir + "/" + File.basename(file_path)
-                            framework_path = FileFilter.get_exist_expand_path(framework_path)
+                            framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                             if framework_path
                                 user_framework_paths.push framework_path
                                 found = true
@@ -742,6 +794,7 @@ class XcodeprojParser
         if flags.size > 0
             (0..(flags.size-1)).each do | flag_i |
                 flag = flags[flag_i]
+                binding.pry if flag.downcase.include? ".xcframework"
                 force_load = (flag_i > 0 and flags[flag_i-1] == "-force_load")
                 if flag_i > 0 and (flags[flag_i-1] == "-framework" or flags[flag_i-1] == "-weak_framework")
                     if force_load
@@ -762,7 +815,7 @@ class XcodeprojParser
                         framework_name = flag + ".framework"
                         target_framework_dirs.each do | dir |
                             framework_path = dir + "/" + framework_name
-                            framework_path = FileFilter.get_exist_expand_path(framework_path)
+                            framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                             if framework_path
                                 user_framework_paths.push framework_path
                                 found = true
@@ -776,13 +829,11 @@ class XcodeprojParser
                     next
                 end
                 if File.extname(File.dirname(flag)).downcase == ".framework"
-                    if force_load
-                        raise "unsupported flag #{flag}"
-                    end
                     framework_path = File.dirname(flag)
-                    framework_path = FileFilter.get_exist_expand_path(framework_path)
+                    framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                     if framework_path
                         user_framework_paths.push framework_path
+                        alwayslink_product_file_names.add File.basename(framework_path) if force_load
                     else
                         dependency_target_product_file_names.push File.basename(File.dirname(flag))
                         alwayslink_product_file_names.add File.basename(File.dirname(flag)) if force_load
@@ -791,12 +842,11 @@ class XcodeprojParser
                 end
                 if File.extname(flag).downcase == ".a"
                     library_path = flag
-                    library_path = FileFilter.get_exist_expand_path(library_path)
+                    library_path = FileFilter.get_exist_expand_path_file(library_path)
                     if library_path
-                        if force_load
-                            raise "unsupported flag #{flag}"
-                        end
+                        library_path = File.realpath library_path
                         user_library_paths.push library_path
+                        alwayslink_product_file_names.add File.basename(library_path) if force_load
                     else
                         dependency_target_product_file_names.push File.basename(flag)
                         alwayslink_product_file_names.add File.basename(flag) if force_load
@@ -812,8 +862,9 @@ class XcodeprojParser
                         found = false
                         target_library_dirs.each do | dir |
                             library_path = dir + "/" + library_name
-                            library_path = FileFilter.get_exist_expand_path(library_path)
-                            if library_path 
+                            library_path = FileFilter.get_exist_expand_path_file(library_path)
+                            if library_path
+                                library_path = File.realpath library_path
                                 user_library_paths.push library_path
                                 found = true
                                 break
@@ -866,9 +917,6 @@ class XcodeprojParser
         target_cxx_compile_flags.join(" ").scan(/-D *(\S+)/).flatten.each do | define |
             target_defines_settings.push define
         end
-        target_swift_compile_flags.join(" ").scan(/-D *(\S+)/).flatten.each do | define |
-            target_defines_settings.push define
-        end
         target_defines_settings = target_defines_settings.map{|x|x.split(" ")}.flatten.uniq
         target_defines = {}
         target_defines_settings.each do | define |
@@ -878,35 +926,49 @@ class XcodeprojParser
             end
             if define.include? "$"
                 binding.pry
-                raise "unsupported define #{define}"
             else
                 if define.scan("=").size == 0
                     target_defines[define] = "1"
-                elsif define.scan("=").size == 1
-                    target_defines[define.split("=")[0]] = define.split("=")[1]
                 else
-                    binding.pry
-                    raise "unsupported define #{define}"
+                    target_defines[define.split("=")[0]] = define.split("=")[1..-1].join("=")
                 end
             end
         end
     
-        return target_defines
+        swift_target_defines_settings = get_target_build_settings(target, variable_hash, "SWIFT_ACTIVE_COMPILATION_CONDITIONS").flatten
+        swift_target_defines = swift_target_defines_settings.map{|x|x.split(" ")}.flatten.map{|x|x.strip}.select{|x|x.size>0}
+        target_swift_compile_flags.join(" ").scan(/-D *(\S+)/).flatten.each do | define |
+            swift_target_defines.push define
+        end
+
+        return target_defines, swift_target_defines.uniq
     end
-    
+
+    def get_target_src_root(target, variable_hash)
+        settings = get_target_build_settings(target, variable_hash, "SRCROOT")
+        result = nil
+        if settings.size == 1
+            result = settings[0]
+            result = FileFilter.get_exist_expand_path_dir(result)
+        end
+        binding.pry unless result
+        return result
+    end
+
     def get_target_pch(target, variable_hash)
         pch = nil
         pch_settings = get_target_build_settings(target, variable_hash, "GCC_PREFIX_HEADER")
         if pch_settings.size == 1
             path = pch_settings[0]
             unless File.exist? path
-                new_path = File.dirname(target.project.path.to_s) + "/" + path
+                new_path = get_target_src_root(target, variable_hash) + "/" + path
                 if File.exist? new_path
                     path = new_path
                 end
             end
-            path = FileFilter.get_exist_expand_path(path)
+            path = FileFilter.get_exist_expand_path_file(path)
             if path
+                path = File.realpath path
                 pch = path
             end
         end
@@ -916,13 +978,13 @@ class XcodeprojParser
     def parse_target_product_info(target, variable_hash)
 
         product_name_settings = get_target_build_settings(target, variable_hash, "PRODUCT_NAME")
-        product_name = target.name.gsub("-", "_")
     
         if product_name_settings.size > 0
             if not product_name_settings[0].include? "$"
                 product_name = product_name_settings[0]
             end
         end
+        binding.pry unless product_name
         product_file_name = nil
         if target.product_type == "com.apple.product-type.application"
             product_file_name = product_name + ".app"
@@ -973,6 +1035,9 @@ class XcodeprojParser
                 end
             end
         end
+
+        binding.pry if bundle_id and bundle_id.include? "$"
+
         mach_o_type_settings = get_target_build_settings(target, variable_hash, "MACH_O_TYPE")
         mach_o_type = nil
         if mach_o_type_settings.size == 1
@@ -1034,40 +1099,68 @@ class XcodeprojParser
         return swift_objc_bridging_header
     end
 
-    def get_targe_modules_setting(target, variable_hash, product_name)
+    def get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
+        enable_modules = false
+        settings = get_target_build_settings(target, variable_hash, "CLANG_ENABLE_MODULES")
+        if settings == ["YES"]
+            enable_modules = true
+        end
         defines_module = false
         settings = get_target_build_settings(target, variable_hash, "DEFINES_MODULE")
-        if settings.size > 0 and settings[-1] == "YES"
+        if settings == ["YES"]
             defines_module = true
         end
         product_module_name = nil
         settings = get_target_build_settings(target, variable_hash, "PRODUCT_MODULE_NAME")
-        if settings.size > 0 and settings[-1].size > 0
-            product_module_name = settings[-1]
+        if settings.size == 1
+            product_module_name = settings[0]
             unless product_module_name.match(/^\w+$/)
                 binding.pry
             end
         end
-        modulemap_file = nil
+        module_map_file = nil
         settings = get_target_build_settings(target, variable_hash, "MODULEMAP_FILE")
         if settings.size > 0
-            modulemap_file = get_exist_build_settings_path(target, variable_hash, settings[-1])
-            unless modulemap_file and modulemap_file.class == String
-                binding.pry
+            module_map_file = get_exist_build_settings_path(target, variable_hash, settings[-1])
+        end
+        dep_module_map_files = Set.new
+        [target_c_compile_flags, target_swift_compile_flags].each do | flags |
+            (0..(flags.size-1)).each do | flag_i |
+                flag = flags[flag_i]
+                if flag.strip.start_with? "-fmodule-map-file="
+                    file = flag.strip.sub("-fmodule-map-file=", "").strip
+                    file = FileFilter.get_exist_expand_path_file(file)
+                    if file
+                        file = File.realpath file
+                        dep_module_map_files.add file
+                    end
+                end
+            end    
+        end
+
+        if not defines_module and module_map_file
+            defines_module = true
+        end
+        if not defines_module and target.product_type == "com.apple.product-type.framework"
+            defines_module = true
+        end
+        if not defines_module
+            flags_sources_hash.each do | flags, source_files |
+                extname = flags[0]
+                if FileFilter.get_source_file_extnames_swift.include? extname
+                    defines_module = true
+                    break
+                end
             end
         end
-        if modulemap_file
-            defines_module = true
-        end
-        if target.product_type == "com.apple.product-type.framework"
-            defines_module = true
-        end
+        
         if defines_module
             if not product_module_name
-                product_module_name = product_name.gsub("-", "_")
+                product_module_name = c99ext_identifier(product_name)
             end
         end
-        return product_module_name, modulemap_file
+
+        return enable_modules, product_module_name, module_map_file, dep_module_map_files
     end
 
     def get_target_targeted_device_family(target, variable_hash)
@@ -1146,19 +1239,14 @@ class XcodeprojParser
             next if flag == "-import-underlying-module"
 
             if flag.start_with? "-fmodule-map-file="
-                file = flag.strip.sub("-fmodule-map-file=", "")
-                unless File.exist? file
-                    next
-                end
+                next
             end
 
             if flag == "-Xcc" and flags[flag_i+1] and flags[flag_i+1].start_with? "-fmodule-map-file="
-                file = flags[flag_i+1].sub("-fmodule-map-file=", "")
-                unless File.exist? file
-                    next
-                end
+                next
             end
 
+            binding.pry if flag.include? "$"
             simple_flags.push flag
             
         end
@@ -1171,8 +1259,8 @@ class XcodeprojParser
         projects = get_projects(workspace_path, input_project_path)
         projects.each do | project |
             project_path = project.path.to_s + "/project.pbxproj"
-            project_headermap = nil
             project_variable_hash = get_build_settings_variables(project.build_configurations, {}, project, nil)
+            project_headermap = get_project_headermap(project)
             project.native_targets.each do | target |
                 if target_info_hash_for_xcode[target.name]
                     raise "unexpected conflicting #{target.name}"
@@ -1181,14 +1269,7 @@ class XcodeprojParser
                 variable_hash = get_build_settings_variables(target.build_configurations, project_variable_hash, project, target)
                 header_path_hash_for_target_headermap = {}
 
-                source_files_hash = get_target_source_files(target, variable_hash)
-                extname_sources_hash = {}
-                source_files_hash.each do | file, file_hash |
-                    extname = File.extname(file).downcase
-        
-                    extname_sources_hash[extname] = {} unless extname_sources_hash[extname]
-                    extname_sources_hash[extname][file] = file_hash
-                end
+                clang_enable_objc_arc, flags_sources_hash = get_target_source_files(target, variable_hash)
     
                 target_c_compile_flags, target_cxx_compile_flags, target_c_warning_flags, target_swift_compile_flags = get_target_compile_flags(target, variable_hash)
                 target_link_flags = get_target_link_flags(target, variable_hash)
@@ -1196,7 +1277,7 @@ class XcodeprojParser
                 target_framework_dirs = get_target_framework_dirs(target, variable_hash, target_link_flags)
                 target_library_dirs = get_target_library_dirs(target, variable_hash, target_link_flags)
                 pch = get_target_pch(target, variable_hash)
-                target_defines = get_target_defines(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags)
+                target_defines, swift_target_defines = get_target_defines(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags)
                 product_name, product_file_name, info_plist, bundle_id, bundle_version, mach_o_type = parse_target_product_info(target, variable_hash)
                 target_links_hash = get_target_links_hash(target, variable_hash, target_library_dirs, target_framework_dirs, target_link_flags, product_file_name)
                 resources_files, dependency_resource_product_file_names = get_target_resources(target)
@@ -1206,18 +1287,10 @@ class XcodeprojParser
                 targeted_device_family = get_target_targeted_device_family(target, variable_hash)
 
                 swift_objc_bridging_header = get_targe_swift_setting(target, variable_hash)
-                product_module_name, modulemap_file = get_targe_modules_setting(target, variable_hash, product_name)
+                enable_modules, product_module_name, module_map_file, dep_module_map_files = get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
 
                 use_headermap = get_target_use_headermap(target, variable_hash)
-
-                target_public_headermap = nil
-                target_private_headermap = nil
-                if use_headermap
-                    unless project_headermap
-                        project_headermap = get_project_headermap(project)
-                    end
-                    target_public_headermap, target_private_headermap = get_target_headermap(target, product_module_name, project_headermap)
-                end
+                target_headers, namespace, target_public_headermap, target_private_headermap = get_target_headermap(target, use_headermap, product_module_name)
 
                 info_hash = {}
                 info_hash[:product_name] = product_name
@@ -1228,15 +1301,27 @@ class XcodeprojParser
                 info_hash[:bundle_version] = bundle_version
                 info_hash[:mach_o_type] = mach_o_type
                 info_hash[:pch] = pch
-                info_hash[:extname_sources_hash] = extname_sources_hash
+                info_hash[:clang_enable_objc_arc] = clang_enable_objc_arc
+                info_hash[:flags_sources_hash] = flags_sources_hash
+                info_hash[:enable_modules] = enable_modules
                 info_hash[:product_module_name] = product_module_name
-                info_hash[:modulemap_file] = modulemap_file
+                info_hash[:module_map_file] = module_map_file
+                info_hash[:dep_module_map_files] = dep_module_map_files
                 info_hash[:swift_objc_bridging_header] = swift_objc_bridging_header
+                info_hash[:target_headers] = target_headers
+                info_hash[:use_headermap] = use_headermap
+                info_hash[:namespace] = namespace
                 info_hash[:target_public_headermap] = target_public_headermap
                 info_hash[:target_private_headermap] = target_private_headermap
+                if use_headermap
+                    info_hash[:project_headermap] = project_headermap
+                else
+                    info_hash[:project_headermap] = {}
+                end
                 info_hash[:target_header_dirs] = target_header_dirs
                 info_hash[:target_framework_dirs] = target_framework_dirs
                 info_hash[:target_defines] = target_defines
+                info_hash[:swift_target_defines] = swift_target_defines
                 info_hash[:target_links_hash] = target_links_hash
                 info_hash[:resources_files] = resources_files
                 info_hash[:dependency_resource_product_file_names] = dependency_resource_product_file_names
@@ -1257,7 +1342,9 @@ class XcodeprojParser
         total_build_product_file_name_set = target_info_hash_for_xcode.map{|e|e[1][:product_file_name].downcase}.to_set
         total_user_framework_path_set = target_info_hash_for_xcode.map{|e|e[1][:target_links_hash][:user_framework_paths]}.flatten.to_set.select{|path| not total_build_product_file_name_set.include? File.basename(path).downcase}.to_set
         total_user_library_paths = target_info_hash_for_xcode.map{|e|e[1][:target_links_hash][:user_library_paths]}.flatten.to_set.select{|path| not total_build_product_file_name_set.include? File.basename(path).downcase}.to_set
-    
+        total_alwayslink_product_file_names = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:alwayslink_product_file_names].to_a}.flatten.map{|x|x.downcase}.to_set
+        binding.pry if (total_alwayslink_product_file_names - total_build_product_file_name_set).size > 0
+
         # fixed invalid links
         target_info_hash_for_xcode.each do | target_name, info_hash |
             target_links_hash = info_hash[:target_links_hash]

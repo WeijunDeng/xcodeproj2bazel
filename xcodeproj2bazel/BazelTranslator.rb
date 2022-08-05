@@ -1,128 +1,113 @@
 class BazelTranslator
+    def translate_module_map(analyze_result, user_module_hash, target_info_hash_for_xcode, target_info_hash_for_bazel)
+        user_module_hash.each do | product_module_name, hash |
+            umbrella_header = hash[:umbrella_header]
+            moduel_map_headers = hash[:moduel_map_headers]
+            module_map_file = hash[:module_map_file]
+            has_swift = hash[:has_swift]
+
+            if has_swift
+                swift_bazel_target_name = get_bazel_target_name_for_swift_module_name(product_module_name)
+                swift_header_target_name = get_bazel_target_name_for_swift_header_map(product_module_name)
+                header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, swift_header_target_name)
+                header_target_info["rule"] = "header_map"
+                header_target_info["namespace"] = product_module_name
+                header_target_info["direct_hdr_providers"] = [":" + swift_bazel_target_name]
+            end
+
+            next unless module_map_file or umbrella_header
+            next unless moduel_map_headers.size > 0
+
+            header_target_name = get_bazel_target_name_for_module_map(product_module_name, false)
+            header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
+            header_target_info["rule"] = "module_map"
+            header_target_info["module_name"] = product_module_name
+            header_target_info["module_map_file"] = module_map_file if module_map_file
+            header_target_info["umbrella_header"] = umbrella_header if umbrella_header
+            header_target_info["hdrs"] = moduel_map_headers
+
+            if has_swift
+                swift_bazel_target_name = get_bazel_target_name_for_swift_module_name(product_module_name)
+                mixed_header_target_name = get_bazel_target_name_for_module_map(product_module_name, true)
+                header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, mixed_header_target_name)
+                header_target_info["rule"] = "module_map"
+                header_target_info["module_name"] = product_module_name
+                header_target_info["module_map_file"] = module_map_file if module_map_file
+                header_target_info["umbrella_header"] = umbrella_header if umbrella_header
+                header_target_info["hdrs"] = moduel_map_headers
+                header_target_info["deps"] = [swift_bazel_target_name]
+            end
+
+            moduel_map_deps = Set.new
+
+            target_info_hash_for_xcode.each do | target_name, info_hash |
+                file_deps_hash = KeyValueStore.get_key_value_store_in_container(analyze_result, target_name)
+                next unless file_deps_hash
+                moduel_map_headers.each do | file |
+                    moduel_map_deps.merge file_deps_hash[file] if file_deps_hash[file]
+                end
+            end
+            hash[:moduel_map_deps] = moduel_map_deps
+        end
+    end
+
+    def translate_header_map(target_info_hash_for_xcode, target_info_hash_for_bazel)
+        target_info_hash_for_xcode.each do | target_name, info_hash |
+            use_headermap = info_hash[:use_headermap]
+            next unless use_headermap
+            namespace = info_hash[:namespace]
+            target_public_headermap = info_hash[:target_public_headermap]
+            target_private_headermap = info_hash[:target_private_headermap]
+            
+            next if (target_public_headermap.size + target_private_headermap.size) == 0
+
+            public_headers = target_public_headermap.values.map{|x|x.to_a}.flatten.to_set
+            if public_headers.size > 0
+                header_target_name = get_bazel_target_name_for_header_map(target_name, true)
+                header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
+                header_target_info["rule"] = "header_map"
+                header_target_info["namespace"] = namespace
+                header_target_info["namespace_only"] = "True"
+                header_target_info["hdrs"] = public_headers
+            end
+
+            private_headers = target_private_headermap.values.map{|x|x.to_a}.flatten.to_set
+            if private_headers.size > 0
+                header_target_name = get_bazel_target_name_for_header_map(target_name, false)
+                header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
+                header_target_info["rule"] = "header_map"
+                header_target_info["namespace"] = namespace
+                header_target_info["hdrs"] = private_headers
+            end
+        end
+    end
+
     def translate(target_info_hash_for_xcode, analyze_result)
 
-        total_header_namspace_hash = analyze_result[:total_header_namspace_hash]
-        total_header_module_hash = analyze_result[:total_header_module_hash]
-        total_user_modules = analyze_result[:total_user_modules]
-
         target_info_hash_for_bazel = {}
-    
+
+        user_module_hash = analyze_result[:user_module_hash]
+        translate_module_map(analyze_result, user_module_hash, target_info_hash_for_xcode, target_info_hash_for_bazel)
+        translate_header_map(target_info_hash_for_xcode, target_info_hash_for_bazel)
+
+        total_system_weak_frameworks = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:system_weak_frameworks].to_a}.flatten.to_set
+        total_alwayslink_product_file_names = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:alwayslink_product_file_names].to_a}.flatten.map{|x|x.downcase}.to_set
+
         product_file_name_hash = {}
-    
-        alwayslink_product_file_names = Set.new
-        module_map_file_hash = {}
         target_info_hash_for_xcode.each do | target_name, info_hash |
             product_file_name = info_hash[:product_file_name]
             product_file_name_hash[product_file_name] = target_name
-    
-            alwayslink_product_file_names.merge info_hash[:target_links_hash][:alwayslink_product_file_names]
-
-            product_module_name = info_hash[:product_module_name]
-            if product_module_name
-                modulemap_file = info_hash[:modulemap_file]
-                module_map_file_hash[product_module_name] = modulemap_file
-            end
-        end
-    
-        total_header_namspace_hash.each do | header, namespace |
-            next if File.extname(header) == ".pch"
-            header_target_name = get_bazel_target_name_for_header_map(total_header_namspace_hash, header)
-            header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
-            header_target_info["rule"] = "header_map"
-            header_target_info["namespace"] = namespace if namespace and namespace.size > 0
-            header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
-            header_target_info["hdrs"].add header
-            # namespace_only
-        end
-
-        total_header_module_hash.each do | header, namespace |
-            next if File.extname(header) == ".pch"
-            binding.pry unless namespace and namespace.size > 0
-            header_target_name = get_bazel_target_name_for_module_map(namespace, false)
-            header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
-            header_target_info["rule"] = "module_map"
-            unless header_target_info["module_name"]
-                header_target_info["module_name"] = namespace
-                if module_map_file_hash[namespace]
-                    binding.pry unless File.exist? module_map_file_hash[namespace]
-                    # TODO, use exist module map file
-                    # header_target_info["module_map_file"] = module_map_file_hash[namespace]
-                    module_map_file_content = File.read(module_map_file_hash[namespace])
-                    match_result = module_map_file_content.match(/umbrella header \"(.*)\"/)
-                    if match_result
-                        umbrella_header = match_result[1]
-                        if umbrella_header.include? "/"
-                            binding.pry
-                        else
-                            umbrella_header = File.dirname(module_map_file_hash[namespace]) + "/" + umbrella_header
-                            umbrella_header = FileFilter.get_exist_expand_path(umbrella_header)
-                            if umbrella_header
-                                header_target_info["umbrella_header"] = umbrella_header
-                            else
-                                header_target_info["umbrella_header_name"] = match_result[1]
-                            end
-                        end
-                    else
-                        binding.pry
-                    end
-                end
-            end
-
-            if header_target_info["umbrella_header_name"]
-                if File.basename(header) == header_target_info["umbrella_header_name"]
-                    header_target_info["umbrella_header"] = header
-                    header_target_info.delete "umbrella_header_name"
-                end
-            end
-
-            if not header_target_info["umbrella_header"] and File.basename(header) == namespace + ".h"
-                header_target_info["umbrella_header"] = header
-            else
-                header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
-                header_target_info["hdrs"].add header
-            end
-        end
-
-        target_info_hash_for_xcode.each do | target_name, info_hash |
-            product_module_name = info_hash[:product_module_name]
-            next unless product_module_name
-            raise unless product_module_name.size > 0
-            product_file_name = info_hash[:product_file_name]
-            extname_sources_hash = info_hash[:extname_sources_hash]
-            extname_sources_hash.each do | extname, files_hash |
-                if FileFilter.get_swift_source_file_extnames.include? extname
-                    bazel_target_name = get_bazel_target_name_for_product_file_name_and_extname_and_swift_module_name(product_file_name, extname, product_module_name)
-
-                    header_target_name0 = get_bazel_target_name_for_module_map(product_module_name, false)
-                    next unless target_info_hash_for_bazel.has_key? header_target_name0
-                    header_target_info0 = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name0)
-
-                    header_target_name = get_bazel_target_name_for_module_map(product_module_name, true)
-                    header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
-                    header_target_info["rule"] = header_target_info0["rule"]
-                    header_target_info["module_name"] = header_target_info0["module_name"]
-                    header_target_info["umbrella_header"] = header_target_info0["umbrella_header"] if header_target_info0["umbrella_header"]
-                    header_target_info["hdrs"] = header_target_info0["hdrs"] if header_target_info0["hdrs"]
-                    header_target_info["deps"] = [bazel_target_name]
-
-                    header_target_name = get_bazel_target_name_for_swift_header_map(product_module_name)
-                    header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
-                    header_target_info["rule"] = "header_map"
-                    header_target_info["namespace"] = product_module_name
-                    header_target_info["direct_hdr_providers"] = [":" + bazel_target_name]
-
-                end
-            end
         end
 
         target_info_hash_for_xcode.each do | target_name, info_hash |
     
             pch = info_hash[:pch]
-            extname_sources_hash = info_hash[:extname_sources_hash]
+            flags_sources_hash = info_hash[:flags_sources_hash]
             header_path_hash_for_target_headermap = info_hash[:header_path_hash_for_target_headermap]
             header_path_hash_for_project_headermap = info_hash[:header_path_hash_for_project_headermap]
     
             product_name = info_hash[:product_name]
+            enable_modules = info_hash[:enable_modules]
             product_module_name = info_hash[:product_module_name]
             modulemap_file = info_hash[:modulemap_file]
             product_file_name = info_hash[:product_file_name]
@@ -137,99 +122,166 @@ class BazelTranslator
             target_c_compile_flags = info_hash[:target_c_compile_flags]
             target_cxx_compile_flags = info_hash[:target_cxx_compile_flags]
             target_swift_compile_flags = info_hash[:target_swift_compile_flags]
+            clang_enable_objc_arc = info_hash[:clang_enable_objc_arc]
             target_link_flags = info_hash[:target_link_flags]
             target_defines = info_hash[:target_defines]
+            swift_target_defines = info_hash[:swift_target_defines]
             swift_objc_bridging_header = info_hash[:swift_objc_bridging_header]
-            target_header_dirs = info_hash[:target_header_dirs]
-
-            alwayslink = alwayslink_product_file_names.include? product_file_name
+            target_header_dirs = info_hash[:target_header_dirs].select{|x|x.class==String}
+            
+            alwayslink = total_alwayslink_product_file_names.include? product_file_name.downcase
             if File.extname(product_file_name) == ".framework" and mach_o_type == "mh_dylib"
                 alwayslink = true
             end
     
+            relative_sources_files = Set.new
+            if product_module_name and user_module_hash[product_module_name]
+                umbrella_header = user_module_hash[product_module_name][:umbrella_header]
+                if umbrella_header
+                    relative_sources_files.add umbrella_header
+                end
+                module_map_file = user_module_hash[product_module_name][:module_map_file]
+                if module_map_file
+                    relative_sources_files.merge user_module_hash[product_module_name][:moduel_map_headers]
+                end
+            end
+            if pch
+                relative_sources_files.add pch
+            end
+            if swift_objc_bridging_header
+                relative_sources_files.add swift_objc_bridging_header
+            end
+
             dep_bazel_source_targets = Set.new
 
-            extname_sources_hash.each do | extname, files_hash |
+            flags_index_hash = {}
+            extname_count_hash = {}
+            flags_sources_hash.each do | flags, source_files |
+                extname = flags[0]
+                extname_count_hash[extname] = 0 unless extname_count_hash[extname]
+                flags_index_hash[flags] = extname_count_hash[extname]
+                extname_count_hash[extname] = extname_count_hash[extname] + 1
 
-                if FileFilter.get_swift_source_file_extnames.include? extname
-                    bazel_target_name = get_bazel_target_name_for_product_file_name_and_extname_and_swift_module_name(product_file_name, extname, product_module_name)
+                if FileFilter.get_source_file_extnames_swift.include? extname
+                    binding.pry if extname_count_hash[extname] > 1
+                end
+            end
+
+            file_deps_hash = KeyValueStore.get_key_value_store_in_container(analyze_result, target_name)
+
+            flags_sources_hash.each do | flags, source_files |
+                extname = flags[0]
+                compiler_flags = flags[1]
+
+                if FileFilter.get_source_file_extnames_d.include? extname
+                    dtrace_target_name = get_bazel_target_name_for_product_file_name_and_extname_and_index_and_count(product_file_name, extname, 0, 0)
+                    binding.pry if target_info_hash_for_bazel.include? dtrace_target_name
+                    target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, dtrace_target_name)
+                    target_info["rule"] = "dtrace_compile"
+                    target_info["srcs"] = source_files
+
+                    dtrace_headermap_target_name = target_name + "_dtrace_header_map"
+                    binding.pry if target_info_hash_for_bazel.include? dtrace_headermap_target_name
+                    target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, dtrace_headermap_target_name)
+                    target_info["rule"] = "header_map"
+                    target_info["hdrs"] = [":#{dtrace_target_name}"]
+                end
+
+                if FileFilter.get_source_file_extnames_swift.include? extname
+                    binding.pry unless product_module_name
+                    bazel_target_name = get_bazel_target_name_for_swift_module_name(product_module_name)
+                    binding.pry if target_info_hash_for_bazel.include? bazel_target_name
                     dep_bazel_source_targets.add bazel_target_name
                     target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bazel_target_name)
                     target_info["rule"] = "swift_library"
                     target_info["alwayslink"] = "True"
-                    if product_module_name
-                        target_info["module_name"] = product_module_name
-                    end
+                    target_info["module_name"] = product_module_name
+                    add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
 
-                    swift_dep_objc_headers = Set.new
                     if swift_objc_bridging_header
                         target_info["objc_bridging_header"] = swift_objc_bridging_header
-                        swift_dep_objc_headers.add swift_objc_bridging_header
-                    elsif product_module_name
-                        module_map_target_name = get_bazel_target_name_for_module_map(product_module_name, false)
-                        if target_info_hash_for_bazel.has_key? module_map_target_name
-                            target_info["objc_module_maps"] = Set.new unless target_info["objc_module_maps"]
-                            target_info["objc_module_maps"].add module_map_target_name
-                            
-                            target_info["copts"] = [] unless target_info["copts"]
-                            target_info["copts"].push "-import-underlying-module" unless target_info["copts"].include? "-import-underlying-module"
-
-                            module_map_target_info = target_info_hash_for_bazel[module_map_target_name]
-                            if module_map_target_info["umbrella_header"]
-                                swift_dep_objc_headers.add module_map_target_info["umbrella_header"]
-                            end
-                            swift_dep_objc_headers.merge module_map_target_info["hdrs"] if module_map_target_info["hdrs"]
-                        end
                     end
-                    extname_analyze_result = KeyValueStore.get_key_value_store_in_container(analyze_result, extname)
-                    file_swift_user_modules_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_swift_user_modules_hash)
 
                     target_info["srcs"] = Set.new unless target_info["srcs"]
-                    user_modules = Set.new
-                    files_hash.each do | file, file_hash |        
+                    source_files.each do | file |        
                         target_info["srcs"].add file
-                        user_modules.merge file_swift_user_modules_hash[file]
                     end
-                    user_modules.each do | user_module |
-                        next if user_module == product_module_name
-                        target_info["deps"] = Set.new unless target_info["deps"]
-                        target_info["deps"].add get_bazel_target_name_for_product_file_name_and_extname_and_swift_module_name(nil, nil, user_module)
 
-                        header_target_name = get_bazel_target_name_for_module_map(user_module, true)
-                        if not target_info_hash_for_bazel.has_key? header_target_name
-                            header_target_name = get_bazel_target_name_for_module_map(user_module, false)
+                    (relative_sources_files + source_files).uniq.each do | file |
+                        next unless file_deps_hash[file]
+                        file_deps_hash[file].each do | dep_info |
+                            add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
                         end
-                        if not target_info_hash_for_bazel.has_key? header_target_name
-                            next
-                        end
-                        
-                        key = "objc_module_maps"
-                        target_info[key] = Set.new unless target_info[key]
-                        target_info[key].add header_target_name
-        
-                        module_map_target_info = target_info_hash_for_bazel[header_target_name]
-                        if module_map_target_info["umbrella_header"]
-                            swift_dep_objc_headers.add module_map_target_info["umbrella_header"]
-                        end
-                        swift_dep_objc_headers.merge module_map_target_info["hdrs"] if module_map_target_info["hdrs"]
                     end
-                    swift_dep_objc_headers.each do | header |
-                        add_deps_for_target_info(target_info, true, header, total_header_module_hash, total_header_namspace_hash, target_info_hash_for_bazel, target_info_hash_for_xcode, analyze_result)
 
-                        FileFilter.get_pure_objc_source_file_extnames.each do | objc_extname |
-                            extname_analyze_result = KeyValueStore.get_key_value_store_in_container(analyze_result, objc_extname)
-                            file_headers_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_headers_hash)
-                            file_includes_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_includes_hash)
+                    if target_info["objc_includes"] and target_info["objc_includes"].size > 0 and target_header_dirs.size > 0
+                        # keep original search order
+                        target_info["objc_includes"] = (target_header_dirs + target_info["objc_includes"].sort).select{|x| target_info["objc_includes"].include? x}.uniq
+                    end
 
-                            next unless file_headers_hash[header]
-                            file_headers_hash[header].each do | header2 |
-                                add_deps_for_target_info(target_info, true, header2, total_header_module_hash, total_header_namspace_hash, target_info_hash_for_bazel, target_info_hash_for_xcode, analyze_result)
+                    if target_info["objc_header_maps"] and target_info["objc_header_maps"].size > 1
+                        target_info["objc_header_maps"] = target_info["objc_header_maps"].sort_by { | x |
+                            if x.end_with? "_public_header_map"
+                                "0 " + x
+                            elsif x.end_with? "_private_header_map"
+                                "1 " + x
+                            elsif x.end_with? "_private_header_map"
+                                "2 " + x
+                            else
+                                "3 " + x
                             end
-                            target_info["objc_includes"] = Set.new unless target_info["objc_includes"]
-                            target_info["objc_includes"].merge file_includes_hash[header] if file_includes_hash[header]
-                        end
+                        }
                     end
 
+                    if target_defines and target_defines.size > 0
+                        defines = []
+                        target_defines.each do | key, value |
+                            defines.push "#{key}=#{value}"
+                        end
+                        target_info["objc_defines"] = Set.new unless target_info["objc_defines"]
+                        target_info["objc_defines"].merge defines
+                    end
+                    if swift_target_defines.size > 0
+                        target_info["defines"] = Set.new unless target_info["defines"]
+                        target_info["defines"].merge swift_target_defines
+                    end
+                    if target_swift_compile_flags and target_swift_compile_flags.size > 0
+                        target_info["copts"] = [] unless target_info["copts"]
+                        target_info["copts"] = target_info["copts"] + target_swift_compile_flags
+                    end
+                    if compiler_flags.size > 0
+                        target_info["copts"] = [] unless target_info["copts"]
+                        target_info["copts"] = target_info["copts"] + [compiler_flags]
+                    end
+                end
+
+                if FileFilter.get_source_file_extnames_c_type.include? extname
+                    bazel_target_name = get_bazel_target_name_for_product_file_name_and_extname_and_index_and_count(product_file_name, extname, flags_index_hash[flags], extname_count_hash[extname])
+                    binding.pry if target_info_hash_for_bazel.include? bazel_target_name
+                    dep_bazel_source_targets.add bazel_target_name
+                    target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bazel_target_name)
+                    type = "cc_library"
+                    if FileFilter.get_source_file_extnames_mixed_objective_c.include? extname
+                        type = "objc_library"
+                    end
+                    target_info["rule"] = type
+                    target_info["alwayslink"] = "True" if alwayslink
+                    target_info["pch"] = pch if pch
+
+                    if target_info["rule"] == "objc_library"
+                        target_info["enable_modules"] = "True" if enable_modules
+                        if product_module_name
+                            add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
+                        end
+                    end
+                    if FileFilter.get_source_file_extnames_mixed_c.include? extname and target_c_compile_flags and target_c_compile_flags.size > 0
+                        target_info["copts"] = [] unless target_info["copts"]
+                        target_info["copts"] = target_info["copts"] + target_c_compile_flags
+                    end
+                    if FileFilter.get_source_file_extnames_mixed_cpp.include? extname and target_cxx_compile_flags and target_cxx_compile_flags.size > 0
+                        target_info["copts"] = [] unless target_info["copts"]
+                        target_info["copts"] = target_info["copts"] + target_cxx_compile_flags
+                    end
                     if target_defines and target_defines.size > 0
                         defines = []
                         target_defines.each do | key, value |
@@ -238,74 +290,55 @@ class BazelTranslator
                         target_info["defines"] = Set.new unless target_info["defines"]
                         target_info["defines"].merge defines
                     end
-                    if target_swift_compile_flags and target_swift_compile_flags.size > 0
+                    if target_link_flags and target_link_flags.size > 0
+                        target_info["linkopts"] = [] unless target_info["linkopts"]
+                        target_info["linkopts"] = target_info["linkopts"] + target_link_flags
+                    end
+
+                    target_info["deps"] = Set.new unless target_info["deps"]
+                    
+                    (relative_sources_files + source_files).uniq.each do | file |
+                        next unless file_deps_hash[file]
+                        file_deps_hash[file].each do | dep_info |
+                            add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
+                        end
+                    end
+
+                    if target_info["includes"] and target_info["includes"].size > 0 and target_header_dirs and target_header_dirs.size > 0
+                        # keep original search order
+                        target_info["includes"] = (target_header_dirs + target_info["includes"].sort).select{|x| target_info["includes"].include? x}.uniq
+                    end
+                    if target_info["header_maps"] and target_info["header_maps"].size > 1
+                        target_info["header_maps"] = target_info["header_maps"].sort_by { | x |
+                            if x.end_with? "_public_header_map"
+                                "0 " + x
+                            elsif x.end_with? "_private_header_map"
+                                "1 " + x
+                            elsif x.end_with? "_private_header_map"
+                                "2 " + x
+                            else
+                                "3 " + x
+                            end
+                        }
+                    end
+                    source_files.each do | file |
+                        if target_info["rule"] == "objc_library"
+                            binding.pry if compiler_flags.include? "-fobjc-arc" and compiler_flags.include? "-fno-objc-arc"
+                            if clang_enable_objc_arc == true and not compiler_flags.include? "-fno-objc-arc"
+                                target_info["srcs"] = Set.new unless target_info["srcs"]
+                                target_info["srcs"].add file
+                            else
+                                target_info["non_arc_srcs"] = Set.new unless target_info["non_arc_srcs"]
+                                target_info["non_arc_srcs"].add file
+                            end
+                        else
+                            target_info["srcs"] = Set.new unless target_info["srcs"]
+                            target_info["srcs"].add file
+                        end
+                    end
+                    if compiler_flags.size > 0
                         target_info["copts"] = [] unless target_info["copts"]
-                        target_info["copts"] = target_info["copts"] + target_swift_compile_flags
-                    end
-                end
-
-                unless FileFilter.get_source_file_extnames_without_swift.include? extname
-                    next
-                end
-
-                extname_analyze_result = KeyValueStore.get_key_value_store_in_container(analyze_result, extname)
-                file_headers_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_headers_hash)
-                file_includes_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_includes_hash)
-
-                bazel_target_name = get_bazel_target_name_for_product_file_name_and_extname(product_file_name, extname)
-                dep_bazel_source_targets.add bazel_target_name
-                target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bazel_target_name)
-                type = "cc_library"
-                if FileFilter.get_objc_source_file_extnames.include? extname
-                    type = "objc_library"
-                end
-                target_info["rule"] = type
-                target_info["alwayslink"] = "True" if alwayslink
-                target_info["pch"] = pch if pch
-
-                if FileFilter.get_c_source_file_extnames.include? extname and target_c_compile_flags and target_c_compile_flags.size > 0
-                    target_info["copts"] = [] unless target_info["copts"]
-                    target_info["copts"] = target_info["copts"] + target_c_compile_flags
-                end
-                if FileFilter.get_cpp_source_file_extnames.include? extname and target_cxx_compile_flags and target_cxx_compile_flags.size > 0
-                    target_info["copts"] = [] unless target_info["copts"]
-                    target_info["copts"] = target_info["copts"] + target_cxx_compile_flags
-                end
-                if target_defines and target_defines.size > 0
-                    defines = []
-                    target_defines.each do | key, value |
-                        defines.push "#{key}=#{value}"
-                    end
-                    target_info["defines"] = Set.new unless target_info["defines"]
-                    target_info["defines"].merge defines
-                end
-                if target_link_flags and target_link_flags.size > 0
-                    target_info["linkopts"] = [] unless target_info["linkopts"]
-                    target_info["linkopts"] = target_info["linkopts"] + target_link_flags
-                end
-
-                headers = files_hash.keys.map{|e|file_headers_hash[e].to_a}.flatten.to_set
-
-                target_info["deps"] = Set.new unless target_info["deps"]
-                headers.each do | header |
-                    add_deps_for_target_info(target_info, false, header, total_header_module_hash, total_header_namspace_hash, target_info_hash_for_bazel, target_info_hash_for_xcode, analyze_result)
-                end
-                includes = files_hash.keys.map{|e|file_includes_hash[e].to_a}.flatten.to_set
-                if includes.size > 0
-                    target_info["includes"] = Set.new unless target_info["includes"]
-                    target_info["includes"].merge includes
-                end
-                if target_info["includes"] and target_info["includes"].size > 0 and target_header_dirs and target_header_dirs.size > 0
-                    # keep original search order
-                    target_info["includes"] = (target_header_dirs + target_info["includes"].sort).select{|x| target_info["includes"].include? x}.uniq
-                end
-                files_hash.each do | file, file_hash |
-                    if file_hash["non_arc"] == true and target_info["rule"] == "objc_library"
-                        target_info["non_arc_srcs"] = Set.new unless target_info["non_arc_srcs"]
-                        target_info["non_arc_srcs"].add file
-                    else
-                        target_info["srcs"] = Set.new unless target_info["srcs"]
-                        target_info["srcs"].add file
+                        target_info["copts"] = target_info["copts"] + [compiler_flags]
                     end
                 end
             end
@@ -478,26 +511,17 @@ class BazelTranslator
             end
         end
 
-        # fix up
-        target_info_hash_for_bazel.each do | target_name, hash |
-            if hash["deps"]
-                hash["deps"].to_a.each do | dep |
-                    unless target_info_hash_for_bazel.has_key? dep
-                        hash["deps"].delete dep
-                        if dep.end_with? "_swift"
-                            import_target_name = "import_" + get_bazel_target_name_for_product_file_name(dep.sub("_swift", ".framework"))
-                            hash["deps"].add import_target_name if target_info_hash_for_bazel.has_key? import_target_name
-                        end
-                    end
-                end
-            end
-        end
-
         target_info_hash_for_bazel.sort.each do | target_name, hash |
             hash.keys.each do | key |
                 if hash[key].class == Set
+                    hash[key].each do | v |
+                        binding.pry if v == nil
+                    end
                     hash[key] = hash[key].sort.uniq {|x|x.downcase}
                 elsif hash[key].class == Array
+                    hash[key].each do | v |
+                        binding.pry if v == nil
+                    end
                     hash[key] = hash[key].uniq {|x|x.downcase}
                 end
             end
@@ -528,7 +552,7 @@ class BazelTranslator
     end
     
     def generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
-        framework_path = FileFilter.get_exist_expand_path(framework_path)
+        framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
         target_name = get_bazel_target_name_for_framework_import framework_path
         unless target_info_hash_for_bazel.has_key? target_name
             framework_name = File.basename(framework_path).split(".")[0]
@@ -549,11 +573,32 @@ class BazelTranslator
             else
                 raise "unexpected #{framework_library_path} is_dynamic"
             end
-            framework_target_info["framework_imports"] = framework_library_path
+            framework_target_info["framework_imports"] = framework_path
         end
         return target_name
     end
     
+    def generate_bazel_target_name_for_xcframework_import(framework_path, target_info_hash_for_bazel)
+        framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
+        target_name = get_bazel_target_name_for_framework_import framework_path
+        unless target_info_hash_for_bazel.has_key? target_name
+            framework_name = File.basename(framework_path).split(".")[0]
+            framework_library_paths = Dir.glob("#{framework_path}/*/lib#{framework_name}.a").sort
+            binding.pry unless framework_library_paths.size > 0
+            framework_library_path = framework_library_paths[0]
+            unless File.exist? framework_library_path
+                binding.pry
+                raise "unexpected #{framework_library_path} not exist"
+            end
+            binding.pry if Open3.capture3("file #{framework_library_path}")[0].include? "dynamically linked shared library"
+    
+            framework_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
+            framework_target_info["rule"] = "apple_static_xcframework_import"
+            framework_target_info["xcframework_imports"] = framework_path
+        end
+        return target_name
+    end
+
     def generate_bazel_target_name_for_library_import(library_path, target_info_hash_for_bazel)
         library_target_name = get_bazel_target_name_for_library_import library_path
         unless target_info_hash_for_bazel.has_key? library_target_name
@@ -564,74 +609,76 @@ class BazelTranslator
         return library_target_name
     end
     
-    def add_deps_for_target_info(target_info, is_swift, header, total_header_module_hash, total_header_namspace_hash, target_info_hash_for_bazel, target_info_hash_for_xcode, analyze_result)
-        if header
-            if header.include? ".framework/"
-                framework_path = header.split(".framework/")[0] + ".framework"
+    def add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, file_deps_set)
+        binding.pry unless dep_info.class == Array
+
+        return if file_deps_set.include? dep_info
+        file_deps_set.add dep_info
+
+        if dep_info[0] == :system_framework
+            system_framework = dep_info[1]
+            if total_system_weak_frameworks.include? system_framework
+                info_hash[:target_links_hash][:system_weak_frameworks].add system_framework
+            else
+                info_hash[:target_links_hash][:system_frameworks].add system_framework
+            end
+            return
+        end
+        if dep_info[0] == :system_library
+            system_library = dep_info[1]
+            info_hash[:target_links_hash][:system_libraries].add system_library
+            return
+        end
+        if dep_info[0] == :private_headermap
+            header_target_name = get_bazel_target_name_for_header_map(dep_info[2], false)
+            key = "header_maps"
+            key = "objc_" + key if target_info["rule"] == "swift_library"
+            target_info[key] = Set.new unless target_info[key]
+            target_info[key].add header_target_name
+            return
+        end
+
+        if dep_info[0] == :public_headermap
+            header_target_name = get_bazel_target_name_for_header_map(dep_info[2], true)
+            key = "header_maps"
+            key = "objc_" + key if target_info["rule"] == "swift_library"
+            target_info[key] = Set.new unless target_info[key]
+            target_info[key].add header_target_name
+            return
+        end
+
+        if dep_info[0] == :project_headermap
+            header = dep_info[1]
+            header_target_name = "#{dep_info[2]}_project_header_map"
+            header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
+            header_target_info["rule"] = "header_map"
+            header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
+            header_target_info["hdrs"].add header
+
+            key = "header_maps"
+            key = "objc_" + key if target_info["rule"] == "swift_library"
+            target_info[key] = Set.new unless target_info[key]
+            target_info[key].add header_target_name
+            return
+        end
+
+        if dep_info[0] == :headers
+            header = dep_info[1]
+            
+            header_target_name = nil
+            if header.downcase.include? ".framework/"
+                framework_path = header.downcase.split(".framework/")[0] + ".framework"
                 header_target_name = generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
-                target_info["deps"] = Set.new unless target_info["deps"]
-                target_info["deps"].add header_target_name
                 if target_info["rule"] == "cc_library"
                     target_info["framework_search_paths"] = Set.new unless target_info["framework_search_paths"]
                     target_info["framework_search_paths"].add File.dirname(framework_path)
                 end
-            elsif total_header_module_hash and total_header_module_hash[header] and (target_info["rule"] == "objc_library" or target_info["rule"] == "swift_library")
-                is_mixed = false
-                if not is_swift or target_info["module_name"] != total_header_module_hash[header]
-                    is_mixed = true
-                end
-                header_target_name = get_bazel_target_name_for_module_map(total_header_module_hash[header], is_mixed)
-                if not target_info_hash_for_bazel.has_key? header_target_name
-                    header_target_name = get_bazel_target_name_for_module_map(total_header_module_hash[header], false)
-                end
-                if not target_info_hash_for_bazel.has_key? header_target_name
-                    binding.pry
-                end
-
-                key = "module_maps"
-                key = "objc_" + key if is_swift
-                target_info[key] = Set.new unless target_info[key]
-                target_info[key].add header_target_name
-
-                header_target_name = get_bazel_target_name_for_header_map(total_header_namspace_hash, header)
-                key = "header_maps"
-                key = "objc_" + key if is_swift
-                target_info[key] = Set.new unless target_info[key]
-                target_info[key].add header_target_name
-
-            elsif total_header_namspace_hash and total_header_namspace_hash[header]
-                header_target_name = get_bazel_target_name_for_header_map(total_header_namspace_hash, header)
-                key = "header_maps"
-                key = "objc_" + key if is_swift
-                target_info[key] = Set.new unless target_info[key]
-                target_info[key].add header_target_name
-            elsif header.end_with? "-Swift.h"
-                header_target_name = get_bazel_target_name_for_header_map(total_header_namspace_hash, header)
-                key = "header_maps"
-                key = "objc_" + key if is_swift
-                target_info[key] = Set.new unless target_info[key]
-                target_info[key].add header_target_name
-
-                if not is_swift
-                    swift_module_target_name = target_info_hash_for_xcode.keys.filter{|e|target_info_hash_for_xcode[e][:product_module_name]}.detect{|e|target_info_hash_for_xcode[e][:product_module_name] +  "_swift_header_map" == header_target_name}
-                    if swift_module_target_name
-                        swift_objc_bridging_header = target_info_hash_for_xcode[swift_module_target_name][:swift_objc_bridging_header]
-                        if swift_objc_bridging_header
-                            add_deps_for_target_info(target_info, is_swift, swift_objc_bridging_header, total_header_module_hash, total_header_namspace_hash, target_info_hash_for_bazel, target_info_hash_for_xcode, analyze_result)
-                            FileFilter.get_pure_objc_source_file_extnames.each do | objc_extname |
-                                extname_analyze_result = KeyValueStore.get_key_value_store_in_container(analyze_result, objc_extname)
-                                file_headers_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_headers_hash)
-                                file_includes_hash = KeyValueStore.get_key_value_store_in_container(extname_analyze_result, :file_includes_hash)
-
-                                next unless file_headers_hash[swift_objc_bridging_header]
-                                file_headers_hash[swift_objc_bridging_header].each do | header2 |
-                                    add_deps_for_target_info(target_info, is_swift, header2, total_header_module_hash, total_header_namspace_hash, target_info_hash_for_bazel, target_info_hash_for_xcode, analyze_result)
-                                end
-                                target_info["includes"] = Set.new unless target_info["includes"]
-                                target_info["includes"].merge file_includes_hash[swift_objc_bridging_header] if file_includes_hash[swift_objc_bridging_header]
-                            end
-                        end
-                    end
+            elsif header.downcase.include? ".xcframework/"
+                framework_path = header.downcase.split(".xcframework/")[0] + ".xcframework"
+                header_target_name = generate_bazel_target_name_for_xcframework_import(framework_path, target_info_hash_for_bazel)
+                if target_info["rule"] == "cc_library"
+                    target_info["framework_search_paths"] = Set.new unless target_info["framework_search_paths"]
+                    target_info["framework_search_paths"].add File.dirname(framework_path)
                 end
             else
                 header_target_name = get_bazel_target_name_for_general_header(header)
@@ -639,13 +686,87 @@ class BazelTranslator
                 header_target_info["rule"] = "cc_header"
                 header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
                 header_target_info["hdrs"].add header
+            end
+    
+            key = "deps"
+            target_info[key] = Set.new unless target_info[key]
+            target_info[key].add header_target_name
+            
+            search_path = dep_info[2]
+            if search_path
+                key = "includes"
+                key = "objc_" + key if target_info["rule"] == "swift_library"
+                target_info[key] = Set.new unless target_info[key]
+                target_info[key].add search_path
+            end
+            return
+        end
 
-                key = "deps"
+        if dep_info[0] == :user_module
+            user_module = dep_info[1]
+            binding.pry if target_info["rule"] == "cc_library"
+            binding.pry unless user_module_hash[user_module]
+            
+            is_mixed = true
+            if target_info["rule"] == "swift_library" and target_info["module_name"] == user_module
+                is_mixed = false
+            end
+            header_target_name = get_bazel_target_name_for_module_map(user_module, is_mixed)
+            if not target_info_hash_for_bazel.has_key? header_target_name
+                header_target_name = get_bazel_target_name_for_module_map(user_module, false)
+            end
+            if target_info_hash_for_bazel.has_key? header_target_name
+                if target_info["module_name"] == user_module
+                    if target_info["rule"] == "swift_library"
+                        target_info["copts"] = [] unless target_info["copts"]
+                        target_info["copts"].push "-import-underlying-module" unless target_info["copts"].include? "-import-underlying-module"
+                    end
+                end
 
+                key = "module_maps"
+                key = "objc_" + key if target_info["rule"] == "swift_library"
                 target_info[key] = Set.new unless target_info[key]
                 target_info[key].add header_target_name
+
+                user_module_hash[user_module][:moduel_map_deps].each do | moduel_map_dep |
+                    add_file_deps(moduel_map_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, file_deps_set)
+                end
             end
+            if target_info["rule"] == "swift_library" and user_module_hash[user_module][:has_swift] and target_info["module_name"] != user_module
+                swift_target_name = get_bazel_target_name_for_swift_module_name(user_module)
+                key = "deps"
+                target_info[key] = Set.new unless target_info[key]
+                target_info[key].add swift_target_name
+            end
+            return
         end
+
+        if dep_info[0] == :swift_header
+            swift_header = dep_info[1]
+            module_name = File.basename(swift_header).sub("-Swift.h", "")
+            binding.pry unless swift_header == "#{module_name}/#{module_name}-Swift.h" or swift_header == "#{module_name}-Swift.h"
+            swift_header_target_name = get_bazel_target_name_for_swift_header_map(module_name)
+            if target_info_hash_for_bazel.has_key? swift_header_target_name
+                key = "deps"
+                target_info[key] = Set.new unless target_info[key]
+                target_info[key].add swift_header_target_name
+            else
+                binding.pry
+            end
+
+            return
+        end
+
+        if dep_info[0] == :dtrace_header
+            dtrace_headermap_target_name = dep_info[2] + "_dtrace_header_map"
+            key = "header_maps"
+            key = "objc_" + key if target_info["rule"] == "swift_library"
+            target_info[key] = Set.new unless target_info[key]
+            target_info[key].add dtrace_headermap_target_name
+            return
+        end
+
+        binding.pry
     end
 
     def get_bazel_target_name_for_library_import(library_path)
@@ -660,40 +781,27 @@ class BazelTranslator
         return get_legal_bazel_target_name(product_file_name)
     end
 
-    def get_bazel_target_name_for_product_file_name_and_extname(product_file_name, extname)
-        return get_legal_bazel_target_name(product_file_name + extname)
+    def get_bazel_target_name_for_swift_module_name(swift_module_name)
+        return swift_module_name + "_swift"
     end
 
-    def get_bazel_target_name_for_product_file_name_and_extname_and_swift_module_name(product_file_name, extname, module_name)
-        if module_name
-            return module_name + "_swift"
-        else
-            return get_bazel_target_name_for_product_file_name_and_extname(product_file_name, extname)
+    def get_bazel_target_name_for_product_file_name_and_extname_and_index_and_count(product_file_name, extname, index, count)
+        suffix = ""
+        if count > 1
+            suffix = "_" + index.to_s
         end
+        return get_legal_bazel_target_name(product_file_name + extname + suffix)
     end
 
     def get_bazel_target_name_for_swift_header_map(module_name)
         return module_name + "_swift_header_map"
     end
 
-    def get_bazel_target_name_for_header_map(total_header_namspace_hash, header)
-        namespace = nil
-        if total_header_namspace_hash.has_key? header
-            namespace = total_header_namspace_hash[header]
+    def get_bazel_target_name_for_header_map(target_name, is_public)
+        if is_public
+            return get_legal_bazel_target_name(target_name) + "_public_header_map"
         else
-            if header == header.split("/")[0] + "/" + header.split("/")[0] + "-Swift.h"
-                namespace = header.split("/")[0]
-                return namespace + "_swift_header_map"
-            end
-        end
-
-        raise unless namespace
-        
-        if namespace.size > 0
-            return namespace + "_header_map"
-        else
-            path = File.dirname(header) + File.extname(header)
-            return get_legal_bazel_target_name(path).downcase + "_header_map"
+            return get_legal_bazel_target_name(target_name) + "_private_header_map"
         end
     end
 
@@ -713,7 +821,7 @@ class BazelTranslator
 
     def get_legal_bazel_target_name(name)
         name = DynamicConfig.filter_content(name)
-        return name.gsub(/[^a-zA-Z0-9]/, "_")
+        return name.gsub(/\W/, "_")
     end
 
 end
