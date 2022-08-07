@@ -1,6 +1,8 @@
-load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import", "apple_static_xcframework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
@@ -34,11 +36,13 @@ ios_application(
     bundle_name = "empty_app_storyboard_objc",
     deps = [
         ":empty_app_storyboard_objc_app_m",
-        ":empty_app_storyboard_objc_app_system_library",
     ],
     families = ["iphone", "ipad"],
     infoplists = [
         "empty_app_storyboard_objc/Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     minimum_os_version = "15.5",
     resources = [
@@ -63,19 +67,10 @@ objc_library(
     header_maps = [
         ":empty_app_storyboard_objc_project_header_map",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     srcs = [
         "empty_app_storyboard_objc/AppDelegate.m",
         "empty_app_storyboard_objc/SceneDelegate.m",
         "empty_app_storyboard_objc/ViewController.m",
         "empty_app_storyboard_objc/main.m",
-    ],
-)
-system_library(
-    name = "empty_app_storyboard_objc_app_system_library",
-    sdk_frameworks = [
-        "UIKit",
     ],
 )

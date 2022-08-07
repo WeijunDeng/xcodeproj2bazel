@@ -68,37 +68,6 @@ class DependencyAnalyzer
                 end
             end
     
-            # beta
-            # CLANG_MODULES_AUTOLINK
-            if line_strip.include? "CGImageSource"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("ImageIO")]
-            end
-            if line_strip.include? "CMSampleBuffer"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CoreMedia")]
-            end
-            if line_strip.include? "CVPixelBuffer"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CoreVideo")]
-            end
-            if line_strip.include? "MTLDevice"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("Metal")]
-            end
-            if line_strip.include? "CFNetwork"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CFNetwork")]
-            end
-            if line_strip.include? "SecPolicy"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("Security")]
-            end
-            if line_strip.include? "CGContext"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("CoreGraphics")]
-            end
-            if line_strip.include? "CATransform"
-                file_deps_hash[file].add [:system_framework, FileFilter.get_system_framework_by_name("QuartzCore")]
-            end
-            
-            if line_strip.include? "res_9_"
-                file_deps_hash[file].add [:system_library,  "libresolv.9.tbd"]
-            end
-    
             import_file_path_match = line_strip.match(/^# *(?:import|include) *([<\"]\S+?[>\"])/)
             next unless import_file_path_match
             is_angled_import = nil

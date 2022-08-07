@@ -25,28 +25,28 @@ target 'swift_app_with_pod_no_use_frameworks' do
   pod 'DropDown'
   pod 'Eureka'
   # pod 'FBAEMKit'
-  # pod 'FBMemoryProfiler'
-  # pod 'FBRetainCycleDetector'
+  pod 'FBMemoryProfiler'
+  pod 'FBRetainCycleDetector'
   pod 'FDFullscreenPopGesture'
   pod 'FileKit'
   # pod 'Firebase/Analytics'
   # pod 'Firebase/Auth'
   # pod 'Firebase/Crashlytics'
   # pod 'Firebase/Firestore'
-  # pod 'fishhook'
-  # pod 'FLAnimatedImage'
-  # pod 'FLEX'
-  # pod 'FMDB'
-  # pod 'FSCalendar'
-  # pod 'FSPagerView'
+  pod 'fishhook'
+  pod 'FLAnimatedImage'
+  pod 'FLEX'
+  pod 'FMDB'
+  pod 'FSCalendar'
+  pod 'FSPagerView'
   # pod 'GrowingAutoTrackKit'
   # pod 'GrowingCoreKit'
   # pod 'IFTTTConnectSDK'
-  # pod 'Instructions'
-  # pod 'IQKeyboardManager'
-  # pod 'JRSwizzle'
-  # pod 'JTAppleCalendar'
-  # pod 'JWT'
+  pod 'Instructions'
+  pod 'IQKeyboardManager'
+  pod 'JRSwizzle'
+  pod 'JTAppleCalendar'
+  pod 'JWT'
   pod 'JXPagingView/Paging'
   pod 'JXSegmentedView'
   # pod 'KeychainAccess'
@@ -55,26 +55,26 @@ target 'swift_app_with_pod_no_use_frameworks' do
   pod 'Lantern'
   pod 'Loading'
   pod 'LookinServer'
-  # pod 'lottie-ios'
+  pod 'lottie-ios'
   # pod 'LTMorphingLabel'
   # pod 'Macaw'
-  # pod 'Masonry'
-  # pod 'Material'
+  pod 'Masonry'
+  pod 'Material'
   pod 'MBProgressHUD'
-  # pod 'MessageKit'
+  pod 'MessageKit'
   pod 'MJExtension'
-  # pod 'MJRefresh'
-  # pod 'MLeaksFinder'
+  pod 'MJRefresh'
+  pod 'MLeaksFinder'
   pod 'MMKV'
   pod 'MonkeyKing'
-  # pod 'Moya'
-  # pod 'MTAppenderFile'
-  # pod 'MTHawkeye'
+  pod 'Moya'
+  pod 'MTAppenderFile'
+  pod 'MTHawkeye'
   # pod 'Nimble'
   # pod 'Nuke'
   # pod 'NVActivityIndicatorView'
-  # pod 'ObjectMapper'
-  # pod 'OHHTTPStubs'
+  pod 'ObjectMapper'
+  pod 'OHHTTPStubs'
   pod 'PanModal'
   pod 'Permission'
   pod 'Permission/Microphone'
@@ -113,22 +113,56 @@ target 'swift_app_with_pod_no_use_frameworks' do
   pod 'SwiftyJSON'
   pod 'SwiftyStoreKit'
   pod 'SwipeCellKit'
-  # pod 'TensorFlowLiteTaskText'
-  # pod 'TextFieldEffects'
-  # pod 'Texture'
+  pod 'TensorFlowLiteTaskText'
+  pod 'TextFieldEffects'
+  pod 'Texture'
   pod 'UMCommon'
   pod 'UMDevice'
   pod 'UMPush'
-  # pod 'ViewAnimator'
+  pod 'ViewAnimator'
   pod 'WKWebViewJavascriptBridge'
-  # pod 'YYCache'
-  # pod 'YYImage'
-  # pod 'YYImage/WebP'
-  # pod 'YYModel'
+  pod 'YYCache'
+  pod 'YYImage'
+  pod 'YYImage/WebP'
+  pod 'YYModel'
   pod 'YYText'
-  # pod 'ZipArchive'
+  pod 'ZipArchive'
   pod "AMPopTip"
   pod "InAppPurchase"
   pod "NSAttributedStringBuilder13"
 
+end
+
+post_install do |installer|
+  fix_xcode_12_5_compile_error
+end
+
+def fix_xcode_12_5_compile_error
+  force_replace_file("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
+  "layoutCache[currentClass] = ivars;",
+  "layoutCache[(id)currentClass] = ivars;")
+end
+
+def force_replace_file(file, origin_content, replace_content)
+  unless File.exist? file
+      return
+  end
+
+  content = File.read(file)
+
+  if content.include? replace_content
+      return
+  end
+
+  unless content.include? origin_content
+      return
+  end
+
+  unless system "chmod 777 #{file}"
+      return
+  end
+
+  content = content.gsub(origin_content, replace_content)
+
+  File.write(file, content)
 end

@@ -489,7 +489,7 @@ class XcodeprojParser
         flags_sources_hash = {}
         clang_enable_objc_arc = false
         clang_enable_objc_arc_settings = get_target_build_settings(target, variable_hash, "CLANG_ENABLE_OBJC_ARC")
-        if clang_enable_objc_arc_settings == ["YES"]
+        if clang_enable_objc_arc_settings.size == 1 and clang_enable_objc_arc_settings[0].upcase == "YES"
             clang_enable_objc_arc = true
         end
         target.source_build_phase.files.each do | file |
@@ -692,7 +692,10 @@ class XcodeprojParser
             value = "-stdlib=" + value
             target_cxx_compile_flags.push value unless target_cxx_compile_flags.include? value
         end
-
+        settings = get_target_build_settings(target, variable_hash, "CLANG_MODULES_AUTOLINK")
+        if settings.size > 0
+            binding.pry
+        end
         return target_c_compile_flags, target_cxx_compile_flags, target_c_warning_flags, target_swift_compile_flags
     end
     
@@ -704,7 +707,7 @@ class XcodeprojParser
         target_link_flags = format_strict_value(target_link_flags_settings)
 
         dead_code_stripping_settings = get_target_build_settings(target, variable_hash, "DEAD_CODE_STRIPPING")
-        unless dead_code_stripping_settings[-1] == "NO"
+        unless dead_code_stripping_settings[-1] and dead_code_stripping_settings[-1].upcase == "NO"
             target_link_flags.push "-dead_strip" unless target_link_flags.include? "-dead_strip"
         end
         return target_link_flags
@@ -1102,12 +1105,13 @@ class XcodeprojParser
     def get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
         enable_modules = false
         settings = get_target_build_settings(target, variable_hash, "CLANG_ENABLE_MODULES")
-        if settings == ["YES"]
+        if settings.size == 1 and settings[0].upcase == "YES"
             enable_modules = true
         end
+
         defines_module = false
         settings = get_target_build_settings(target, variable_hash, "DEFINES_MODULE")
-        if settings == ["YES"]
+        if settings.size == 1 and settings[0].upcase == "YES"
             defines_module = true
         end
         product_module_name = nil
@@ -1357,13 +1361,6 @@ class XcodeprojParser
             target_links_hash[:dependency_target_product_file_names] = fixed_dependency_target_product_file_names
             target_links_hash[:user_framework_paths] = fixed_user_framework_paths
             target_links_hash[:user_library_paths] = fixed_user_library_paths
-        end
-
-        total_system_weak_frameworks = target_info_hash_for_xcode.map{|e|e[1][:target_links_hash][:system_weak_frameworks].to_a}.flatten.to_set
-        target_info_hash_for_xcode.each do | target_name, info_hash |
-            target_links_hash = info_hash[:target_links_hash]
-            target_links_hash[:system_weak_frameworks].merge target_links_hash[:system_frameworks].select{|e|total_system_weak_frameworks.include? e}
-            target_links_hash[:system_frameworks] = target_links_hash[:system_frameworks] - total_system_weak_frameworks
         end
 
         return target_info_hash_for_xcode

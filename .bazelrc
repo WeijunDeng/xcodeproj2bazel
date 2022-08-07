@@ -1,6 +1,5 @@
 build --features=debug_prefix_map_pwd_is_dot
 build --verbose_failures --apple_platform_type=ios
 
-# shared _objc_module_cache when using sandboxed
-build "--per_file_copt=.*\.(m|mm)\$@-fmodules-cache-path=/private/var/tmp/_objc_module_cache"
-build "--copt=-Wno-incomplete-umbrella"
+build "--per_file_copt=.*\.(m|mm)\$@-fmodules-cache-path=/private/var/tmp/_objc_module_cache" # override bazel sandboxed _objc_module_cache
+build "--per_file_copt=.*\.(m|mm)\$@-fautolink" # override bazel -fno-autolink

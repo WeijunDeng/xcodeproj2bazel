@@ -55,10 +55,11 @@ bash test.sh
 - Support .bundle, .xib, .storyboard, .metal, .xcassets, .appiconset and more
 - Support import header dependency simulation
 - Support objc modules
+- Support objc modules cache with sandbox
 - Support objc auto link framework
 - Support auto remove absolute path
 - Support CMake/Cocoapods generated project
-- Support static library and dynamic framework
+- Support static library, static framework and dynamic framework
 - Support iOS app and extension
 - Support major xcode build settings
     - ASSETCATALOG_COMPILER_APPICON_NAME
@@ -115,5 +116,5 @@ Doing or Planning:
 - test for xcode 14 (xcode 13 now)
 - more examples
 - support xcframework
-- static framework with mixed swift and objc
+
 

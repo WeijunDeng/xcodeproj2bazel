@@ -12,8 +12,10 @@ class BazelFormatter
         lines.push 'load("xcodeproj2bazel_rules/module_map.bzl", "module_map")'
         lines.push 'load("xcodeproj2bazel_rules/hmap.bzl", "header_map")'
         
-        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")'
-        lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import", "apple_static_xcframework_import")'
+        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")'
+        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")'
+        lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")'
+        lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import")'
         lines.push 'load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")'
         lines.push 'load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")'
         lines.push 'load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")'

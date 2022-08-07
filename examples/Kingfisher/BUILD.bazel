@@ -1,6 +1,8 @@
-load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import", "apple_static_xcframework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_framework", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
@@ -108,9 +110,8 @@ ios_application(
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Images.xcassets/AppIcon.appiconset/**",
     ]),
     bundle_id = "com.onevcat.Kingfisher-Demo",
-    bundle_name = "Kingfisher-Demo",
+    bundle_name = "Kingfisher_Demo",
     deps = [
-        ":Kingfisher_Demo_app_system_library",
         ":Kingfisher_Demo_swift",
     ],
     families = ["iphone", "ipad"],
@@ -119,6 +120,9 @@ ios_application(
     ],
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     minimum_os_version = "12.0",
     resources = [
@@ -138,7 +142,7 @@ ios_application(
         "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Assets.xcassets/AppIcon.appiconset/**",
     ]),
     bundle_id = "com.onevcat.Kingfisher-OSX-Demo",
-    bundle_name = "Kingfisher-macOS-Demo",
+    bundle_name = "Kingfisher_macOS_Demo",
     deps = [
         ":Kingfisher_macOS_Demo_swift",
     ],
@@ -148,6 +152,9 @@ ios_application(
     ],
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     minimum_os_version = "12.0",
     resources = [
@@ -164,9 +171,8 @@ ios_application(
 ios_application(
     name = "Kingfisher_tvOS_Demo_app",
     bundle_id = "com.onevcat.Kingfisher-tvOS-Demo",
-    bundle_name = "Kingfisher-tvOS-Demo",
+    bundle_name = "Kingfisher_tvOS_Demo",
     deps = [
-        ":Kingfisher_tvOS_Demo_app_system_library",
         ":Kingfisher_tvOS_Demo_swift",
     ],
     families = ["tv"],
@@ -175,6 +181,9 @@ ios_application(
     ],
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     minimum_os_version = "12.0",
     resources = [
@@ -201,6 +210,9 @@ ios_application(
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Info.plist",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     minimum_os_version = "12.0",
     resources = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Base.lproj/Interface.storyboard",
@@ -214,15 +226,17 @@ ios_application(
 ios_extension(
     name = "Kingfisher_watchOS_Demo_Extension_appex",
     bundle_id = "com.onevcat.Kingfisher-Demo.watchkitapp.watchkitextension",
-    bundle_name = "Kingfisher-watchOS-Demo Extension",
+    bundle_name = "Kingfisher_watchOS_Demo_Extension",
     deps = [
         ":Kingfisher_framework",
-        ":Kingfisher_watchOS_Demo_Extension_appex_system_library",
         ":Kingfisher_watchOS_Demo_Extension_swift",
     ],
     families = ["watch"],
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     minimum_os_version = "12.0",
     resources = glob([
@@ -237,12 +251,14 @@ ios_framework(
     bundle_id = "com.onevcat.Kingfisher",
     bundle_name = "Kingfisher",
     deps = [
-        ":Kingfisher_framework_system_library",
         ":Kingfisher_swift",
     ],
     families = ["iphone", "ipad", "tv", "watch"],
     infoplists = [
         "Kingfisher/Sources/Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     minimum_os_version = "12.0",
     version = ":Kingfisher_framework_version",
@@ -258,9 +274,6 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":KingfisherTests_project_header_map",
-    ],
-    linkopts = [
-        "-dead_strip",
     ],
     srcs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSData+Nocilla.m",
@@ -496,44 +509,5 @@ swift_library(
     srcs = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/ExtensionDelegate.swift",
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/InterfaceController.swift",
-    ],
-)
-system_library(
-    name = "Kingfisher_Demo_app_system_library",
-    sdk_frameworks = [
-        "AVKit",
-        "Foundation",
-        "SwiftUI",
-        "UIKit",
-    ],
-)
-system_library(
-    name = "Kingfisher_framework_system_library",
-    sdk_frameworks = [
-        "AVKit",
-        "Accelerate",
-        "CarPlay",
-        "Combine",
-        "CoreGraphics",
-        "CoreImage",
-        "CoreServices",
-        "Foundation",
-        "ImageIO",
-        "MobileCoreServices",
-        "SwiftUI",
-        "UIKit",
-    ],
-)
-system_library(
-    name = "Kingfisher_tvOS_Demo_app_system_library",
-    sdk_frameworks = [
-        "Foundation",
-        "UIKit",
-    ],
-)
-system_library(
-    name = "Kingfisher_watchOS_Demo_Extension_appex_system_library",
-    sdk_frameworks = [
-        "Foundation",
     ],
 )

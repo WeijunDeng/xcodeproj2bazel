@@ -90,7 +90,6 @@ class BazelTranslator
         translate_module_map(analyze_result, user_module_hash, target_info_hash_for_xcode, target_info_hash_for_bazel)
         translate_header_map(target_info_hash_for_xcode, target_info_hash_for_bazel)
 
-        total_system_weak_frameworks = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:system_weak_frameworks].to_a}.flatten.to_set
         total_alwayslink_product_file_names = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:alwayslink_product_file_names].to_a}.flatten.map{|x|x.downcase}.to_set
 
         product_file_name_hash = {}
@@ -153,6 +152,7 @@ class BazelTranslator
             end
 
             dep_bazel_source_targets = Set.new
+            swift_bazel_target_name = nil
 
             flags_index_hash = {}
             extname_count_hash = {}
@@ -192,11 +192,12 @@ class BazelTranslator
                     bazel_target_name = get_bazel_target_name_for_swift_module_name(product_module_name)
                     binding.pry if target_info_hash_for_bazel.include? bazel_target_name
                     dep_bazel_source_targets.add bazel_target_name
+                    swift_bazel_target_name = bazel_target_name
                     target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bazel_target_name)
                     target_info["rule"] = "swift_library"
                     target_info["alwayslink"] = "True"
                     target_info["module_name"] = product_module_name
-                    add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
+                    add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, Set.new)
 
                     if swift_objc_bridging_header
                         target_info["objc_bridging_header"] = swift_objc_bridging_header
@@ -210,7 +211,7 @@ class BazelTranslator
                     (relative_sources_files + source_files).uniq.each do | file |
                         next unless file_deps_hash[file]
                         file_deps_hash[file].each do | dep_info |
-                            add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
+                            add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, Set.new)
                         end
                     end
 
@@ -269,9 +270,13 @@ class BazelTranslator
                     target_info["pch"] = pch if pch
 
                     if target_info["rule"] == "objc_library"
-                        target_info["enable_modules"] = "True" if enable_modules
+                        if enable_modules
+                            target_info["enable_modules"] = "True"
+                        else
+                            target_info["enable_modules"] = "False"
+                        end
                         if product_module_name
-                            add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
+                            add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, Set.new)
                         end
                     end
                     if FileFilter.get_source_file_extnames_mixed_c.include? extname and target_c_compile_flags and target_c_compile_flags.size > 0
@@ -290,17 +295,13 @@ class BazelTranslator
                         target_info["defines"] = Set.new unless target_info["defines"]
                         target_info["defines"].merge defines
                     end
-                    if target_link_flags and target_link_flags.size > 0
-                        target_info["linkopts"] = [] unless target_info["linkopts"]
-                        target_info["linkopts"] = target_info["linkopts"] + target_link_flags
-                    end
 
                     target_info["deps"] = Set.new unless target_info["deps"]
                     
                     (relative_sources_files + source_files).uniq.each do | file |
                         next unless file_deps_hash[file]
                         file_deps_hash[file].each do | dep_info |
-                            add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, Set.new)
+                            add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, Set.new)
                         end
                     end
 
@@ -352,7 +353,7 @@ class BazelTranslator
                 if mach_o_type == "mh_dylib"
                     target_info["rule"] = "ios_framework"
                 else
-                    target_info["rule"] = "static_library"
+                    target_info["rule"] = "ios_static_framework"
                 end
             elsif File.extname(product_file_name) == ".app"
                 target_info["rule"] = "ios_application"
@@ -370,7 +371,6 @@ class BazelTranslator
             if target_info["rule"] == "ios_application" or 
                 target_info["rule"] == "ios_extension" or
                 target_info["rule"] == "ios_framework"
-                target_info["bundle_name"] = product_name
                 target_info["bundle_id"] = bundle_id if bundle_id
                 if bundle_version
                     bundle_version_target_name = generate_bazel_target_name_for_bundle_version(bazel_target_name, bundle_version, target_info_hash_for_bazel)
@@ -383,7 +383,12 @@ class BazelTranslator
     
             target_info["deps"] = Set.new unless target_info["deps"]
     
-            target_info["deps"].merge dep_bazel_source_targets
+            if target_info["rule"] == "static_library" and swift_bazel_target_name
+                target_info["deps"].merge (dep_bazel_source_targets - [swift_bazel_target_name].to_set)
+                target_info["swift_deps"] = [":" + swift_bazel_target_name]
+            else
+                target_info["deps"].merge dep_bazel_source_targets
+            end
 
             target_links_hash[:user_framework_paths].each do | framework_path |
                 dep_bazel_target_name_name = generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
@@ -401,15 +406,14 @@ class BazelTranslator
                 dep_bazel_target_name_info = target_info_hash_for_xcode[dep_bazel_target_name_name]
                 dep_bazel_target_name_name = get_bazel_target_name_for_product_file_name(dep_bazel_target_name_info[:product_file_name])
                 if File.extname(dependency_target_product_file_name) == ".framework" and dep_bazel_target_name_info[:mach_o_type] == "mh_dylib"
-                    if target_info["rule"] == "ios_application" or target_info["rule"] == "ios_framework"
+                    if target_info["rule"] == "ios_application" or 
+                        target_info["rule"] == "ios_framework" or 
+                        target_info["rule"] == "ios_static_framework"
                         target_info["frameworks"] = Set.new unless target_info["frameworks"]
                         target_info["frameworks"].add dep_bazel_target_name_name
                         next
                     elsif target_info["rule"] == "static_library"
                         next
-                    else
-                        # TODO
-                        # raise "unexpected #{target_info["rule"]}"
                     end
                 end
 
@@ -477,36 +481,40 @@ class BazelTranslator
                     target_info["resources"].add ":" + get_bazel_target_name_for_product_file_name(dependency_resource_product_file_name)
                 end
             end
-
-            provisioning_profile_specifier = info_hash[:provisioning_profile_specifier]
-            iphoneos_deployment_target = info_hash[:iphoneos_deployment_target]
-            targeted_device_family = info_hash[:targeted_device_family]
-
             if target_info["rule"] == "ios_application" or 
                 target_info["rule"] == "ios_extension" or
-                target_info["rule"] == "ios_framework"
-                
-                unless targeted_device_family.size > 0
-                    binding.pry
-                    raise "unexpected targeted_device_family null"
+                target_info["rule"] == "ios_framework" or
+                target_info["rule"] == "ios_static_framework" or 
+                target_info["rule"] == "static_library"
+                iphoneos_deployment_target = info_hash[:iphoneos_deployment_target]
+                if iphoneos_deployment_target.size > 0
+                    target_info["minimum_os_version"] = iphoneos_deployment_target
                 end
-                unless iphoneos_deployment_target.size > 0
-                    raise "unexpected iphoneos_deployment_target null"
+                if target_link_flags and target_link_flags.size > 0
+                    target_info["linkopts"] = [] unless target_info["linkopts"]
+                    target_info["linkopts"] = target_info["linkopts"] + target_link_flags
                 end
-
-                target_info["families"] = targeted_device_family
-                target_info["minimum_os_version"] = iphoneos_deployment_target
             end
             if target_info["rule"] == "ios_application" or 
-                target_info["rule"] == "ios_extension"
-                
-                if provisioning_profile_specifier and provisioning_profile_specifier.size > 0
-                    target_info["provisioning_profile"] = provisioning_profile_specifier
-                end                
-
+                target_info["rule"] == "ios_extension" or
+                target_info["rule"] == "ios_framework" or
+                target_info["rule"] == "ios_static_framework"
+                targeted_device_family = info_hash[:targeted_device_family]
+                if targeted_device_family.size > 0
+                    target_info["families"] = targeted_device_family
+                end
                 target_app_icon = info_hash[:target_app_icon]
                 if target_app_icon and target_app_icon.size > 0
                     target_info["app_icons"] = [target_app_icon + "/**"]
+                end
+                provisioning_profile_specifier = info_hash[:provisioning_profile_specifier]
+                if provisioning_profile_specifier and provisioning_profile_specifier.size > 0
+                    target_info["provisioning_profile"] = provisioning_profile_specifier
+                end
+                if product_module_name and product_module_name.size > 0
+                    target_info["bundle_name"] = product_module_name
+                else
+                    target_info["bundle_name"] = product_name
                 end
             end
         end
@@ -609,7 +617,7 @@ class BazelTranslator
         return library_target_name
     end
     
-    def add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, file_deps_set)
+    def add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)
         binding.pry unless dep_info.class == Array
 
         return if file_deps_set.include? dep_info
@@ -617,11 +625,7 @@ class BazelTranslator
 
         if dep_info[0] == :system_framework
             system_framework = dep_info[1]
-            if total_system_weak_frameworks.include? system_framework
-                info_hash[:target_links_hash][:system_weak_frameworks].add system_framework
-            else
-                info_hash[:target_links_hash][:system_frameworks].add system_framework
-            end
+            # TODO
             return
         end
         if dep_info[0] == :system_library
@@ -729,7 +733,7 @@ class BazelTranslator
                 target_info[key].add header_target_name
 
                 user_module_hash[user_module][:moduel_map_deps].each do | moduel_map_dep |
-                    add_file_deps(moduel_map_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, total_system_weak_frameworks, file_deps_set)
+                    add_file_deps(moduel_map_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)
                 end
             end
             if target_info["rule"] == "swift_library" and user_module_hash[user_module][:has_swift] and target_info["module_name"] != user_module
@@ -747,7 +751,8 @@ class BazelTranslator
             binding.pry unless swift_header == "#{module_name}/#{module_name}-Swift.h" or swift_header == "#{module_name}-Swift.h"
             swift_header_target_name = get_bazel_target_name_for_swift_header_map(module_name)
             if target_info_hash_for_bazel.has_key? swift_header_target_name
-                key = "deps"
+                key = "header_maps"
+                key = "objc_" + key if target_info["rule"] == "swift_library"
                 target_info[key] = Set.new unless target_info[key]
                 target_info[key].add swift_header_target_name
             else
