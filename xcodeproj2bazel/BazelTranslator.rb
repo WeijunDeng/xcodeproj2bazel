@@ -124,6 +124,8 @@ class BazelTranslator
             clang_enable_objc_arc = info_hash[:clang_enable_objc_arc]
             target_link_flags = info_hash[:target_link_flags]
             target_defines = info_hash[:target_defines]
+            c_target_defines = info_hash[:c_target_defines]
+            cxx_target_defines = info_hash[:cxx_target_defines]
             swift_target_defines = info_hash[:swift_target_defines]
             swift_objc_bridging_header = info_hash[:swift_objc_bridging_header]
             target_header_dirs = info_hash[:target_header_dirs].select{|x|x.class==String}
@@ -235,12 +237,12 @@ class BazelTranslator
                     end
 
                     if target_defines and target_defines.size > 0
-                        defines = []
-                        target_defines.each do | key, value |
-                            defines.push "#{key}=#{value}"
-                        end
                         target_info["objc_defines"] = Set.new unless target_info["objc_defines"]
-                        target_info["objc_defines"].merge defines
+                        target_info["objc_defines"].merge target_defines
+                    end
+                    if c_target_defines and c_target_defines.size > 0
+                        target_info["objc_defines"] = Set.new unless target_info["objc_defines"]
+                        target_info["objc_defines"].merge c_target_defines
                     end
                     if swift_target_defines.size > 0
                         target_info["defines"] = Set.new unless target_info["defines"]
@@ -279,21 +281,19 @@ class BazelTranslator
                             add_file_deps([:user_module, product_module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, Set.new)
                         end
                     end
-                    if FileFilter.get_source_file_extnames_mixed_c.include? extname and target_c_compile_flags and target_c_compile_flags.size > 0
+                    target_info["defines"] = Set.new unless target_info["defines"]
+                    target_info["defines"].merge target_defines
+                    if FileFilter.get_source_file_extnames_mixed_c.include? extname
                         target_info["copts"] = [] unless target_info["copts"]
                         target_info["copts"] = target_info["copts"] + target_c_compile_flags
+
+                        target_info["defines"].merge c_target_defines
                     end
-                    if FileFilter.get_source_file_extnames_mixed_cpp.include? extname and target_cxx_compile_flags and target_cxx_compile_flags.size > 0
+                    if FileFilter.get_source_file_extnames_mixed_cpp.include? extname
                         target_info["copts"] = [] unless target_info["copts"]
                         target_info["copts"] = target_info["copts"] + target_cxx_compile_flags
-                    end
-                    if target_defines and target_defines.size > 0
-                        defines = []
-                        target_defines.each do | key, value |
-                            defines.push "#{key}=#{value}"
-                        end
-                        target_info["defines"] = Set.new unless target_info["defines"]
-                        target_info["defines"].merge defines
+
+                        target_info["defines"].merge cxx_target_defines
                     end
 
                     target_info["deps"] = Set.new unless target_info["deps"]
