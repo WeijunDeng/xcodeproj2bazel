@@ -1,5 +1,5 @@
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
-load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")
@@ -33,6 +33,10 @@ apple_bundle_version(
 )
 apple_bundle_version(
     name = "AliyunOSSiOS_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "AnimatedCollectionViewLayout_framework_version",
     build_version = "1",
 )
 apple_bundle_version(
@@ -160,6 +164,10 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "JLRoutes_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "JRSwizzle_framework_version",
     build_version = "1",
 )
@@ -180,11 +188,23 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "KeychainAccess_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "KingfisherWebP_framework_version",
     build_version = "1",
 )
 apple_bundle_version(
     name = "Kingfisher_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "Koloda_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "LTMorphingLabel_framework_version",
     build_version = "1",
 )
 apple_bundle_version(
@@ -236,6 +256,10 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "Macaw_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "Masonry_framework_version",
     build_version = "1",
 )
@@ -261,6 +285,14 @@ apple_bundle_version(
 )
 apple_bundle_version(
     name = "NSAttributedStringBuilder13_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "NVActivityIndicatorView_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "Nuke_framework_version",
     build_version = "1",
 )
 apple_bundle_version(
@@ -356,11 +388,19 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "SWXMLHash_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "Sentry_framework_version",
     build_version = "1",
 )
 apple_bundle_version(
     name = "SideMenu_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "Siren_framework_version",
     build_version = "1",
 )
 apple_bundle_version(
@@ -416,6 +456,10 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "TOCropViewController_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "TextFieldEffects_framework_version",
     build_version = "1",
 )
@@ -456,8 +500,52 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "pop_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "swift_app_with_pod_use_frameworks_app_version",
     build_version = "1",
+)
+apple_dynamic_xcframework_import(
+    name = "import_AgoraAIDenoiseExtension_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/AgoraAIDenoiseExtension.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_AgoraCore_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/AgoraCore.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_AgoraFullAudioFormatExtension_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/AgoraFullAudioFormatExtension.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_AgoraRtcKit_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/AgoraRtcKit.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_AgoraSoundTouch_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/AgoraSoundTouch.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_AgoraSpatialAudioExtension_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/AgoraSpatialAudioExtension.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_Agorafdkaac_xcframework",
+    xcframework_imports = glob(["Pods/AgoraAudio_iOS/Agorafdkaac.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_FBAEMKit_xcframework",
+    xcframework_imports = glob(["Pods/FBAEMKit/XCFrameworks/FBAEMKit.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_FBSDKCoreKit_Basics_xcframework",
+    xcframework_imports = glob(["Pods/FBSDKCoreKit_Basics/XCFrameworks/FBSDKCoreKit_Basics.xcframework/**"]),
+)
+apple_dynamic_xcframework_import(
+    name = "import_RevealServer_xcframework",
+    xcframework_imports = glob(["Pods/Reveal-SDK/RevealServer/RevealServer.xcframework/**"]),
 )
 apple_resource_bundle(
     name = "AnyImageKit_Capture_bundle",
@@ -665,6 +753,45 @@ apple_resource_bundle(
     ],
 )
 apple_resource_bundle(
+    name = "TOCropViewControllerBundle_bundle",
+    bundle_id = "org.cocoapods.TOCropViewControllerBundle",
+    bundle_name = "TOCropViewControllerBundle",
+    infoplists = [
+        "Pods/Target Support Files/TOCropViewController/ResourceBundle-TOCropViewControllerBundle-TOCropViewController-Info.plist",
+    ],
+    resources = [
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/Base.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ar.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ca.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/cs.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/da-DK.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/de.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/en.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/es.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/fa-IR.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/fa.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/fi.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/fr.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/hu.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/id.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/it.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ja.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ko.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ms.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/nl.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/pl.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/pt-BR.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/pt.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ro.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/ru.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/sk.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/tr.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/vi.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/zh-Hans.lproj",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Resources/zh-Hant.lproj",
+    ],
+)
+apple_resource_bundle(
     name = "com_cosmicmind_material_fonts_bundle",
     bundle_id = "org.cocoapods.com.cosmicmind.material.fonts",
     bundle_name = "com.cosmicmind.material.fonts",
@@ -695,6 +822,14 @@ apple_resource_bundle(
 apple_static_framework_import(
     name = "import_Bugly_framework",
     framework_imports = glob(["Pods/Bugly/Bugly.framework/**"]),
+)
+apple_static_framework_import(
+    name = "import_GrowingAutoTrackKit_framework",
+    framework_imports = glob(["Pods/GrowingAutoTrackKit/GrowingIO-iOS-AutoTrackKit/GrowingAutoTrackKit.framework/**"]),
+)
+apple_static_framework_import(
+    name = "import_GrowingCoreKit_framework",
+    framework_imports = glob(["Pods/GrowingCoreKit/GrowingIO-iOS-CoreKit/GrowingCoreKit.framework/**"]),
 )
 apple_static_framework_import(
     name = "import_TensorFlowLiteTaskTextC_framework",
@@ -851,6 +986,254 @@ cc_header(
     ],
 )
 cc_header(
+    name = "pods_realm_include_core_external_json_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/external/json/json.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_h_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/realm_nmmintrin.h",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/aggregate_ops.hpp",
+        "Pods/Realm/include/core/realm/alloc.hpp",
+        "Pods/Realm/include/core/realm/alloc_slab.hpp",
+        "Pods/Realm/include/core/realm/array.hpp",
+        "Pods/Realm/include/core/realm/array_backlink.hpp",
+        "Pods/Realm/include/core/realm/array_basic.hpp",
+        "Pods/Realm/include/core/realm/array_basic_tpl.hpp",
+        "Pods/Realm/include/core/realm/array_binary.hpp",
+        "Pods/Realm/include/core/realm/array_blob.hpp",
+        "Pods/Realm/include/core/realm/array_blobs_big.hpp",
+        "Pods/Realm/include/core/realm/array_blobs_small.hpp",
+        "Pods/Realm/include/core/realm/array_bool.hpp",
+        "Pods/Realm/include/core/realm/array_decimal128.hpp",
+        "Pods/Realm/include/core/realm/array_direct.hpp",
+        "Pods/Realm/include/core/realm/array_fixed_bytes.hpp",
+        "Pods/Realm/include/core/realm/array_integer.hpp",
+        "Pods/Realm/include/core/realm/array_integer_tpl.hpp",
+        "Pods/Realm/include/core/realm/array_key.hpp",
+        "Pods/Realm/include/core/realm/array_list.hpp",
+        "Pods/Realm/include/core/realm/array_mixed.hpp",
+        "Pods/Realm/include/core/realm/array_ref.hpp",
+        "Pods/Realm/include/core/realm/array_string.hpp",
+        "Pods/Realm/include/core/realm/array_string_short.hpp",
+        "Pods/Realm/include/core/realm/array_timestamp.hpp",
+        "Pods/Realm/include/core/realm/array_typed_link.hpp",
+        "Pods/Realm/include/core/realm/array_unsigned.hpp",
+        "Pods/Realm/include/core/realm/array_with_find.hpp",
+        "Pods/Realm/include/core/realm/backup_restore.hpp",
+        "Pods/Realm/include/core/realm/binary_data.hpp",
+        "Pods/Realm/include/core/realm/bplustree.hpp",
+        "Pods/Realm/include/core/realm/cluster.hpp",
+        "Pods/Realm/include/core/realm/cluster_tree.hpp",
+        "Pods/Realm/include/core/realm/collection.hpp",
+        "Pods/Realm/include/core/realm/column_binary.hpp",
+        "Pods/Realm/include/core/realm/column_fwd.hpp",
+        "Pods/Realm/include/core/realm/column_integer.hpp",
+        "Pods/Realm/include/core/realm/column_type.hpp",
+        "Pods/Realm/include/core/realm/column_type_traits.hpp",
+        "Pods/Realm/include/core/realm/data_type.hpp",
+        "Pods/Realm/include/core/realm/db.hpp",
+        "Pods/Realm/include/core/realm/db_options.hpp",
+        "Pods/Realm/include/core/realm/decimal128.hpp",
+        "Pods/Realm/include/core/realm/dictionary.hpp",
+        "Pods/Realm/include/core/realm/dictionary_cluster_tree.hpp",
+        "Pods/Realm/include/core/realm/disable_sync_to_disk.hpp",
+        "Pods/Realm/include/core/realm/error_codes.hpp",
+        "Pods/Realm/include/core/realm/exceptions.hpp",
+        "Pods/Realm/include/core/realm/global_key.hpp",
+        "Pods/Realm/include/core/realm/group.hpp",
+        "Pods/Realm/include/core/realm/handover_defs.hpp",
+        "Pods/Realm/include/core/realm/index_string.hpp",
+        "Pods/Realm/include/core/realm/keys.hpp",
+        "Pods/Realm/include/core/realm/list.hpp",
+        "Pods/Realm/include/core/realm/mixed.hpp",
+        "Pods/Realm/include/core/realm/node.hpp",
+        "Pods/Realm/include/core/realm/node_header.hpp",
+        "Pods/Realm/include/core/realm/null.hpp",
+        "Pods/Realm/include/core/realm/obj.hpp",
+        "Pods/Realm/include/core/realm/obj_list.hpp",
+        "Pods/Realm/include/core/realm/object_id.hpp",
+        "Pods/Realm/include/core/realm/owned_data.hpp",
+        "Pods/Realm/include/core/realm/query.hpp",
+        "Pods/Realm/include/core/realm/query_conditions.hpp",
+        "Pods/Realm/include/core/realm/query_engine.hpp",
+        "Pods/Realm/include/core/realm/query_expression.hpp",
+        "Pods/Realm/include/core/realm/query_state.hpp",
+        "Pods/Realm/include/core/realm/query_value.hpp",
+        "Pods/Realm/include/core/realm/replication.hpp",
+        "Pods/Realm/include/core/realm/set.hpp",
+        "Pods/Realm/include/core/realm/sort_descriptor.hpp",
+        "Pods/Realm/include/core/realm/spec.hpp",
+        "Pods/Realm/include/core/realm/status.hpp",
+        "Pods/Realm/include/core/realm/status_with.hpp",
+        "Pods/Realm/include/core/realm/string_data.hpp",
+        "Pods/Realm/include/core/realm/table.hpp",
+        "Pods/Realm/include/core/realm/table_cluster_tree.hpp",
+        "Pods/Realm/include/core/realm/table_ref.hpp",
+        "Pods/Realm/include/core/realm/table_view.hpp",
+        "Pods/Realm/include/core/realm/timestamp.hpp",
+        "Pods/Realm/include/core/realm/transaction.hpp",
+        "Pods/Realm/include/core/realm/unicode.hpp",
+        "Pods/Realm/include/core/realm/utilities.hpp",
+        "Pods/Realm/include/core/realm/uuid.hpp",
+        "Pods/Realm/include/core/realm/version.hpp",
+        "Pods/Realm/include/core/realm/version_id.hpp",
+        "Pods/Realm/include/core/realm/version_numbers.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_impl_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/impl/array_writer.hpp",
+        "Pods/Realm/include/core/realm/impl/changeset_input_stream.hpp",
+        "Pods/Realm/include/core/realm/impl/cont_transact_hist.hpp",
+        "Pods/Realm/include/core/realm/impl/destroy_guard.hpp",
+        "Pods/Realm/include/core/realm/impl/output_stream.hpp",
+        "Pods/Realm/include/core/realm/impl/transact_log.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_metrics_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/metrics/metric_timer.hpp",
+        "Pods/Realm/include/core/realm/metrics/metrics.hpp",
+        "Pods/Realm/include/core/realm/metrics/query_info.hpp",
+        "Pods/Realm/include/core/realm/metrics/transaction_info.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_object_store_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/object-store/audit.hpp",
+        "Pods/Realm/include/core/realm/object-store/audit_serializer.hpp",
+        "Pods/Realm/include/core/realm/object-store/binding_context.hpp",
+        "Pods/Realm/include/core/realm/object-store/collection.hpp",
+        "Pods/Realm/include/core/realm/object-store/collection_notifications.hpp",
+        "Pods/Realm/include/core/realm/object-store/dictionary.hpp",
+        "Pods/Realm/include/core/realm/object-store/feature_checks.hpp",
+        "Pods/Realm/include/core/realm/object-store/index_set.hpp",
+        "Pods/Realm/include/core/realm/object-store/list.hpp",
+        "Pods/Realm/include/core/realm/object-store/object.hpp",
+        "Pods/Realm/include/core/realm/object-store/object_accessor.hpp",
+        "Pods/Realm/include/core/realm/object-store/object_changeset.hpp",
+        "Pods/Realm/include/core/realm/object-store/object_schema.hpp",
+        "Pods/Realm/include/core/realm/object-store/object_store.hpp",
+        "Pods/Realm/include/core/realm/object-store/property.hpp",
+        "Pods/Realm/include/core/realm/object-store/results.hpp",
+        "Pods/Realm/include/core/realm/object-store/schema.hpp",
+        "Pods/Realm/include/core/realm/object-store/set.hpp",
+        "Pods/Realm/include/core/realm/object-store/shared_realm.hpp",
+        "Pods/Realm/include/core/realm/object-store/thread_safe_reference.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_object_store_impl_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/object-store/impl/collection_change_builder.hpp",
+        "Pods/Realm/include/core/realm/object-store/impl/collection_notifier.hpp",
+        "Pods/Realm/include/core/realm/object-store/impl/deep_change_checker.hpp",
+        "Pods/Realm/include/core/realm/object-store/impl/realm_coordinator.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_object_store_sync_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/object-store/sync/app.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/app_credentials.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/app_service_client.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/async_open_task.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/auth_request_client.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/generic_network_transport.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/mongo_client.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/mongo_collection.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/mongo_database.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/push_client.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/subscribable.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/sync_manager.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/sync_session.hpp",
+        "Pods/Realm/include/core/realm/object-store/sync/sync_user.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_object_store_util_bson_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/object-store/util/bson/bson.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/bson/indexed_map.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/bson/max_key.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/bson/min_key.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/bson/mongo_timestamp.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/bson/regular_expression.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_object_store_util_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/object-store/util/atomic_shared_ptr.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/copyable_atomic.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/scheduler.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/tagged_bool.hpp",
+        "Pods/Realm/include/core/realm/object-store/util/tagged_string.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_sync_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/sync/client.hpp",
+        "Pods/Realm/include/core/realm/sync/client_base.hpp",
+        "Pods/Realm/include/core/realm/sync/config.hpp",
+        "Pods/Realm/include/core/realm/sync/protocol.hpp",
+        "Pods/Realm/include/core/realm/sync/subscriptions.hpp",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_util_h_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/util/config.h",
+        "Pods/Realm/include/core/realm/util/features.h",
+    ],
+)
+cc_header(
+    name = "pods_realm_include_core_realm_util_hpp_header",
+    hdrs = [
+        "Pods/Realm/include/core/realm/util/assert.hpp",
+        "Pods/Realm/include/core/realm/util/backtrace.hpp",
+        "Pods/Realm/include/core/realm/util/bind_ptr.hpp",
+        "Pods/Realm/include/core/realm/util/buffer.hpp",
+        "Pods/Realm/include/core/realm/util/cf_ptr.hpp",
+        "Pods/Realm/include/core/realm/util/checked_mutex.hpp",
+        "Pods/Realm/include/core/realm/util/encrypted_file_mapping.hpp",
+        "Pods/Realm/include/core/realm/util/file.hpp",
+        "Pods/Realm/include/core/realm/util/file_mapper.hpp",
+        "Pods/Realm/include/core/realm/util/fixed_size_buffer.hpp",
+        "Pods/Realm/include/core/realm/util/function_ref.hpp",
+        "Pods/Realm/include/core/realm/util/functional.hpp",
+        "Pods/Realm/include/core/realm/util/future.hpp",
+        "Pods/Realm/include/core/realm/util/input_stream.hpp",
+        "Pods/Realm/include/core/realm/util/interprocess_condvar.hpp",
+        "Pods/Realm/include/core/realm/util/interprocess_mutex.hpp",
+        "Pods/Realm/include/core/realm/util/logger.hpp",
+        "Pods/Realm/include/core/realm/util/miscellaneous.hpp",
+        "Pods/Realm/include/core/realm/util/optional.hpp",
+        "Pods/Realm/include/core/realm/util/overload.hpp",
+        "Pods/Realm/include/core/realm/util/safe_int_ops.hpp",
+        "Pods/Realm/include/core/realm/util/scope_exit.hpp",
+        "Pods/Realm/include/core/realm/util/serializer.hpp",
+        "Pods/Realm/include/core/realm/util/span.hpp",
+        "Pods/Realm/include/core/realm/util/terminate.hpp",
+        "Pods/Realm/include/core/realm/util/thread.hpp",
+        "Pods/Realm/include/core/realm/util/to_string.hpp",
+        "Pods/Realm/include/core/realm/util/type_list.hpp",
+        "Pods/Realm/include/core/realm/util/type_traits.hpp",
+    ],
+)
+cc_header(
     name = "pods_realm_include_h_header",
     hdrs = [
         "Pods/Realm/include/RLMMigration_Private.h",
@@ -986,7 +1369,8 @@ cc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-Wno-unsupported-availability-guard -Wno-strict-prototypes",
+        "-Wno-unsupported-availability-guard",
+        "-Wno-strict-prototypes",
     ],
     defines = [
         "COCOAPODS=1",
@@ -1008,7 +1392,8 @@ cc_library(
     copts = [
         "-std=gnu++17",
         "-stdlib=libc++",
-        "-x objective-c++ -fno-objc-arc",
+        "-x objective-c++",
+        "-fno-objc-arc",
     ],
     defines = [
         "COCOAPODS=1",
@@ -1302,7 +1687,8 @@ cc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-Dunix -fno-objc-arc",
+        "-Dunix",
+        "-fno-objc-arc",
     ],
     defines = [
         "COCOAPODS=1",
@@ -1344,7 +1730,8 @@ cc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-D_THREAD_SAFE -fno-objc-arc",
+        "-D_THREAD_SAFE",
+        "-fno-objc-arc",
     ],
     defines = [
         "COCOAPODS=1",
@@ -1489,6 +1876,27 @@ cc_library(
         "Pods/libwebp/src/utils/rescaler_utils.c",
         "Pods/libwebp/src/utils/thread_utils.c",
         "Pods/libwebp/src/utils/utils.c",
+    ],
+)
+cc_library(
+    name = "pop_framework_cpp",
+    alwayslink = True,
+    copts = [
+        "-std=c++11",
+        "-stdlib=libc++",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":pop_public_header_map",
+        ":pop_private_header_map",
+    ],
+    pch = "Pods/Target Support Files/pop/pop-prefix.pch",
+    srcs = [
+        "Pods/pop/pop/WebCore/TransformationMatrix.cpp",
     ],
 )
 dtrace_compile(
@@ -1723,6 +2131,26 @@ header_map(
     ],
     namespace = "AliyunOSSiOS",
     namespace_only = True,
+)
+header_map(
+    name = "AnimatedCollectionViewLayout_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-umbrella.h",
+    ],
+    namespace = "AnimatedCollectionViewLayout",
+)
+header_map(
+    name = "AnimatedCollectionViewLayout_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-umbrella.h",
+    ],
+    namespace = "AnimatedCollectionViewLayout",
+    namespace_only = True,
+)
+header_map(
+    name = "AnimatedCollectionViewLayout_swift_header_map",
+    direct_hdr_providers = [":AnimatedCollectionViewLayout_swift"],
+    namespace = "AnimatedCollectionViewLayout",
 )
 header_map(
     name = "AnyImageKit_private_header_map",
@@ -3175,6 +3603,33 @@ header_map(
     namespace = "Instructions",
 )
 header_map(
+    name = "JLRoutes_private_header_map",
+    hdrs = [
+        "Pods/JLRoutes/JLRoutes/Classes/JLRParsingUtilities.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteDefinition.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteHandler.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteRequest.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteResponse.h",
+        "Pods/JLRoutes/JLRoutes/JLRoutes.h",
+        "Pods/Target Support Files/JLRoutes/JLRoutes-umbrella.h",
+    ],
+    namespace = "JLRoutes",
+)
+header_map(
+    name = "JLRoutes_public_header_map",
+    hdrs = [
+        "Pods/JLRoutes/JLRoutes/Classes/JLRParsingUtilities.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteDefinition.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteHandler.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteRequest.h",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteResponse.h",
+        "Pods/JLRoutes/JLRoutes/JLRoutes.h",
+        "Pods/Target Support Files/JLRoutes/JLRoutes-umbrella.h",
+    ],
+    namespace = "JLRoutes",
+    namespace_only = True,
+)
+header_map(
     name = "JRSwizzle_private_header_map",
     hdrs = [
         "Pods/JRSwizzle/JRSwizzle.h",
@@ -3305,6 +3760,26 @@ header_map(
     namespace = "JXSegmentedView",
 )
 header_map(
+    name = "KeychainAccess_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/KeychainAccess/KeychainAccess-umbrella.h",
+    ],
+    namespace = "KeychainAccess",
+)
+header_map(
+    name = "KeychainAccess_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/KeychainAccess/KeychainAccess-umbrella.h",
+    ],
+    namespace = "KeychainAccess",
+    namespace_only = True,
+)
+header_map(
+    name = "KeychainAccess_swift_header_map",
+    direct_hdr_providers = [":KeychainAccess_swift"],
+    namespace = "KeychainAccess",
+)
+header_map(
     name = "KingfisherWebP_private_header_map",
     hdrs = [
         "Pods/KingfisherWebP/Sources/CGImage+WebP.h",
@@ -3347,6 +3822,48 @@ header_map(
     name = "Kingfisher_swift_header_map",
     direct_hdr_providers = [":Kingfisher_swift"],
     namespace = "Kingfisher",
+)
+header_map(
+    name = "Koloda_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Koloda/Koloda-umbrella.h",
+    ],
+    namespace = "Koloda",
+)
+header_map(
+    name = "Koloda_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Koloda/Koloda-umbrella.h",
+    ],
+    namespace = "Koloda",
+    namespace_only = True,
+)
+header_map(
+    name = "Koloda_swift_header_map",
+    direct_hdr_providers = [":Koloda_swift"],
+    namespace = "Koloda",
+)
+header_map(
+    name = "LTMorphingLabel_private_header_map",
+    hdrs = [
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel.h",
+        "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-umbrella.h",
+    ],
+    namespace = "LTMorphingLabel",
+)
+header_map(
+    name = "LTMorphingLabel_public_header_map",
+    hdrs = [
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel.h",
+        "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-umbrella.h",
+    ],
+    namespace = "LTMorphingLabel",
+    namespace_only = True,
+)
+header_map(
+    name = "LTMorphingLabel_swift_header_map",
+    direct_hdr_providers = [":LTMorphingLabel_swift"],
+    namespace = "LTMorphingLabel",
 )
 header_map(
     name = "Lantern_private_header_map",
@@ -4257,6 +4774,26 @@ header_map(
     namespace_only = True,
 )
 header_map(
+    name = "Macaw_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Macaw/Macaw-umbrella.h",
+    ],
+    namespace = "Macaw",
+)
+header_map(
+    name = "Macaw_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Macaw/Macaw-umbrella.h",
+    ],
+    namespace = "Macaw",
+    namespace_only = True,
+)
+header_map(
+    name = "Macaw_swift_header_map",
+    direct_hdr_providers = [":Macaw_swift"],
+    namespace = "Macaw",
+)
+header_map(
     name = "Masonry_private_header_map",
     hdrs = [
         "Pods/Masonry/Masonry/MASCompositeConstraint.h",
@@ -4420,6 +4957,46 @@ header_map(
     name = "NSAttributedStringBuilder13_swift_header_map",
     direct_hdr_providers = [":NSAttributedStringBuilder13_swift"],
     namespace = "NSAttributedStringBuilder13",
+)
+header_map(
+    name = "NVActivityIndicatorView_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-umbrella.h",
+    ],
+    namespace = "NVActivityIndicatorView",
+)
+header_map(
+    name = "NVActivityIndicatorView_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-umbrella.h",
+    ],
+    namespace = "NVActivityIndicatorView",
+    namespace_only = True,
+)
+header_map(
+    name = "NVActivityIndicatorView_swift_header_map",
+    direct_hdr_providers = [":NVActivityIndicatorView_swift"],
+    namespace = "NVActivityIndicatorView",
+)
+header_map(
+    name = "Nuke_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Nuke/Nuke-umbrella.h",
+    ],
+    namespace = "Nuke",
+)
+header_map(
+    name = "Nuke_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Nuke/Nuke-umbrella.h",
+    ],
+    namespace = "Nuke",
+    namespace_only = True,
+)
+header_map(
+    name = "Nuke_swift_header_map",
+    direct_hdr_providers = [":Nuke_swift"],
+    namespace = "Nuke",
 )
 header_map(
     name = "OHHTTPStubs_private_header_map",
@@ -5741,6 +6318,26 @@ header_map(
     namespace_only = True,
 )
 header_map(
+    name = "SWXMLHash_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SWXMLHash/SWXMLHash-umbrella.h",
+    ],
+    namespace = "SWXMLHash",
+)
+header_map(
+    name = "SWXMLHash_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SWXMLHash/SWXMLHash-umbrella.h",
+    ],
+    namespace = "SWXMLHash",
+    namespace_only = True,
+)
+header_map(
+    name = "SWXMLHash_swift_header_map",
+    direct_hdr_providers = [":SWXMLHash_swift"],
+    namespace = "SWXMLHash",
+)
+header_map(
     name = "Sentry_private_header_map",
     hdrs = [
         "Pods/Sentry/Sources/Sentry/Public/PrivateSentrySDKOnly.h",
@@ -6067,6 +6664,26 @@ header_map(
     namespace = "SideMenu",
 )
 header_map(
+    name = "Siren_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Siren/Siren-umbrella.h",
+    ],
+    namespace = "Siren",
+)
+header_map(
+    name = "Siren_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/Siren/Siren-umbrella.h",
+    ],
+    namespace = "Siren",
+    namespace_only = True,
+)
+header_map(
+    name = "Siren_swift_header_map",
+    direct_hdr_providers = [":Siren_swift"],
+    namespace = "Siren",
+)
+header_map(
     name = "SkeletonView_private_header_map",
     hdrs = [
         "Pods/Target Support Files/SkeletonView/SkeletonView-umbrella.h",
@@ -6325,6 +6942,41 @@ header_map(
     name = "SwipeCellKit_swift_header_map",
     direct_hdr_providers = [":SwipeCellKit_swift"],
     namespace = "SwipeCellKit",
+)
+header_map(
+    name = "TOCropViewController_private_header_map",
+    hdrs = [
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Categories/UIImage+CropRotate.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Constants/TOCropViewConstants.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOActivityCroppedImageProvider.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOCropViewControllerTransitioning.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOCroppedImageAttributes.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/TOCropViewController.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropOverlayView.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropScrollView.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropToolbar.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropView.h",
+        "Pods/Target Support Files/TOCropViewController/TOCropViewController-umbrella.h",
+    ],
+    namespace = "TOCropViewController",
+)
+header_map(
+    name = "TOCropViewController_public_header_map",
+    hdrs = [
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Categories/UIImage+CropRotate.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Constants/TOCropViewConstants.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOActivityCroppedImageProvider.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOCropViewControllerTransitioning.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOCroppedImageAttributes.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/TOCropViewController.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropOverlayView.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropScrollView.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropToolbar.h",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropView.h",
+        "Pods/Target Support Files/TOCropViewController/TOCropViewController-umbrella.h",
+    ],
+    namespace = "TOCropViewController",
+    namespace_only = True,
 )
 header_map(
     name = "TensorFlowLiteTaskText_private_header_map",
@@ -7100,6 +7752,72 @@ header_map(
     namespace_only = True,
 )
 header_map(
+    name = "pop_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/pop/pop-umbrella.h",
+        "Pods/pop/pop/POP.h",
+        "Pods/pop/pop/POPAction.h",
+        "Pods/pop/pop/POPAnimatableProperty.h",
+        "Pods/pop/pop/POPAnimatablePropertyTypes.h",
+        "Pods/pop/pop/POPAnimation.h",
+        "Pods/pop/pop/POPAnimationEvent.h",
+        "Pods/pop/pop/POPAnimationEventInternal.h",
+        "Pods/pop/pop/POPAnimationExtras.h",
+        "Pods/pop/pop/POPAnimationInternal.h",
+        "Pods/pop/pop/POPAnimationPrivate.h",
+        "Pods/pop/pop/POPAnimationRuntime.h",
+        "Pods/pop/pop/POPAnimationTracer.h",
+        "Pods/pop/pop/POPAnimationTracerInternal.h",
+        "Pods/pop/pop/POPAnimator.h",
+        "Pods/pop/pop/POPAnimatorPrivate.h",
+        "Pods/pop/pop/POPBasicAnimation.h",
+        "Pods/pop/pop/POPBasicAnimationInternal.h",
+        "Pods/pop/pop/POPCGUtils.h",
+        "Pods/pop/pop/POPCustomAnimation.h",
+        "Pods/pop/pop/POPDecayAnimation.h",
+        "Pods/pop/pop/POPDecayAnimationInternal.h",
+        "Pods/pop/pop/POPDefines.h",
+        "Pods/pop/pop/POPGeometry.h",
+        "Pods/pop/pop/POPLayerExtras.h",
+        "Pods/pop/pop/POPMath.h",
+        "Pods/pop/pop/POPPropertyAnimation.h",
+        "Pods/pop/pop/POPPropertyAnimationInternal.h",
+        "Pods/pop/pop/POPSpringAnimation.h",
+        "Pods/pop/pop/POPSpringAnimationInternal.h",
+        "Pods/pop/pop/POPSpringSolver.h",
+        "Pods/pop/pop/POPVector.h",
+        "Pods/pop/pop/WebCore/FloatConversion.h",
+        "Pods/pop/pop/WebCore/TransformationMatrix.h",
+        "Pods/pop/pop/WebCore/UnitBezier.h",
+    ],
+    namespace = "pop",
+)
+header_map(
+    name = "pop_public_header_map",
+    hdrs = [
+        "Pods/Target Support Files/pop/pop-umbrella.h",
+        "Pods/pop/pop/POP.h",
+        "Pods/pop/pop/POPAnimatableProperty.h",
+        "Pods/pop/pop/POPAnimatablePropertyTypes.h",
+        "Pods/pop/pop/POPAnimation.h",
+        "Pods/pop/pop/POPAnimationEvent.h",
+        "Pods/pop/pop/POPAnimationExtras.h",
+        "Pods/pop/pop/POPAnimationTracer.h",
+        "Pods/pop/pop/POPAnimator.h",
+        "Pods/pop/pop/POPBasicAnimation.h",
+        "Pods/pop/pop/POPCustomAnimation.h",
+        "Pods/pop/pop/POPDecayAnimation.h",
+        "Pods/pop/pop/POPDefines.h",
+        "Pods/pop/pop/POPGeometry.h",
+        "Pods/pop/pop/POPLayerExtras.h",
+        "Pods/pop/pop/POPPropertyAnimation.h",
+        "Pods/pop/pop/POPSpringAnimation.h",
+        "Pods/pop/pop/POPVector.h",
+    ],
+    namespace = "pop",
+    namespace_only = True,
+)
+header_map(
     name = "swift_app_with_pod_use_frameworks_swift_header_map",
     direct_hdr_providers = [":swift_app_with_pod_use_frameworks_swift"],
     namespace = "swift_app_with_pod_use_frameworks",
@@ -7114,7 +7832,19 @@ ios_application(
     deps = [
         ":Pods_swift_app_with_pod_use_frameworks_framework",
         ":TensorFlowLiteTaskText_framework",
+        ":import_AgoraAIDenoiseExtension_xcframework",
+        ":import_AgoraCore_xcframework",
+        ":import_AgoraFullAudioFormatExtension_xcframework",
+        ":import_AgoraRtcKit_xcframework",
+        ":import_AgoraSoundTouch_xcframework",
+        ":import_AgoraSpatialAudioExtension_xcframework",
+        ":import_Agorafdkaac_xcframework",
         ":import_Bugly_framework",
+        ":import_FBAEMKit_xcframework",
+        ":import_FBSDKCoreKit_Basics_xcframework",
+        ":import_GrowingAutoTrackKit_framework",
+        ":import_GrowingCoreKit_framework",
+        ":import_RevealServer_xcframework",
         ":import_TensorFlowLiteTaskTextC_framework",
         ":import_UMCommon_framework",
         ":import_UMDevice_framework",
@@ -7129,6 +7859,7 @@ ios_application(
         ":AMScrollingNavbar_framework",
         ":Alamofire_framework",
         ":AliyunOSSiOS_framework",
+        ":AnimatedCollectionViewLayout_framework",
         ":AnyImageKit_framework",
         ":Aspects_framework",
         ":AsyncDisplayKit_framework",
@@ -7160,13 +7891,17 @@ ios_application(
         ":InAppPurchase_framework",
         ":InputBarAccessoryView_framework",
         ":Instructions_framework",
+        ":JLRoutes_framework",
         ":JRSwizzle_framework",
         ":JTAppleCalendar_framework",
         ":JWT_framework",
         ":JXPagingView_framework",
         ":JXSegmentedView_framework",
+        ":KeychainAccess_framework",
         ":KingfisherWebP_framework",
         ":Kingfisher_framework",
+        ":Koloda_framework",
+        ":LTMorphingLabel_framework",
         ":Lantern_framework",
         ":Loading_framework",
         ":LookinServer_framework",
@@ -7179,6 +7914,7 @@ ios_application(
         ":MMKV_framework",
         ":MTAppenderFile_framework",
         ":MTHawkeye_framework",
+        ":Macaw_framework",
         ":Masonry_framework",
         ":Material_framework",
         ":MessageKit_framework",
@@ -7186,6 +7922,8 @@ ios_application(
         ":Motion_framework",
         ":Moya_framework",
         ":NSAttributedStringBuilder13_framework",
+        ":NVActivityIndicatorView_framework",
+        ":Nuke_framework",
         ":OHHTTPStubs_framework",
         ":ObjectMapper_framework",
         ":PINCache_framework",
@@ -7209,8 +7947,10 @@ ios_application(
         ":SDWebImage_framework",
         ":SQLite_framework",
         ":SVProgressHUD_framework",
+        ":SWXMLHash_framework",
         ":Sentry_framework",
         ":SideMenu_framework",
+        ":Siren_framework",
         ":SkeletonView_framework",
         ":SnapKit_framework",
         ":Starscream_framework",
@@ -7224,6 +7964,7 @@ ios_application(
         ":SwiftyJSON_framework",
         ":SwiftyStoreKit_framework",
         ":SwipeCellKit_framework",
+        ":TOCropViewController_framework",
         ":TextFieldEffects_framework",
         ":ViewAnimator_framework",
         ":WKWebViewJavascriptBridge_framework",
@@ -7234,6 +7975,7 @@ ios_application(
         ":ZipArchive_framework",
         ":fishhook_framework",
         ":libwebp_framework",
+        ":pop_framework",
     ],
     infoplists = [
         "swift_app_with_pod_use_frameworks/Info.plist",
@@ -7346,6 +8088,25 @@ ios_framework(
     ],
     minimum_os_version = "8.0",
     version = ":AliyunOSSiOS_framework_version",
+)
+ios_framework(
+    name = "AnimatedCollectionViewLayout_framework",
+    bundle_id = "org.cocoapods.AnimatedCollectionViewLayout",
+    bundle_name = "AnimatedCollectionViewLayout",
+    deps = [
+        ":AnimatedCollectionViewLayout_framework_m",
+        ":AnimatedCollectionViewLayout_framework_system_library",
+        ":AnimatedCollectionViewLayout_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "9.0",
+    version = ":AnimatedCollectionViewLayout_framework_version",
 )
 ios_framework(
     name = "AnyImageKit_framework",
@@ -7966,6 +8727,24 @@ ios_framework(
     version = ":Instructions_framework_version",
 )
 ios_framework(
+    name = "JLRoutes_framework",
+    bundle_id = "org.cocoapods.JLRoutes",
+    bundle_name = "JLRoutes",
+    deps = [
+        ":JLRoutes_framework_m",
+        ":JLRoutes_framework_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/JLRoutes/JLRoutes-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "8.0",
+    version = ":JLRoutes_framework_version",
+)
+ios_framework(
     name = "JRSwizzle_framework",
     bundle_id = "org.cocoapods.JRSwizzle",
     bundle_name = "JRSwizzle",
@@ -8063,6 +8842,25 @@ ios_framework(
     version = ":JXSegmentedView_framework_version",
 )
 ios_framework(
+    name = "KeychainAccess_framework",
+    bundle_id = "org.cocoapods.KeychainAccess",
+    bundle_name = "KeychainAccess",
+    deps = [
+        ":KeychainAccess_framework_m",
+        ":KeychainAccess_framework_system_library",
+        ":KeychainAccess_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/KeychainAccess/KeychainAccess-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "9.0",
+    version = ":KeychainAccess_framework_version",
+)
+ios_framework(
     name = "KingfisherWebP_framework",
     bundle_id = "org.cocoapods.KingfisherWebP",
     bundle_name = "KingfisherWebP",
@@ -8103,6 +8901,53 @@ ios_framework(
     ],
     minimum_os_version = "10.0",
     version = ":Kingfisher_framework_version",
+)
+ios_framework(
+    name = "Koloda_framework",
+    bundle_id = "org.cocoapods.Koloda",
+    bundle_name = "Koloda",
+    deps = [
+        ":Koloda_framework_m",
+        ":Koloda_framework_system_library",
+        ":Koloda_swift",
+    ],
+    families = ["iphone", "ipad"],
+    frameworks = [
+        ":pop_framework",
+    ],
+    infoplists = [
+        "Pods/Target Support Files/Koloda/Koloda-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "8.0",
+    version = ":Koloda_framework_version",
+)
+ios_framework(
+    name = "LTMorphingLabel_framework",
+    bundle_id = "org.cocoapods.LTMorphingLabel",
+    bundle_name = "LTMorphingLabel",
+    deps = [
+        ":LTMorphingLabel_framework_m",
+        ":LTMorphingLabel_framework_system_library",
+        ":LTMorphingLabel_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "9.0",
+    resources = [
+        "Pods/LTMorphingLabel/LTMorphingLabel/Particles/Fire.png",
+        "Pods/LTMorphingLabel/LTMorphingLabel/Particles/Fragment.png",
+        "Pods/LTMorphingLabel/LTMorphingLabel/Particles/Smoke.png",
+        "Pods/LTMorphingLabel/LTMorphingLabel/Particles/Sparkle.png",
+    ],
+    version = ":LTMorphingLabel_framework_version",
 )
 ios_framework(
     name = "Lantern_framework",
@@ -8352,6 +9197,28 @@ ios_framework(
     version = ":MTHawkeye_framework_version",
 )
 ios_framework(
+    name = "Macaw_framework",
+    bundle_id = "org.cocoapods.Macaw",
+    bundle_name = "Macaw",
+    deps = [
+        ":Macaw_framework_m",
+        ":Macaw_framework_system_library",
+        ":Macaw_swift",
+    ],
+    families = ["iphone", "ipad"],
+    frameworks = [
+        ":SWXMLHash_framework",
+    ],
+    infoplists = [
+        "Pods/Target Support Files/Macaw/Macaw-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "9.0",
+    version = ":Macaw_framework_version",
+)
+ios_framework(
     name = "Masonry_framework",
     bundle_id = "org.cocoapods.Masonry",
     bundle_name = "Masonry",
@@ -8500,6 +9367,44 @@ ios_framework(
     ],
     minimum_os_version = "8.0",
     version = ":NSAttributedStringBuilder13_framework_version",
+)
+ios_framework(
+    name = "NVActivityIndicatorView_framework",
+    bundle_id = "org.cocoapods.NVActivityIndicatorView",
+    bundle_name = "NVActivityIndicatorView",
+    deps = [
+        ":NVActivityIndicatorView_framework_m",
+        ":NVActivityIndicatorView_framework_system_library",
+        ":NVActivityIndicatorView_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "9.0",
+    version = ":NVActivityIndicatorView_framework_version",
+)
+ios_framework(
+    name = "Nuke_framework",
+    bundle_id = "org.cocoapods.Nuke",
+    bundle_name = "Nuke",
+    deps = [
+        ":Nuke_framework_m",
+        ":Nuke_framework_system_library",
+        ":Nuke_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/Nuke/Nuke-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "11.0",
+    version = ":Nuke_framework_version",
 )
 ios_framework(
     name = "OHHTTPStubs_framework",
@@ -8806,6 +9711,7 @@ ios_framework(
         ":Realm_framework_m_1",
         ":Realm_framework_mm",
         ":Realm_framework_system_library",
+        ":import_realm_monorepo_xcframework",
     ],
     families = ["iphone", "ipad"],
     infoplists = [
@@ -8959,6 +9865,25 @@ ios_framework(
     version = ":SVProgressHUD_framework_version",
 )
 ios_framework(
+    name = "SWXMLHash_framework",
+    bundle_id = "org.cocoapods.SWXMLHash",
+    bundle_name = "SWXMLHash",
+    deps = [
+        ":SWXMLHash_framework_m",
+        ":SWXMLHash_framework_system_library",
+        ":SWXMLHash_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/SWXMLHash/SWXMLHash-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "9.0",
+    version = ":SWXMLHash_framework_version",
+)
+ios_framework(
     name = "Sentry_framework",
     bundle_id = "org.cocoapods.Sentry",
     bundle_name = "Sentry",
@@ -8997,6 +9922,28 @@ ios_framework(
     ],
     minimum_os_version = "10.0",
     version = ":SideMenu_framework_version",
+)
+ios_framework(
+    name = "Siren_framework",
+    bundle_id = "org.cocoapods.Siren",
+    bundle_name = "Siren",
+    deps = [
+        ":Siren_framework_m",
+        ":Siren_framework_system_library",
+        ":Siren_swift",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/Siren/Siren-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "11.0",
+    resources = [
+        "Pods/Siren/Sources/Siren.bundle",
+    ],
+    version = ":Siren_framework_version",
 )
 ios_framework(
     name = "SkeletonView_framework",
@@ -9252,6 +10199,27 @@ ios_framework(
     version = ":SwipeCellKit_framework_version",
 )
 ios_framework(
+    name = "TOCropViewController_framework",
+    bundle_id = "org.cocoapods.TOCropViewController",
+    bundle_name = "TOCropViewController",
+    deps = [
+        ":TOCropViewController_framework_m",
+        ":TOCropViewController_framework_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/TOCropViewController/TOCropViewController-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "8.0",
+    resources = [
+        ":TOCropViewControllerBundle_bundle",
+    ],
+    version = ":TOCropViewController_framework_version",
+)
+ios_framework(
     name = "TextFieldEffects_framework",
     bundle_id = "org.cocoapods.TextFieldEffects",
     bundle_name = "TextFieldEffects",
@@ -9439,6 +10407,26 @@ ios_framework(
     minimum_os_version = "9.0",
     version = ":libwebp_framework_version",
 )
+ios_framework(
+    name = "pop_framework",
+    bundle_id = "org.cocoapods.pop",
+    bundle_name = "pop",
+    deps = [
+        ":pop_framework_cpp",
+        ":pop_framework_m",
+        ":pop_framework_mm",
+        ":pop_framework_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/pop/pop-Info.plist",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    minimum_os_version = "8.0",
+    version = ":pop_framework_version",
+)
 ios_static_framework(
     name = "Pods_swift_app_with_pod_use_frameworks_framework",
     bundle_name = "Pods_swift_app_with_pod_use_frameworks",
@@ -9543,6 +10531,25 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/AliyunOSSiOS/AliyunOSSiOS.modulemap",
     module_name = "AliyunOSSiOS",
+)
+module_map(
+    name = "AnimatedCollectionViewLayout_mixed_module_map",
+    deps = [
+        ":AnimatedCollectionViewLayout_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout.modulemap",
+    module_name = "AnimatedCollectionViewLayout",
+)
+module_map(
+    name = "AnimatedCollectionViewLayout_module_map",
+    hdrs = [
+        "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout.modulemap",
+    module_name = "AnimatedCollectionViewLayout",
 )
 module_map(
     name = "AnyImageKit_mixed_module_map",
@@ -9947,6 +10954,14 @@ module_map(
     module_name = "Instructions",
 )
 module_map(
+    name = "JLRoutes_module_map",
+    hdrs = [
+        "Pods/Target Support Files/JLRoutes/JLRoutes-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/JLRoutes/JLRoutes.modulemap",
+    module_name = "JLRoutes",
+)
+module_map(
     name = "JRSwizzle_module_map",
     hdrs = [
         "Pods/Target Support Files/JRSwizzle/JRSwizzle-umbrella.h",
@@ -10020,6 +11035,25 @@ module_map(
     module_name = "JXSegmentedView",
 )
 module_map(
+    name = "KeychainAccess_mixed_module_map",
+    deps = [
+        ":KeychainAccess_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/KeychainAccess/KeychainAccess-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/KeychainAccess/KeychainAccess.modulemap",
+    module_name = "KeychainAccess",
+)
+module_map(
+    name = "KeychainAccess_module_map",
+    hdrs = [
+        "Pods/Target Support Files/KeychainAccess/KeychainAccess-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/KeychainAccess/KeychainAccess.modulemap",
+    module_name = "KeychainAccess",
+)
+module_map(
     name = "KingfisherWebP_mixed_module_map",
     deps = [
         ":KingfisherWebP_swift",
@@ -10056,6 +11090,44 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/Kingfisher/Kingfisher.modulemap",
     module_name = "Kingfisher",
+)
+module_map(
+    name = "Koloda_mixed_module_map",
+    deps = [
+        ":Koloda_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/Koloda/Koloda-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Koloda/Koloda.modulemap",
+    module_name = "Koloda",
+)
+module_map(
+    name = "Koloda_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Koloda/Koloda-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Koloda/Koloda.modulemap",
+    module_name = "Koloda",
+)
+module_map(
+    name = "LTMorphingLabel_mixed_module_map",
+    deps = [
+        ":LTMorphingLabel_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel.modulemap",
+    module_name = "LTMorphingLabel",
+)
+module_map(
+    name = "LTMorphingLabel_module_map",
+    hdrs = [
+        "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel.modulemap",
+    module_name = "LTMorphingLabel",
 )
 module_map(
     name = "Lantern_mixed_module_map",
@@ -10187,6 +11259,25 @@ module_map(
     module_name = "MTHawkeye",
 )
 module_map(
+    name = "Macaw_mixed_module_map",
+    deps = [
+        ":Macaw_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/Macaw/Macaw-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Macaw/Macaw.modulemap",
+    module_name = "Macaw",
+)
+module_map(
+    name = "Macaw_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Macaw/Macaw-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Macaw/Macaw.modulemap",
+    module_name = "Macaw",
+)
+module_map(
     name = "Masonry_module_map",
     hdrs = [
         "Pods/Target Support Files/Masonry/Masonry-umbrella.h",
@@ -10307,6 +11398,44 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/NSAttributedStringBuilder13/NSAttributedStringBuilder13.modulemap",
     module_name = "NSAttributedStringBuilder13",
+)
+module_map(
+    name = "NVActivityIndicatorView_mixed_module_map",
+    deps = [
+        ":NVActivityIndicatorView_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView.modulemap",
+    module_name = "NVActivityIndicatorView",
+)
+module_map(
+    name = "NVActivityIndicatorView_module_map",
+    hdrs = [
+        "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView.modulemap",
+    module_name = "NVActivityIndicatorView",
+)
+module_map(
+    name = "Nuke_mixed_module_map",
+    deps = [
+        ":Nuke_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/Nuke/Nuke-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Nuke/Nuke.modulemap",
+    module_name = "Nuke",
+)
+module_map(
+    name = "Nuke_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Nuke/Nuke-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Nuke/Nuke.modulemap",
+    module_name = "Nuke",
 )
 module_map(
     name = "OHHTTPStubs_module_map",
@@ -10680,6 +11809,25 @@ module_map(
     module_name = "SVProgressHUD",
 )
 module_map(
+    name = "SWXMLHash_mixed_module_map",
+    deps = [
+        ":SWXMLHash_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SWXMLHash/SWXMLHash-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SWXMLHash/SWXMLHash.modulemap",
+    module_name = "SWXMLHash",
+)
+module_map(
+    name = "SWXMLHash_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SWXMLHash/SWXMLHash-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SWXMLHash/SWXMLHash.modulemap",
+    module_name = "SWXMLHash",
+)
+module_map(
     name = "Sentry_module_map",
     hdrs = [
         "Pods/Target Support Files/Sentry/Sentry-umbrella.h",
@@ -10705,6 +11853,25 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/SideMenu/SideMenu.modulemap",
     module_name = "SideMenu",
+)
+module_map(
+    name = "Siren_mixed_module_map",
+    deps = [
+        ":Siren_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/Siren/Siren-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Siren/Siren.modulemap",
+    module_name = "Siren",
+)
+module_map(
+    name = "Siren_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Siren/Siren-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Siren/Siren.modulemap",
+    module_name = "Siren",
 )
 module_map(
     name = "SkeletonView_mixed_module_map",
@@ -10954,6 +12121,14 @@ module_map(
     module_name = "SwipeCellKit",
 )
 module_map(
+    name = "TOCropViewController_module_map",
+    hdrs = [
+        "Pods/Target Support Files/TOCropViewController/TOCropViewController-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/TOCropViewController/TOCropViewController.modulemap",
+    module_name = "TOCropViewController",
+)
+module_map(
     name = "TensorFlowLiteTaskText_module_map",
     hdrs = [
         "Pods/TensorFlowLiteTaskText/tensorflow_lite_support/ios/task/text/apis/TFLTaskText.h",
@@ -11073,6 +12248,14 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/libwebp/libwebp.modulemap",
     module_name = "libwebp",
+)
+module_map(
+    name = "pop_module_map",
+    hdrs = [
+        "Pods/Target Support Files/pop/pop-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/pop/pop.modulemap",
+    module_name = "pop",
 )
 objc_library(
     name = "AFNetworking_framework_m",
@@ -11237,6 +12420,26 @@ objc_library(
         "Pods/AliyunOSSiOS/AliyunOSSSDK/OSSUtil.m",
         "Pods/AliyunOSSiOS/AliyunOSSSDK/OSSXMLDictionary.m",
         "Pods/Target Support Files/AliyunOSSiOS/AliyunOSSiOS-dummy.m",
+    ],
+)
+objc_library(
+    name = "AnimatedCollectionViewLayout_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":AnimatedCollectionViewLayout_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout-dummy.m",
     ],
 )
 objc_library(
@@ -11961,7 +13164,8 @@ objc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-w -fno-objc-arc",
+        "-w",
+        "-fno-objc-arc",
     ],
     defines = [
         "COCOAPODS=1",
@@ -12355,7 +13559,8 @@ objc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-Wno-unsupported-availability-guard -Wno-strict-prototypes",
+        "-Wno-unsupported-availability-guard",
+        "-Wno-strict-prototypes",
     ],
     defines = [
         "COCOAPODS=1",
@@ -12563,7 +13768,8 @@ objc_library(
     copts = [
         "-std=gnu++14",
         "-stdlib=libc++",
-        "-Wno-unsupported-availability-guard -Wno-strict-prototypes",
+        "-Wno-unsupported-availability-guard",
+        "-Wno-strict-prototypes",
     ],
     defines = [
         "COCOAPODS=1",
@@ -12874,6 +14080,35 @@ objc_library(
     ],
 )
 objc_library(
+    name = "JLRoutes_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":JLRoutes_private_header_map",
+    ],
+    module_maps = [
+        ":JLRoutes_module_map",
+    ],
+    pch = "Pods/Target Support Files/JLRoutes/JLRoutes-prefix.pch",
+    srcs = [
+        "Pods/JLRoutes/JLRoutes/Classes/JLRParsingUtilities.m",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteDefinition.m",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteHandler.m",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteRequest.m",
+        "Pods/JLRoutes/JLRoutes/Classes/JLRRouteResponse.m",
+        "Pods/JLRoutes/JLRoutes/JLRoutes.m",
+        "Pods/Target Support Files/JLRoutes/JLRoutes-dummy.m",
+    ],
+)
+objc_library(
     name = "JRSwizzle_framework_m_0",
     alwayslink = True,
     copts = [
@@ -13020,6 +14255,26 @@ objc_library(
     ],
 )
 objc_library(
+    name = "KeychainAccess_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":KeychainAccess_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/KeychainAccess/KeychainAccess-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/KeychainAccess/KeychainAccess-dummy.m",
+    ],
+)
+objc_library(
     name = "KingfisherWebP_framework_m",
     alwayslink = True,
     copts = [
@@ -13071,6 +14326,49 @@ objc_library(
     pch = "Pods/Target Support Files/Kingfisher/Kingfisher-prefix.pch",
     srcs = [
         "Pods/Target Support Files/Kingfisher/Kingfisher-dummy.m",
+    ],
+)
+objc_library(
+    name = "Koloda_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":Koloda_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/Koloda/Koloda-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Koloda/Koloda-dummy.m",
+    ],
+)
+objc_library(
+    name = "LTMorphingLabel_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":LTMorphingLabel_private_header_map",
+    ],
+    module_maps = [
+        ":LTMorphingLabel_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/LTMorphingLabel/LTMorphingLabel-dummy.m",
     ],
 )
 objc_library(
@@ -13751,6 +15049,26 @@ objc_library(
     ],
 )
 objc_library(
+    name = "Macaw_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":Macaw_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/Macaw/Macaw-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Macaw/Macaw-dummy.m",
+    ],
+)
+objc_library(
     name = "Masonry_framework_m",
     alwayslink = True,
     copts = [
@@ -13901,6 +15219,46 @@ objc_library(
     pch = "Pods/Target Support Files/NSAttributedStringBuilder13/NSAttributedStringBuilder13-prefix.pch",
     srcs = [
         "Pods/Target Support Files/NSAttributedStringBuilder13/NSAttributedStringBuilder13-dummy.m",
+    ],
+)
+objc_library(
+    name = "NVActivityIndicatorView_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":NVActivityIndicatorView_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/NVActivityIndicatorView/NVActivityIndicatorView-dummy.m",
+    ],
+)
+objc_library(
+    name = "Nuke_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":Nuke_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/Nuke/Nuke-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Nuke/Nuke-dummy.m",
     ],
 )
 objc_library(
@@ -14599,7 +15957,10 @@ objc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"10.28.4\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC",
+        "-DREALM_HAVE_CONFIG",
+        "-DREALM_COCOA_VERSION='@\"10.28.4\"'",
+        "-D__ASSERTMACROS__",
+        "-DREALM_ENABLE_SYNC",
     ],
     defines = [
         "COCOAPODS=1",
@@ -14656,7 +16017,10 @@ objc_library(
         "-fvisibility-inlines-hidden",
         "-std=c++17",
         "-stdlib=libc++",
-        "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"10.28.4\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC",
+        "-DREALM_HAVE_CONFIG",
+        "-DREALM_COCOA_VERSION='@\"10.28.4\"'",
+        "-D__ASSERTMACROS__",
+        "-DREALM_ENABLE_SYNC",
     ],
     defines = [
         "COCOAPODS=1",
@@ -14664,7 +16028,19 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":import_realm_monorepo_xcframework",
+        ":pods_realm_include_core_external_json_hpp_header",
+        ":pods_realm_include_core_realm_h_header",
+        ":pods_realm_include_core_realm_hpp_header",
+        ":pods_realm_include_core_realm_impl_hpp_header",
+        ":pods_realm_include_core_realm_metrics_hpp_header",
+        ":pods_realm_include_core_realm_object_store_hpp_header",
+        ":pods_realm_include_core_realm_object_store_impl_hpp_header",
+        ":pods_realm_include_core_realm_object_store_sync_hpp_header",
+        ":pods_realm_include_core_realm_object_store_util_bson_hpp_header",
+        ":pods_realm_include_core_realm_object_store_util_hpp_header",
+        ":pods_realm_include_core_realm_sync_hpp_header",
+        ":pods_realm_include_core_realm_util_h_header",
+        ":pods_realm_include_core_realm_util_hpp_header",
         ":pods_realm_include_h_header",
         ":pods_realm_include_hpp_header",
     ],
@@ -14674,7 +16050,7 @@ objc_library(
     ],
     includes = [
         "Pods/Realm/include",
-        "Pods/Realm/core/realm-monorepo.xcframework/ios-arm64_x86_64_i386-simulator/Headers",
+        "Pods/Realm/include/core",
     ],
     module_maps = [
         ":Realm_module_map",
@@ -14975,6 +16351,26 @@ objc_library(
     ],
 )
 objc_library(
+    name = "SWXMLHash_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":SWXMLHash_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SWXMLHash/SWXMLHash-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SWXMLHash/SWXMLHash-dummy.m",
+    ],
+)
+objc_library(
     name = "Sentry_framework_m",
     alwayslink = True,
     copts = [
@@ -15192,6 +16588,26 @@ objc_library(
     pch = "Pods/Target Support Files/SideMenu/SideMenu-prefix.pch",
     srcs = [
         "Pods/Target Support Files/SideMenu/SideMenu-dummy.m",
+    ],
+)
+objc_library(
+    name = "Siren_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    module_maps = [
+        ":Siren_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/Siren/Siren-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Siren/Siren-dummy.m",
     ],
 )
 objc_library(
@@ -15455,6 +16871,38 @@ objc_library(
     ],
 )
 objc_library(
+    name = "TOCropViewController_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":TOCropViewController_private_header_map",
+    ],
+    module_maps = [
+        ":TOCropViewController_module_map",
+    ],
+    pch = "Pods/Target Support Files/TOCropViewController/TOCropViewController-prefix.pch",
+    srcs = [
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Categories/UIImage+CropRotate.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOActivityCroppedImageProvider.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOCropViewControllerTransitioning.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Models/TOCroppedImageAttributes.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/TOCropViewController.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropOverlayView.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropScrollView.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropToolbar.m",
+        "Pods/TOCropViewController/Objective-C/TOCropViewController/Views/TOCropView.m",
+        "Pods/Target Support Files/TOCropViewController/TOCropViewController-dummy.m",
+    ],
+)
+objc_library(
     name = "TensorFlowLiteTaskText_framework_m",
     copts = [
         "-std=gnu11",
@@ -15692,7 +17140,8 @@ objc_library(
     alwayslink = True,
     copts = [
         "-std=gnu11",
-        "-Dunix -fno-objc-arc",
+        "-Dunix",
+        "-fno-objc-arc",
     ],
     defines = [
         "COCOAPODS=1",
@@ -15784,6 +17233,71 @@ objc_library(
     pch = "Pods/Target Support Files/libwebp/libwebp-prefix.pch",
     srcs = [
         "Pods/Target Support Files/libwebp/libwebp-dummy.m",
+    ],
+)
+objc_library(
+    name = "pop_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":pop_public_header_map",
+        ":pop_private_header_map",
+    ],
+    module_maps = [
+        ":pop_module_map",
+    ],
+    pch = "Pods/Target Support Files/pop/pop-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/pop/pop-dummy.m",
+    ],
+)
+objc_library(
+    name = "pop_framework_mm",
+    alwayslink = True,
+    copts = [
+        "-std=c++11",
+        "-stdlib=libc++",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":pop_public_header_map",
+        ":pop_private_header_map",
+    ],
+    module_maps = [
+        ":pop_module_map",
+    ],
+    pch = "Pods/Target Support Files/pop/pop-prefix.pch",
+    srcs = [
+        "Pods/pop/pop/POPAnimatableProperty.mm",
+        "Pods/pop/pop/POPAnimation.mm",
+        "Pods/pop/pop/POPAnimationEvent.mm",
+        "Pods/pop/pop/POPAnimationExtras.mm",
+        "Pods/pop/pop/POPAnimationRuntime.mm",
+        "Pods/pop/pop/POPAnimationTracer.mm",
+        "Pods/pop/pop/POPAnimator.mm",
+        "Pods/pop/pop/POPBasicAnimation.mm",
+        "Pods/pop/pop/POPCGUtils.mm",
+        "Pods/pop/pop/POPCustomAnimation.mm",
+        "Pods/pop/pop/POPDecayAnimation.mm",
+        "Pods/pop/pop/POPGeometry.mm",
+        "Pods/pop/pop/POPLayerExtras.mm",
+        "Pods/pop/pop/POPMath.mm",
+        "Pods/pop/pop/POPPropertyAnimation.mm",
+        "Pods/pop/pop/POPSpringAnimation.mm",
+        "Pods/pop/pop/POPVector.mm",
     ],
 )
 swift_library(
@@ -15892,6 +17406,38 @@ swift_library(
         "Pods/Alamofire/Source/URLRequest+Alamofire.swift",
         "Pods/Alamofire/Source/URLSessionConfiguration+Alamofire.swift",
         "Pods/Alamofire/Source/Validation.swift",
+    ],
+)
+swift_library(
+    name = "AnimatedCollectionViewLayout_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "AnimatedCollectionViewLayout",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":AnimatedCollectionViewLayout_module_map",
+    ],
+    srcs = [
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/CrossFadeAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/CubeAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/LinearCardAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/PageAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/ParallaxAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/RotateInOutAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/SnapInAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/Animators/ZoomInOutAttributesAnimator.swift",
+        "Pods/AnimatedCollectionViewLayout/Sources/AnimatedCollectionViewLayout/LayoutAttributesAnimator.swift",
     ],
 )
 swift_library(
@@ -17059,6 +18605,29 @@ swift_library(
     ],
 )
 swift_library(
+    name = "KeychainAccess_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "KeychainAccess",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":KeychainAccess_module_map",
+    ],
+    srcs = [
+        "Pods/KeychainAccess/Lib/KeychainAccess/Keychain.swift",
+    ],
+)
+swift_library(
     name = "KingfisherWebP_swift",
     alwayslink = True,
     copts = [
@@ -17167,6 +18736,78 @@ swift_library(
         "Pods/Kingfisher/Sources/Utility/String+MD5.swift",
         "Pods/Kingfisher/Sources/Views/AnimatedImageView.swift",
         "Pods/Kingfisher/Sources/Views/Indicator.swift",
+    ],
+)
+swift_library(
+    name = "Koloda_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "Koloda",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":pop_public_header_map",
+        ":pop_private_header_map",
+    ],
+    objc_module_maps = [
+        ":Koloda_module_map",
+        ":pop_module_map",
+    ],
+    srcs = [
+        "Pods/Koloda/Pod/Classes/KolodaView/DraggableCardView/DraggableCardView.swift",
+        "Pods/Koloda/Pod/Classes/KolodaView/KolodaAnimationSemaphore.swift",
+        "Pods/Koloda/Pod/Classes/KolodaView/KolodaCardStorage.swift",
+        "Pods/Koloda/Pod/Classes/KolodaView/KolodaView.swift",
+        "Pods/Koloda/Pod/Classes/KolodaView/KolodaViewAnimatior.swift",
+        "Pods/Koloda/Pod/Classes/KolodaView/OverlayView/OverlayView.swift",
+        "Pods/Koloda/Pod/Classes/KolodaView/SwipeResultDirection.swift",
+    ],
+)
+swift_library(
+    name = "LTMorphingLabel_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "LTMorphingLabel",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":LTMorphingLabel_private_header_map",
+    ],
+    objc_module_maps = [
+        ":LTMorphingLabel_module_map",
+    ],
+    srcs = [
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTCharacterDiffResult.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTCharacterLimbo.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTEasing.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTEmitterView.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingEffect.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel+Anvil.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel+Burn.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel+Evaporate.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel+Fall.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel+Pixelate.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel+Sparkle.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTMorphingLabel.swift",
+        "Pods/LTMorphingLabel/LTMorphingLabel/LTStringDiffResult.swift",
     ],
 )
 swift_library(
@@ -17441,6 +19082,172 @@ swift_library(
         "Pods/lottie-ios/Sources/Public/iOS/Compatibility/CompatibleAnimationView.swift",
         "Pods/lottie-ios/Sources/Public/iOS/FilepathImageProvider.swift",
         "Pods/lottie-ios/Sources/Public/iOS/UIColorExtension.swift",
+    ],
+)
+swift_library(
+    name = "Macaw_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    deps = [
+        ":SWXMLHash_swift",
+    ],
+    module_name = "Macaw",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":Macaw_module_map",
+        ":SWXMLHash_mixed_module_map",
+    ],
+    srcs = [
+        "Pods/Macaw/Source/MCAMediaTimingFillMode_iOS.swift",
+        "Pods/Macaw/Source/MCAMediaTimingFillMode_macOS.swift",
+        "Pods/Macaw/Source/MCAMediaTimingFunctionName_iOS.swift",
+        "Pods/Macaw/Source/MCAMediaTimingFunctionName_macOS.swift",
+        "Pods/Macaw/Source/MCAShapeLayerLineCap_iOS.swift",
+        "Pods/Macaw/Source/MCAShapeLayerLineCap_macOS.swift",
+        "Pods/Macaw/Source/MCAShapeLayerLineJoin_iOS.swift",
+        "Pods/Macaw/Source/MCAShapeLayerLineJoin_macOS.swift",
+        "Pods/Macaw/Source/animation/AnimatableVariable.swift",
+        "Pods/Macaw/Source/animation/Animation.swift",
+        "Pods/Macaw/Source/animation/AnimationImpl.swift",
+        "Pods/Macaw/Source/animation/AnimationProducer.swift",
+        "Pods/Macaw/Source/animation/AnimationUtils.swift",
+        "Pods/Macaw/Source/animation/Easing.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/AnimOperators.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/ContentsInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/DoubleInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/FillInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/Interpolable.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/LocusInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/ShapeInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/StrokeInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/Extensions/TransformInterpolation.swift",
+        "Pods/Macaw/Source/animation/layer_animation/FuncBounds.swift",
+        "Pods/Macaw/Source/animation/layer_animation/PathBounds.swift",
+        "Pods/Macaw/Source/animation/layer_animation/PathFunctions.swift",
+        "Pods/Macaw/Source/animation/types/AnimationSequence.swift",
+        "Pods/Macaw/Source/animation/types/CombineAnimation.swift",
+        "Pods/Macaw/Source/animation/types/ContentsAnimation.swift",
+        "Pods/Macaw/Source/animation/types/MorphingAnimation.swift",
+        "Pods/Macaw/Source/animation/types/OpacityAnimation.swift",
+        "Pods/Macaw/Source/animation/types/PathAnimation.swift",
+        "Pods/Macaw/Source/animation/types/ShapeAnimation.swift",
+        "Pods/Macaw/Source/animation/types/TransformAnimation.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/Cache/AnimationCache.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/Cache/NodeHashable.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/Cache/TransformHashable.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/CombinationAnimationGenerator.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/MorphingGenerator.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/OpacityGenerator.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/PathAnimationGenerator.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/ShapeAnimationGenerator.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/TimingFunction.swift",
+        "Pods/Macaw/Source/animation/types/animation_generators/TransformGenerator.swift",
+        "Pods/Macaw/Source/bindings/Disposable.swift",
+        "Pods/Macaw/Source/bindings/GroupDisposable.swift",
+        "Pods/Macaw/Source/bindings/Variable.swift",
+        "Pods/Macaw/Source/events/Event.swift",
+        "Pods/Macaw/Source/events/PanEvent.swift",
+        "Pods/Macaw/Source/events/PinchEvent.swift",
+        "Pods/Macaw/Source/events/RotateEvent.swift",
+        "Pods/Macaw/Source/events/TapEvent.swift",
+        "Pods/Macaw/Source/events/TouchEvent.swift",
+        "Pods/Macaw/Source/export/MacawView+PDF.swift",
+        "Pods/Macaw/Source/layout/ContentLayout.swift",
+        "Pods/Macaw/Source/model/draw/Align.swift",
+        "Pods/Macaw/Source/model/draw/AlphaEffect.swift",
+        "Pods/Macaw/Source/model/draw/AspectRatio.swift",
+        "Pods/Macaw/Source/model/draw/Baseline.swift",
+        "Pods/Macaw/Source/model/draw/BlendEffect.swift",
+        "Pods/Macaw/Source/model/draw/Color.swift",
+        "Pods/Macaw/Source/model/draw/ColorMatrix.swift",
+        "Pods/Macaw/Source/model/draw/ColorMatrixEffect.swift",
+        "Pods/Macaw/Source/model/draw/Drawable.swift",
+        "Pods/Macaw/Source/model/draw/Effect.swift",
+        "Pods/Macaw/Source/model/draw/Fill.swift",
+        "Pods/Macaw/Source/model/draw/Font.swift",
+        "Pods/Macaw/Source/model/draw/GaussianBlur.swift",
+        "Pods/Macaw/Source/model/draw/Gradient.swift",
+        "Pods/Macaw/Source/model/draw/LineCap.swift",
+        "Pods/Macaw/Source/model/draw/LineJoin.swift",
+        "Pods/Macaw/Source/model/draw/LinearGradient.swift",
+        "Pods/Macaw/Source/model/draw/OffsetEffect.swift",
+        "Pods/Macaw/Source/model/draw/Pattern.swift",
+        "Pods/Macaw/Source/model/draw/RadialGradient.swift",
+        "Pods/Macaw/Source/model/draw/Stop.swift",
+        "Pods/Macaw/Source/model/draw/Stroke.swift",
+        "Pods/Macaw/Source/model/geom2d/Arc.swift",
+        "Pods/Macaw/Source/model/geom2d/Circle.swift",
+        "Pods/Macaw/Source/model/geom2d/Ellipse.swift",
+        "Pods/Macaw/Source/model/geom2d/GeomUtils.swift",
+        "Pods/Macaw/Source/model/geom2d/Insets.swift",
+        "Pods/Macaw/Source/model/geom2d/Line.swift",
+        "Pods/Macaw/Source/model/geom2d/Locus.swift",
+        "Pods/Macaw/Source/model/geom2d/MoveTo.swift",
+        "Pods/Macaw/Source/model/geom2d/Path.swift",
+        "Pods/Macaw/Source/model/geom2d/PathBuilder.swift",
+        "Pods/Macaw/Source/model/geom2d/PathSegment.swift",
+        "Pods/Macaw/Source/model/geom2d/PathSegmentType.swift",
+        "Pods/Macaw/Source/model/geom2d/Point.swift",
+        "Pods/Macaw/Source/model/geom2d/Polygon.swift",
+        "Pods/Macaw/Source/model/geom2d/Polyline.swift",
+        "Pods/Macaw/Source/model/geom2d/Rect.swift",
+        "Pods/Macaw/Source/model/geom2d/RoundRect.swift",
+        "Pods/Macaw/Source/model/geom2d/Size.swift",
+        "Pods/Macaw/Source/model/geom2d/Transform.swift",
+        "Pods/Macaw/Source/model/geom2d/TransformedLocus.swift",
+        "Pods/Macaw/Source/model/scene/Group.swift",
+        "Pods/Macaw/Source/model/scene/Image.swift",
+        "Pods/Macaw/Source/model/scene/Node.swift",
+        "Pods/Macaw/Source/model/scene/SceneUtils.swift",
+        "Pods/Macaw/Source/model/scene/Shape.swift",
+        "Pods/Macaw/Source/model/scene/Text.swift",
+        "Pods/Macaw/Source/platform/MDisplayLink.swift",
+        "Pods/Macaw/Source/platform/iOS/Common_iOS.swift",
+        "Pods/Macaw/Source/platform/iOS/Graphics_iOS.swift",
+        "Pods/Macaw/Source/platform/iOS/MDisplayLink_iOS.swift",
+        "Pods/Macaw/Source/platform/iOS/MView_iOS.swift",
+        "Pods/Macaw/Source/platform/macOS/Common_macOS.swift",
+        "Pods/Macaw/Source/platform/macOS/Graphics_macOS.swift",
+        "Pods/Macaw/Source/platform/macOS/MBezierPath+Extension_macOS.swift",
+        "Pods/Macaw/Source/platform/macOS/MDisplayLink_macOS.swift",
+        "Pods/Macaw/Source/platform/macOS/MView_macOS.swift",
+        "Pods/Macaw/Source/render/GroupRenderer.swift",
+        "Pods/Macaw/Source/render/ImageRenderer.swift",
+        "Pods/Macaw/Source/render/NodeRenderer.swift",
+        "Pods/Macaw/Source/render/RenderContext.swift",
+        "Pods/Macaw/Source/render/RenderUtils.swift",
+        "Pods/Macaw/Source/render/ShapeRenderer.swift",
+        "Pods/Macaw/Source/render/TextRenderer.swift",
+        "Pods/Macaw/Source/svg/CSSParser.swift",
+        "Pods/Macaw/Source/svg/SVGCanvas.swift",
+        "Pods/Macaw/Source/svg/SVGConstants.swift",
+        "Pods/Macaw/Source/svg/SVGNodeLayout.swift",
+        "Pods/Macaw/Source/svg/SVGParser.swift",
+        "Pods/Macaw/Source/svg/SVGParserError.swift",
+        "Pods/Macaw/Source/svg/SVGSerializer.swift",
+        "Pods/Macaw/Source/svg/SVGView.swift",
+        "Pods/Macaw/Source/thirdparty/CAAnimationClosure.swift",
+        "Pods/Macaw/Source/thirdparty/CGFloat+Double.swift",
+        "Pods/Macaw/Source/thirdparty/NSTimer+Closure.swift",
+        "Pods/Macaw/Source/utils/BoundsUtils.swift",
+        "Pods/Macaw/Source/utils/CGMappings.swift",
+        "Pods/Macaw/Source/utils/CommonError.swift",
+        "Pods/Macaw/Source/utils/DescriptionExtensions.swift",
+        "Pods/Macaw/Source/utils/UIImage2Image.swift",
+        "Pods/Macaw/Source/views/MacawView.swift",
+        "Pods/Macaw/Source/views/MacawZoom.swift",
+        "Pods/Macaw/Source/views/ShapeLayer.swift",
+        "Pods/Macaw/Source/views/Touchable.swift",
     ],
 )
 swift_library(
@@ -17845,6 +19652,145 @@ swift_library(
         "Pods/NSAttributedStringBuilder13/Sources/NSAttributedStringBuilder/Components/Link.swift",
         "Pods/NSAttributedStringBuilder13/Sources/NSAttributedStringBuilder/Components/StaticComponents.swift",
         "Pods/NSAttributedStringBuilder13/Sources/NSAttributedStringBuilder/NSAttributedStringBuilder.swift",
+    ],
+)
+swift_library(
+    name = "NVActivityIndicatorView_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "NVActivityIndicatorView",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":NVActivityIndicatorView_module_map",
+    ],
+    srcs = [
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationAudioEqualizer.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallBeat.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallClipRotate.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallClipRotateMultiple.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallClipRotatePulse.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallDoubleBounce.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallGridBeat.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallGridPulse.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallPulse.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallPulseRise.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallPulseSync.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallRotate.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallRotateChase.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallScale.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallScaleMultiple.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallScaleRipple.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallScaleRippleMultiple.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallSpinFadeLoader.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallTrianglePath.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallZigZag.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBallZigZagDeflect.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationBlank.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationCircleStrokeSpin.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationCubeTransition.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationLineScale.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationLineScaleParty.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationLineScalePulseOut.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationLineScalePulseOutRapid.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationLineSpinFadeLoader.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationOrbit.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationPacman.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationSemiCircleSpin.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationSquareSpin.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/Animations/NVActivityIndicatorAnimationTriangleSkewSpin.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/NVActivityIndicatorAnimationDelegate.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/NVActivityIndicatorShape.swift",
+        "Pods/NVActivityIndicatorView/Sources/Base/NVActivityIndicatorView.swift",
+    ],
+)
+swift_library(
+    name = "Nuke_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "Nuke",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":Nuke_module_map",
+    ],
+    srcs = [
+        "Pods/Nuke/Sources/Combine/ImagePublisher.swift",
+        "Pods/Nuke/Sources/Core/Caching/DataCache.swift",
+        "Pods/Nuke/Sources/Core/Caching/DataCaching.swift",
+        "Pods/Nuke/Sources/Core/Caching/ImageCache.swift",
+        "Pods/Nuke/Sources/Core/Caching/ImageCaching.swift",
+        "Pods/Nuke/Sources/Core/Caching/ImagePipelineCache.swift",
+        "Pods/Nuke/Sources/Core/Decoding/AssetType.swift",
+        "Pods/Nuke/Sources/Core/Decoding/ImageDecoderRegistry.swift",
+        "Pods/Nuke/Sources/Core/Decoding/ImageDecoders+Default.swift",
+        "Pods/Nuke/Sources/Core/Decoding/ImageDecoders+Empty.swift",
+        "Pods/Nuke/Sources/Core/Decoding/ImageDecoders+Video.swift",
+        "Pods/Nuke/Sources/Core/Decoding/ImageDecoding.swift",
+        "Pods/Nuke/Sources/Core/Encoding/ImageEncoders+Default.swift",
+        "Pods/Nuke/Sources/Core/Encoding/ImageEncoders+ImageIO.swift",
+        "Pods/Nuke/Sources/Core/Encoding/ImageEncoders.swift",
+        "Pods/Nuke/Sources/Core/Encoding/ImageEncoding.swift",
+        "Pods/Nuke/Sources/Core/ImagePipeline.swift",
+        "Pods/Nuke/Sources/Core/ImagePipelineConfiguration.swift",
+        "Pods/Nuke/Sources/Core/ImagePipelineDelegate.swift",
+        "Pods/Nuke/Sources/Core/ImageRequest.swift",
+        "Pods/Nuke/Sources/Core/ImageResponse.swift",
+        "Pods/Nuke/Sources/Core/ImageTask.swift",
+        "Pods/Nuke/Sources/Core/Loading/DataLoader.swift",
+        "Pods/Nuke/Sources/Core/Loading/DataLoading.swift",
+        "Pods/Nuke/Sources/Core/Prefetching/ImagePrefetcher.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageDecompression.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessing.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessingOptions.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+Anonymous.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+Circle.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+Composition.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+CoreImage.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+GaussianBlur.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+Resize.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors+RoundedCorners.swift",
+        "Pods/Nuke/Sources/Core/Processing/ImageProcessors.swift",
+        "Pods/Nuke/Sources/Core/Tasks/AsyncTask.swift",
+        "Pods/Nuke/Sources/Core/Tasks/ImagePipelineTask.swift",
+        "Pods/Nuke/Sources/Core/Tasks/OperationTask.swift",
+        "Pods/Nuke/Sources/Core/Tasks/TaskFetchDecodedImage.swift",
+        "Pods/Nuke/Sources/Core/Tasks/TaskFetchOriginalImageData.swift",
+        "Pods/Nuke/Sources/Core/Tasks/TaskFetchWithPublisher.swift",
+        "Pods/Nuke/Sources/Core/Tasks/TaskLoadData.swift",
+        "Pods/Nuke/Sources/Core/Tasks/TaskLoadImage.swift",
+        "Pods/Nuke/Sources/Internal/AVDataAsset.swift",
+        "Pods/Nuke/Sources/Internal/Allocations.swift",
+        "Pods/Nuke/Sources/Internal/Combine.swift",
+        "Pods/Nuke/Sources/Internal/Deprecated.swift",
+        "Pods/Nuke/Sources/Internal/Extensions.swift",
+        "Pods/Nuke/Sources/Internal/Graphics.swift",
+        "Pods/Nuke/Sources/Internal/ImageRequestKeys.swift",
+        "Pods/Nuke/Sources/Internal/LinkedList.swift",
+        "Pods/Nuke/Sources/Internal/Log.swift",
+        "Pods/Nuke/Sources/Internal/Operation.swift",
+        "Pods/Nuke/Sources/Internal/RateLimiter.swift",
+        "Pods/Nuke/Sources/Internal/ResumableData.swift",
+        "Pods/Nuke/Sources/UI/FetchImage.swift",
+        "Pods/Nuke/Sources/UI/ImageViewExtensions.swift",
     ],
 )
 swift_library(
@@ -18672,6 +20618,54 @@ swift_library(
     ],
 )
 swift_library(
+    name = "SWXMLHash_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "SWXMLHash",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":SWXMLHash_module_map",
+    ],
+    srcs = [
+        "Pods/SWXMLHash/Source/Deserialization/XMLAttributeDeserializable.swift",
+        "Pods/SWXMLHash/Source/Deserialization/XMLElementDeserializable.swift",
+        "Pods/SWXMLHash/Source/Deserialization/XMLIndexer+XMLDeserialization.swift",
+        "Pods/SWXMLHash/Source/Deserialization/XMLObjectDeserialization.swift",
+        "Pods/SWXMLHash/Source/Deserialization/XMLValueDeserialization.swift",
+        "Pods/SWXMLHash/Source/DeserializationTypes/Bool+XMLDeserialization.swift",
+        "Pods/SWXMLHash/Source/DeserializationTypes/Double+XMLDeserialization.swift",
+        "Pods/SWXMLHash/Source/DeserializationTypes/Float+XMLDeserialization.swift",
+        "Pods/SWXMLHash/Source/DeserializationTypes/Int+XMLDeserialization.swift",
+        "Pods/SWXMLHash/Source/DeserializationTypes/String+XMLDeserialization.swift",
+        "Pods/SWXMLHash/Source/Errors/IndexingError.swift",
+        "Pods/SWXMLHash/Source/Errors/ParsingError.swift",
+        "Pods/SWXMLHash/Source/Errors/XMLDeserializationError.swift",
+        "Pods/SWXMLHash/Source/FullXMLParser.swift",
+        "Pods/SWXMLHash/Source/IndexOp.swift",
+        "Pods/SWXMLHash/Source/LazyXMLParser.swift",
+        "Pods/SWXMLHash/Source/Stack.swift",
+        "Pods/SWXMLHash/Source/String+Extensions.swift",
+        "Pods/SWXMLHash/Source/TextElement.swift",
+        "Pods/SWXMLHash/Source/XMLAttribute.swift",
+        "Pods/SWXMLHash/Source/XMLContent.swift",
+        "Pods/SWXMLHash/Source/XMLElement.swift",
+        "Pods/SWXMLHash/Source/XMLHash.swift",
+        "Pods/SWXMLHash/Source/XMLHashOptions.swift",
+        "Pods/SWXMLHash/Source/XMLIndexer.swift",
+        "Pods/SWXMLHash/Source/shim.swift",
+    ],
+)
+swift_library(
     name = "SideMenu_swift",
     alwayslink = True,
     copts = [
@@ -18705,6 +20699,48 @@ swift_library(
         "Pods/SideMenu/Pod/Classes/SideMenuPushCoordinator.swift",
         "Pods/SideMenu/Pod/Classes/SideMenuTransitionController.swift",
         "Pods/SideMenu/Pod/Classes/UITableViewVibrantCell.swift",
+    ],
+)
+swift_library(
+    name = "Siren_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    module_name = "Siren",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":Siren_module_map",
+    ],
+    srcs = [
+        "Pods/Siren/Sources/Extensions/BundleExtension.swift",
+        "Pods/Siren/Sources/Extensions/DateExtension.swift",
+        "Pods/Siren/Sources/Extensions/UIAlertControllerExtension.swift",
+        "Pods/Siren/Sources/Extensions/UserDefaultsExtension.swift",
+        "Pods/Siren/Sources/Managers/APIManager.swift",
+        "Pods/Siren/Sources/Managers/PresentationManager.swift",
+        "Pods/Siren/Sources/Managers/RulesManager.swift",
+        "Pods/Siren/Sources/Models/APIModel.swift",
+        "Pods/Siren/Sources/Models/AlertAction.swift",
+        "Pods/Siren/Sources/Models/AlertConstants.swift",
+        "Pods/Siren/Sources/Models/AppStoreCountry.swift",
+        "Pods/Siren/Sources/Models/Localization.swift",
+        "Pods/Siren/Sources/Models/Model.swift",
+        "Pods/Siren/Sources/Models/PerformCheck.swift",
+        "Pods/Siren/Sources/Models/Rules.swift",
+        "Pods/Siren/Sources/Models/UpdateResults.swift",
+        "Pods/Siren/Sources/Siren.swift",
+        "Pods/Siren/Sources/Utilities/DataParser.swift",
+        "Pods/Siren/Sources/Utilities/KnownError.swift",
+        "Pods/Siren/Sources/View Controllers/SirenViewController.swift",
     ],
 )
 swift_library(
@@ -19601,6 +21637,12 @@ system_library(
     ],
 )
 system_library(
+    name = "AnimatedCollectionViewLayout_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "AnyImageKit_framework_system_library",
     sdk_frameworks = [
         "Accelerate",
@@ -19866,6 +21908,12 @@ system_library(
     ],
 )
 system_library(
+    name = "JLRoutes_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "JRSwizzle_framework_system_library",
     sdk_frameworks = [
         "Foundation",
@@ -19898,6 +21946,12 @@ system_library(
     ],
 )
 system_library(
+    name = "KeychainAccess_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "KingfisherWebP_framework_system_library",
     sdk_frameworks = [
         "Accelerate",
@@ -19919,6 +21973,21 @@ system_library(
     weak_sdk_frameworks = [
         "Combine",
         "SwiftUI",
+    ],
+)
+system_library(
+    name = "Koloda_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "LTMorphingLabel_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "QuartzCore",
+        "UIKit",
     ],
 )
 system_library(
@@ -20031,6 +22100,12 @@ system_library(
     ],
 )
 system_library(
+    name = "Macaw_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "Masonry_framework_system_library",
     sdk_frameworks = [
         "Foundation",
@@ -20071,6 +22146,20 @@ system_library(
 )
 system_library(
     name = "NSAttributedStringBuilder13_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "NVActivityIndicatorView_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "QuartzCore",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "Nuke_framework_system_library",
     sdk_frameworks = [
         "Foundation",
     ],
@@ -20263,6 +22352,12 @@ system_library(
     ],
 )
 system_library(
+    name = "SWXMLHash_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "Sentry_framework_system_library",
     sdk_dylibs = [
         "libc++",
@@ -20274,6 +22369,12 @@ system_library(
 )
 system_library(
     name = "SideMenu_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "Siren_framework_system_library",
     sdk_frameworks = [
         "Foundation",
     ],
@@ -20355,6 +22456,12 @@ system_library(
 )
 system_library(
     name = "SwipeCellKit_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "TOCropViewController_framework_system_library",
     sdk_frameworks = [
         "Foundation",
     ],
@@ -20452,10 +22559,20 @@ system_library(
     ],
 )
 system_library(
+    name = "pop_framework_system_library",
+    sdk_dylibs = [
+        "libc++",
+    ],
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "swift_app_with_pod_use_frameworks_app_system_library",
     sdk_dylibs = [
         "libc++",
         "libcompression",
+        "libicucore",
         "libresolv",
         "libsqlite3",
         "libz",
@@ -20476,6 +22593,7 @@ system_library(
         "CoreText",
         "Foundation",
         "ImageIO",
+        "JavaScriptCore",
         "MapKit",
         "MessageUI",
         "MobileCoreServices",

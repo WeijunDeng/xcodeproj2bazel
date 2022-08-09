@@ -334,33 +334,70 @@ class XcodeprojParser
         target_build_settings = target_build_settings.flatten.map{|x|x.strip}.select{|x|x.size>0}
 
         if multi_value
-            split_values = []
-            target_build_settings.each do | value |
-                while (value.size > 0)
-                    match_result = value.match(/^[\w\-\+\$\{\}\/\.=]+(?: |$)/)
-                    if match_result
-                        split_values.push match_result[0].strip
-                        value = value[match_result[0].size..-1].strip
-                        next
-                    end
-                    match_result = value.match(/^[\w\-\+\$\{\}\/\.=]*\"[\w\-\+\$\{\}\/\.=]+\"(?: |$)/)
-                    if match_result
-                        split_values.push match_result[0].gsub("\"", "").strip
-                        value = value[match_result[0].size..-1].strip
-                        next
-                    end
-                    binding.pry
-                end
-            end
-            target_build_settings = split_values
+            target_build_settings = split_multi_values(target_build_settings)
         else
             binding.pry if target_build_settings.size > 1
         end
         return target_build_settings
     end
 
+    def split_multi_values(values)
+        split_values = []
+        values.flatten.each do | value |
+            while (value.size > 0)
+                match_result = value.match(/^[\w\-\+\$\{\}\/\.\*=@]+(?: |$)/)
+                if match_result
+                    match_value = match_result[0].strip
+                    split_values.push match_value
+                    value = value[match_result[0].size..-1].strip
+                    next
+                end
+                match_result = value.match(/^[\w\-\+\$\{\}\/\.\*=@]*\"[\w\-\+\$\{\}\/\.\*=@ ]*\"(?: |$)/)
+                if match_result
+                    match_value = match_result[0].strip
+                    if match_value.include? " "
+                        match_value = match_value.gsub("\"", "\\\"")
+                    else
+                        match_value = match_value.gsub("\"", "")
+                    end
+                    split_values.push match_value
+                    value = value[match_result[0].size..-1].strip
+                    next
+                end
+                match_result = value.match(/^[\w\-\+\$\{\}\/\.\*=@]*\'[\w\-\+\$\{\}\/\.\*=@ \"]*\'(?: |$)/)
+                if match_result
+                    match_value = match_result[0].strip
+                    match_value = match_value.gsub("\"", "\\\"")
+                    split_values.push match_value
+                    value = value[match_result[0].size..-1].strip
+                    next
+                end
+                binding.pry
+            end
+        end
+        return split_values
+    end
+
+    def merge_flags(flags)
+        (0..(flags.size-1)).each do | flag_i |
+            if flag_i + 1 < flags.size
+                if flags[flag_i].start_with? "-" and not flags[flag_i].include? "="
+                    if not flags[flag_i+1].start_with? "-"
+                        flags[flag_i] = flags[flag_i] + " " + flags[flag_i+1]
+                        flags[flag_i+1] = ""
+                    end
+                end
+            end
+        end
+        flags.delete_if{|x|x.size==0}
+    end
+
     def get_exist_build_settings_path(target, variable_hash, path)
+        binding.pry if path.include? "'"
+        binding.pry if path.include? "\""
         origin_path = path
+
+        binding.pry if get_target_build_settings(target, variable_hash, "EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", true).size > 0
 
         recursive = false
         if path.end_with? "/**"
@@ -477,22 +514,21 @@ class XcodeprojParser
                 binding.pry unless FileFilter.get_source_file_extnames_all.include? extname
                 binding.pry unless file_path and File.exist? file_path and File.file? file_path
 
-                compiler_flags = ""
+                file_compiler_flags = ""
                 if file.settings
                     file.settings.each do | k, v |
                         if k == "COMPILER_FLAGS"
                             binding.pry unless v.class == String
-                            compiler_flags = v
+                            file_compiler_flags = v
                         else
                             binding.pry
                         end
                     end
                 end
-                compiler_flags = compiler_flags.gsub("$(inherited)", "").strip
-                binding.pry if compiler_flags.include? "\n"
-                binding.pry if compiler_flags.include? "$"
-                compiler_flags = compiler_flags.gsub("\"", "\\\"")
-                fileflags = [extname, compiler_flags]
+                file_compiler_flags = file_compiler_flags.gsub("$(inherited)", "").strip
+                file_compiler_flags = split_multi_values([file_compiler_flags])
+                file_compiler_flags = merge_flags(file_compiler_flags).uniq
+                fileflags = [extname, file_compiler_flags]
                 flags_sources_hash[fileflags] = Set.new unless flags_sources_hash[fileflags]
                 flags_sources_hash[fileflags].add file_path
             end
@@ -526,25 +562,30 @@ class XcodeprojParser
         return resources_files, dependency_resource_product_file_names
     end
 
-    def get_target_header_dirs(target, variable_hash, target_cxx_compile_flags)
+    def get_target_header_dirs(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags)
         target_header_dirs = []
         # TODO, split HEADER_SEARCH_PATHS and USER_HEADER_SEARCH_PATHS
         search_paths = get_target_build_settings(target, variable_hash, "HEADER_SEARCH_PATHS", true) + get_target_build_settings(target, variable_hash, "USER_HEADER_SEARCH_PATHS", true)
-        # flags = target_cxx_compile_flags
-        # if flags.size > 0
-        #     (0..(flags.size-1)).each do | flag_i |
-        #         flag = flags[flag_i]
-        #         if flag == "-isystem" and flag_i < flags.size
-        #             search_paths.push flags[flag_i+1]
-        #             flags[flag_i] = ""
-        #             flags[flag_i+1] = ""
-        #             next
-        #         end
-        #         binding.pry if flag.start_with? "-isystem"
-        #     end
-        #     flags.delete_if{|x|x.size==0}
-        # end
-
+        [target_c_compile_flags, target_cxx_compile_flags].each do | flags |
+            if flags.size > 0
+                (0..(flags.size-1)).each do | flag_i |
+                    flag = flags[flag_i]
+                    if flag == "-isystem" and flag_i + 1 < flags.size
+                        search_paths.push flags[flag_i+1]
+                        flags[flag_i] = ""
+                        flags[flag_i+1] = ""
+                        next
+                    end
+                    binding.pry if flag.start_with? "-isystem"
+                    binding.pry if flag.start_with? "-I"
+                    binding.pry if flag.start_with? "-iquote"
+                    binding.pry if flag.start_with? "-isysroot"
+                    binding.pry if flag.start_with? "-include"
+                end
+                flags.delete_if{|x|x.size==0}
+            end
+        end
+        search_paths.push get_target_src_root(target, variable_hash)
         search_paths.each do | origin_search_path |
             search_path = get_exist_build_settings_path(target, variable_hash, origin_search_path)
             if search_path and search_path.size > 0
@@ -569,7 +610,7 @@ class XcodeprojParser
         if flags.size > 0
             (0..(flags.size-1)).each do | flag_i |
                 flag = flags[flag_i]
-                if flag == "-F" and flag_i < flags.size
+                if flag == "-F" and flag_i + 1< flags.size
                     search_paths.push flags[flag_i+1]
                     flags[flag_i] = ""
                     flags[flag_i+1] = ""
@@ -583,7 +624,7 @@ class XcodeprojParser
             if flags.size > 0
                 (0..(flags.size-1)).each do | flag_i |
                     flag = flags[flag_i]
-                    if flag == "-iframework" and flag_i < flags.size
+                    if flag == "-iframework" and flag_i + 1 < flags.size
                         search_paths.push flags[flag_i+1]
                         flags[flag_i] = ""
                         flags[flag_i+1] = ""
@@ -615,7 +656,7 @@ class XcodeprojParser
         if flags.size > 0
             (0..(flags.size-1)).each do | flag_i |
                 flag = flags[flag_i]
-                if flag == "-L" and flag_i < flags.size
+                if flag == "-L" and flag_i + 1 < flags.size
                     search_paths.push flags[flag_i+1]
                     flags[flag_i] = ""
                     flags[flag_i+1] = ""
@@ -724,8 +765,25 @@ class XcodeprojParser
                         user_library_paths.push file_path
                     elsif extname == ".framework"
                         user_framework_paths.push file_path
+                    elsif extname == ".xcframework"
+                        xcframework_info = FileFilter.get_match_xcframework_info(file_path)
+                        binding.pry unless xcframework_info
+                        library_path = xcframework_info[:LibraryPath]
+                        binding.pry unless library_path
+                        library_path = File.realpath library_path                        
+                        if File.extname(library_path).downcase == ".framework"
+                            library_path = FileFilter.get_exist_expand_path_dir(library_path)
+                            binding.pry unless library_path
+                            user_framework_paths.push library_path
+                        elsif File.extname(library_path).downcase == ".a"
+                            library_path = FileFilter.get_exist_expand_path_file(library_path)
+                            binding.pry unless library_path
+                            user_library_paths.push library_path
+                        else
+                            binding.pry
+                        end 
                     else
-                        raise "unexpected extname #{extname}"
+                        binding.pry
                     end
                 end
             else
@@ -772,45 +830,111 @@ class XcodeprojParser
                 end
             end
         end
-        link_arguments = Set.new
         alwayslink_product_file_names = Set.new
         flags = target_link_flags
         if flags.size > 0
             (0..(flags.size-1)).each do | flag_i |
                 flag = flags[flag_i]
                 binding.pry if flag.downcase.include? ".xcframework"
-                force_load = (flag_i > 0 and flags[flag_i-1] == "-force_load")
-                if flag_i > 0 and (flags[flag_i-1] == "-framework" or flags[flag_i-1] == "-weak_framework")
-                    if force_load
-                        raise "unsupported flag #{flag}"
-                    end
-                    if flag.include? "." or flag.include? "/"
-                        raise "unsupported flag #{flag}"
-                    end
-                    system_framework = FileFilter.get_system_framework_by_name(flag)
-                    if system_framework
-                        if flags[flag_i-1] == "-weak_framework"
-                            system_weak_frameworks.add system_framework
+
+                if flag_i + 1 < flags.size
+                    if flag == "-framework" or flag == "-weak_framework"
+                        framework_name = flags[flag_i+1]
+                        system_framework = FileFilter.get_system_framework_by_name(framework_name)
+                        if system_framework
+                            if flag == "-weak_framework"
+                                system_weak_frameworks.add system_framework
+                            else
+                                system_frameworks.add system_framework
+                            end
                         else
-                            system_frameworks.add system_framework
+                            found = false
+                            framework_file_name = framework_name + ".framework"
+                            target_framework_dirs.each do | dir |
+                                framework_path = dir + "/" + framework_file_name
+                                framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
+                                if framework_path
+                                    user_framework_paths.push framework_path
+                                    found = true
+                                    break
+                                end
+                            end
+                            unless found
+                                target_framework_dirs.each do | dir |
+                                    Dir.glob("#{dir}/*.xcframework").sort.each do | xcframework_path | 
+                                        xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
+                                        next unless xcframework_info
+                                        library_path = xcframework_info[:LibraryPath]
+                                        if library_path and File.basename(library_path) == framework_file_name
+                                            library_path = FileFilter.get_exist_expand_path_dir(library_path)
+                                            binding.pry unless library_path
+                                            library_path = File.realpath library_path
+                                            user_framework_paths.push library_path
+                                            found = true
+                                            break
+                                        end
+                                    end
+                                    break if found
+                                end
+                            end
+                            unless found
+                                dependency_target_product_file_names.push framework_file_name
+                            end
                         end
+                        flags[flag_i] = ""
+                        flags[flag_i+1] = ""
+                        next
+                    end
+                end
+
+                if flag.start_with? "-l"
+                    library_name = flag.sub("-l", "")
+                    system_library = FileFilter.get_system_library_by_name(library_name)
+                    if system_library
+                        system_libraries.add system_library
                     else
+                        library_file_name = "lib" + flag.sub("-l", "") + ".a"
                         found = false
-                        framework_name = flag + ".framework"
-                        target_framework_dirs.each do | dir |
-                            framework_path = dir + "/" + framework_name
-                            framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
-                            if framework_path
-                                user_framework_paths.push framework_path
+                        target_library_dirs.each do | dir |
+                            library_path = dir + "/" + library_file_name
+                            library_path = FileFilter.get_exist_expand_path_file(library_path)
+                            if library_path
+                                library_path = File.realpath library_path
+                                user_library_paths.push library_path
                                 found = true
                                 break
                             end
                         end
                         unless found
-                            dependency_target_product_file_names.push flag + ".framework"
+                            target_framework_dirs.each do | dir |
+                                Dir.glob("#{dir}/*.xcframework").sort.each do | xcframework_path | 
+                                    xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
+                                    next unless xcframework_info
+                                    library_path = xcframework_info[:LibraryPath]
+                                    if library_path and File.basename(library_path) == library_file_name
+                                        library_path = FileFilter.get_exist_expand_path_file(library_path)
+                                        binding.pry unless library_path
+                                        library_path = File.realpath library_path
+                                        user_library_paths.push library_path
+                                        found = true
+                                        break
+                                    end
+                                end
+                                break if found
+                            end
+                        end
+
+                        unless found
+                            dependency_target_product_file_names.push library_file_name
                         end
                     end
+                    flags[flag_i] = ""
                     next
+                end
+
+                force_load = (flag_i > 0 and flags[flag_i-1] == "-force_load")
+                if force_load
+                    flags[flag_i-1] = ""
                 end
                 if File.extname(File.dirname(flag)).downcase == ".framework"
                     framework_path = File.dirname(flag)
@@ -822,6 +946,7 @@ class XcodeprojParser
                         dependency_target_product_file_names.push File.basename(File.dirname(flag))
                         alwayslink_product_file_names.add File.basename(File.dirname(flag)) if force_load
                     end
+                    flags[flag_i] = ""
                     next
                 end
                 if File.extname(flag).downcase == ".a"
@@ -835,49 +960,19 @@ class XcodeprojParser
                         dependency_target_product_file_names.push File.basename(flag)
                         alwayslink_product_file_names.add File.basename(flag) if force_load
                     end
+                    flags[flag_i] = ""
                     next
                 end
-                if flag.start_with? "-l"
-                    system_library = FileFilter.get_system_library_by_name(flag.sub("-l", ""))
-                    if system_library
-                        system_libraries.add system_library
-                    else
-                        library_name = "lib" + flag.sub("-l", "") + ".a"
-                        found = false
-                        target_library_dirs.each do | dir |
-                            library_path = dir + "/" + library_name
-                            library_path = FileFilter.get_exist_expand_path_file(library_path)
-                            if library_path
-                                library_path = File.realpath library_path
-                                user_library_paths.push library_path
-                                found = true
-                                break
-                            end
-                        end
-                        unless found
-                            if force_load
-                                raise "unsupported flag #{flag}"
-                            end
-                            dependency_target_product_file_names.push library_name
-                            alwayslink_product_file_names.add library_name if force_load
-                        end
-                        next
-                    end
-                end
-    
-                next if flag == "-framework" or flag == "-weak_framework"
-                next if flag == "-force_load"
-                
+                    
                 if flag == "-all_load"
                     alwayslink_product_file_names.add product_file_name
+                    flags[flag_i] = ""
                     next
-                end
-                
-                link_arguments.add flag
-
+                end                
             end
+            flags.delete_if{|x|x.size==0}
         end
-    
+
         target_links_hash = {}
         target_links_hash[:user_framework_paths] = user_framework_paths.uniq
         target_links_hash[:user_library_paths] = user_library_paths.uniq
@@ -886,7 +981,6 @@ class XcodeprojParser
         target_links_hash[:system_libraries] = system_libraries
         target_links_hash[:dependency_target_product_file_names] = dependency_target_product_file_names.uniq
         target_links_hash[:alwayslink_product_file_names] = alwayslink_product_file_names
-        target_links_hash[:link_arguments] = link_arguments
 
         return target_links_hash
     end
@@ -1189,31 +1283,6 @@ class XcodeprojParser
         return nil
     end
 
-    def get_simplify_flags(flags)
-        unless flags and flags.size > 0
-            return []
-        end
-        simple_flags = []
-        (0..(flags.size-1)).each do | flag_i |
-            flag = flags[flag_i]
-            next if flag == "-framework"
-            next if flag_i > 0 and flags[flag_i-1] == "-framework"
-            next if flag == "-weak_framework"
-            next if flag_i > 0 and flags[flag_i-1] == "-weak_framework"
-            next if flag == "-force_load"
-            next if flag_i > 0 and flags[flag_i-1] == "-force_load"
-            
-            next if File.extname(flag).downcase == ".a"
-            next if File.extname(File.dirname(flag)).downcase == ".framework"
-            next if flag.start_with? "-l"
-
-            binding.pry if flag.include? "$"
-            simple_flags.push flag
-            
-        end
-        return simple_flags
-    end
-
     def parse_xcodeproj(workspace_path, input_project_path)
         target_info_hash_for_xcode = {}
     
@@ -1234,7 +1303,7 @@ class XcodeprojParser
     
                 target_c_compile_flags, target_cxx_compile_flags, target_c_warning_flags, target_swift_compile_flags = get_target_compile_flags(target, variable_hash)
                 target_link_flags = get_target_link_flags(target, variable_hash)
-                target_header_dirs = get_target_header_dirs(target, variable_hash, target_cxx_compile_flags)
+                target_header_dirs = get_target_header_dirs(target, variable_hash, target_c_compile_flags, target_cxx_compile_flags)
                 target_framework_dirs = get_target_framework_dirs(target, variable_hash, target_link_flags, target_c_compile_flags, target_cxx_compile_flags)
                 target_library_dirs = get_target_library_dirs(target, variable_hash, target_link_flags)
                 pch = get_target_pch(target, variable_hash)
@@ -1293,10 +1362,10 @@ class XcodeprojParser
                 info_hash[:iphoneos_deployment_target] = iphoneos_deployment_target
                 info_hash[:targeted_device_family] = targeted_device_family
 
-                info_hash[:target_c_compile_flags] = get_simplify_flags(target_c_compile_flags) + get_simplify_flags(target_c_warning_flags)
-                info_hash[:target_cxx_compile_flags] = get_simplify_flags target_cxx_compile_flags
-                info_hash[:target_swift_compile_flags] = get_simplify_flags target_swift_compile_flags
-                info_hash[:target_link_flags] = get_simplify_flags target_link_flags
+                info_hash[:target_c_compile_flags] = merge_flags(target_c_compile_flags + target_c_warning_flags).uniq
+                info_hash[:target_cxx_compile_flags] = merge_flags(target_cxx_compile_flags).uniq
+                info_hash[:target_swift_compile_flags] = merge_flags(target_swift_compile_flags).uniq
+                info_hash[:target_link_flags] = merge_flags(target_link_flags).uniq
 
                 target_info_hash_for_xcode[target.name] = info_hash
             end

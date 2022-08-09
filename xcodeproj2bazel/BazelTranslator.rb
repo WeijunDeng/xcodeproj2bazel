@@ -173,7 +173,7 @@ class BazelTranslator
 
             flags_sources_hash.each do | flags, source_files |
                 extname = flags[0]
-                compiler_flags = flags[1]
+                file_compiler_flags = flags[1]
 
                 if FileFilter.get_source_file_extnames_d.include? extname
                     dtrace_target_name = get_bazel_target_name_for_product_file_name_and_extname_and_index_and_count(product_file_name, extname, 0, 0)
@@ -252,9 +252,9 @@ class BazelTranslator
                         target_info["copts"] = [] unless target_info["copts"]
                         target_info["copts"] = target_info["copts"] + target_swift_compile_flags
                     end
-                    if compiler_flags.size > 0
+                    if file_compiler_flags.size > 0
                         target_info["copts"] = [] unless target_info["copts"]
-                        target_info["copts"] = target_info["copts"] + [compiler_flags]
+                        target_info["copts"] = target_info["copts"] + file_compiler_flags
                     end
                 end
 
@@ -324,8 +324,8 @@ class BazelTranslator
                     end
                     source_files.each do | file |
                         if target_info["rule"] == "objc_library"
-                            binding.pry if compiler_flags.include? "-fobjc-arc" and compiler_flags.include? "-fno-objc-arc"
-                            if clang_enable_objc_arc == true and not compiler_flags.include? "-fno-objc-arc"
+                            binding.pry if file_compiler_flags.include? "-fobjc-arc" and file_compiler_flags.include? "-fno-objc-arc"
+                            if clang_enable_objc_arc == true and not file_compiler_flags.include? "-fno-objc-arc"
                                 target_info["srcs"] = Set.new unless target_info["srcs"]
                                 target_info["srcs"].add file
                             else
@@ -337,9 +337,9 @@ class BazelTranslator
                             target_info["srcs"].add file
                         end
                     end
-                    if compiler_flags.size > 0
+                    if file_compiler_flags.size > 0
                         target_info["copts"] = [] unless target_info["copts"]
-                        target_info["copts"] = target_info["copts"] + [compiler_flags]
+                        target_info["copts"] = target_info["copts"] + file_compiler_flags
                     end
                 end
             end
@@ -560,61 +560,77 @@ class BazelTranslator
     end
     
     def generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
-        framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
-        target_name = get_bazel_target_name_for_framework_import framework_path
-        unless target_info_hash_for_bazel.has_key? target_name
-            framework_name = File.basename(framework_path).split(".")[0]
-            framework_library_path = framework_path + "/" + framework_name
-            unless File.exist? framework_library_path
-                raise "unexpected #{framework_library_path} not exist"
-            end
-    
-            framework_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
-            is_dynamic = Open3.capture3("file #{framework_library_path}")[0].include? "dynamically linked shared library"
-            if is_dynamic == true
-                framework_target_info["rule"] = "apple_dynamic_framework_import"
-            elsif is_dynamic == false
-                framework_target_info["rule"] = "apple_static_framework_import"
-                if Dir.glob(framework_path + "/Modules/*.swiftmodule").size > 0
-                    framework_target_info["alwayslink"] = "True"
+        if framework_path.include? ".xcframework/"
+            xcframework_path = framework_path.split(".xcframework/")[0] + ".xcframework"
+            target_name = generate_bazel_target_name_for_xcframework_import(xcframework_path, target_info_hash_for_bazel)
+            return target_name
+        else
+            framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
+            target_name = get_bazel_target_name_for_framework_import framework_path
+            unless target_info_hash_for_bazel.has_key? target_name
+                framework_name = File.basename(framework_path).split(".")[0]
+                framework_library_path = framework_path + "/" + framework_name
+                unless File.exist? framework_library_path
+                    raise "unexpected #{framework_library_path} not exist"
                 end
-            else
-                raise "unexpected #{framework_library_path} is_dynamic"
+        
+                framework_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
+                is_dynamic = Open3.capture3("file #{framework_library_path}")[0].include? "dynamically linked shared library"
+                if is_dynamic == true
+                    framework_target_info["rule"] = "apple_dynamic_framework_import"
+                elsif is_dynamic == false
+                    framework_target_info["rule"] = "apple_static_framework_import"
+                    if Dir.glob(framework_path + "/Modules/*.swiftmodule").size > 0
+                        framework_target_info["alwayslink"] = "True"
+                    end
+                else
+                    raise "unexpected #{framework_library_path} is_dynamic"
+                end
+                framework_target_info["framework_imports"] = framework_path
             end
-            framework_target_info["framework_imports"] = framework_path
+            return target_name
         end
-        return target_name
     end
     
-    def generate_bazel_target_name_for_xcframework_import(framework_path, target_info_hash_for_bazel)
-        framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
-        target_name = get_bazel_target_name_for_framework_import framework_path
+    def generate_bazel_target_name_for_xcframework_import(xcframework_path, target_info_hash_for_bazel)
+        xcframework_path = FileFilter.get_exist_expand_path_dir(xcframework_path)
+        target_name = get_bazel_target_name_for_framework_import xcframework_path
         unless target_info_hash_for_bazel.has_key? target_name
-            framework_name = File.basename(framework_path).split(".")[0]
-            framework_library_paths = Dir.glob("#{framework_path}/*/lib#{framework_name}.a").sort
-            binding.pry unless framework_library_paths.size > 0
-            framework_library_path = framework_library_paths[0]
-            unless File.exist? framework_library_path
-                binding.pry
-                raise "unexpected #{framework_library_path} not exist"
+            framework_name = File.basename(xcframework_path).split(".")[0]
+
+            xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
+            binding.pry unless xcframework_info
+            library_path = xcframework_info[:LibraryPath]
+            if library_path.end_with? ".framework"
+                library_path = library_path + "/" + framework_name
             end
-            binding.pry if Open3.capture3("file #{framework_library_path}")[0].include? "dynamically linked shared library"
-    
+            binding.pry unless File.exist? library_path
+
             framework_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
-            framework_target_info["rule"] = "apple_static_xcframework_import"
-            framework_target_info["xcframework_imports"] = framework_path
+            framework_target_info["xcframework_imports"] = xcframework_path
+            if Open3.capture3("file #{library_path}")[0].include? "dynamically linked shared library"
+                framework_target_info["rule"] = "apple_dynamic_xcframework_import"
+            else
+                framework_target_info["rule"] = "apple_static_xcframework_import"
+            end
         end
         return target_name
     end
 
     def generate_bazel_target_name_for_library_import(library_path, target_info_hash_for_bazel)
-        library_target_name = get_bazel_target_name_for_library_import library_path
-        unless target_info_hash_for_bazel.has_key? library_target_name
-            target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, library_target_name)
-            target_info["rule"] = "objc_import"
-            target_info["archives"] = library_path
+        if library_path.include? ".xcframework/"
+            xcframework_path = library_path.split(".xcframework/")[0] + ".xcframework"
+            target_name = generate_bazel_target_name_for_xcframework_import(xcframework_path, target_info_hash_for_bazel)
+            return target_name
+        else
+            target_name = get_bazel_target_name_for_library_import library_path
+            unless target_info_hash_for_bazel.has_key? target_name
+                target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
+                target_info["rule"] = "objc_import"
+                target_info["archives"] = library_path
+            end
+            return target_name
         end
-        return library_target_name
     end
     
     def add_file_deps(dep_info, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)

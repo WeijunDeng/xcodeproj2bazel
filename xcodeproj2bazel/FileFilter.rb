@@ -137,6 +137,7 @@ class FileFilter
         binding.pry unless convert_result[2] == 0
         json_content = convert_result[0]
         json_object = JSON.parse(json_content)
+        binding.pry unless json_object and json_object["AvailableLibraries"]
         match_libraries = []
         json_object["AvailableLibraries"].each do | x |
             next unless x["SupportedPlatform"] == DynamicConfig.get_build_platform
@@ -145,10 +146,19 @@ class FileFilter
             match_libraries.push x
         end
         binding.pry unless match_libraries.size == 1
+        binding.pry unless match_libraries[0]["LibraryIdentifier"]
+        binding.pry unless match_libraries[0]["LibraryPath"]
+
         path = xcframework_path + "/" + match_libraries[0]["LibraryIdentifier"]
         hash = {}
-        hash[:LibraryPath] = path + "/" + match_libraries[0]["LibraryPath"]
-        hash[:HeadersPath] = path + "/" + match_libraries[0]["HeadersPath"]
+        if match_libraries[0]["LibraryPath"]
+            hash[:LibraryPath] = path + "/" + match_libraries[0]["LibraryPath"]
+            binding.pry unless File.exist? hash[:LibraryPath]
+        end
+        if match_libraries[0]["HeadersPath"]
+            hash[:HeadersPath] = path + "/" + match_libraries[0]["HeadersPath"]
+            binding.pry unless File.exist? hash[:HeadersPath]
+        end
         @@xcframework_path_info_hash[origin_xcframework_path] = hash
         return hash
     end

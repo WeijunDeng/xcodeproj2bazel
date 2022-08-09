@@ -211,28 +211,6 @@ class DependencyAnalyzer
             end
 
             unless match_header
-                if import_file_path.include? "/" and not import_file_path.include? ".."
-                    target_framework_dirs.each do | dir |
-                        Dir.glob("#{dir}/*.xcframework").sort.each do | xcframework_path | 
-                            xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
-                            next unless xcframework_info
-                            header_dir = xcframework_info[:HeadersPath]
-                            header = header_dir + "/" + import_file_path
-                            header = FileFilter.get_exist_expand_path_file(header)
-                            if header
-                                # xcframework, need more test
-                                match_header = header
-                                FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search xcframework in dir #{dir}"
-                                file_deps_hash[file].add [:headers, match_header, header_dir]
-                                break
-                            end
-                        end
-                        break if match_header
-                    end
-                end
-            end
-
-            unless match_header
                 if import_file_path.end_with? "-Swift.h"
                     file_deps_hash[file].add [:swift_header, import_file_path]
                 else

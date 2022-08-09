@@ -58,8 +58,8 @@ bash test.sh
 - Support objc modules cache with sandbox
 - Support objc auto link framework
 - Support auto remove absolute path
-- Support CMake/Cocoapods generated project
-- Support static library, static framework and dynamic framework
+- Support Cocoapods generated project (100+ in [example](https://github.com/WeijunDeng/xcodeproj2bazel/blob/main/examples/swift_app_with_pod_no_use_frameworks/Podfile))
+- Support static library, static framework, dynamic framework, static xcframework, dynamic xcframework
 - Support iOS app and extension
 - Support major xcode build settings
     - ASSETCATALOG_COMPILER_APPICON_NAME
@@ -115,6 +115,3 @@ Doing or Planning:
 - read iOS default template build settings to parse
 - test for xcode 14 (xcode 13 now)
 - more examples
-- support xcframework
-
-
