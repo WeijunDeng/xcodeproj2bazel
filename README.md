@@ -33,9 +33,7 @@ bash test.sh
 
 # Feature
 
-- Support mixed objc and swift
-- Support header map
-- Support module map
+- Support Cocoapods generated project (100+ in [example](https://github.com/WeijunDeng/xcodeproj2bazel/blob/main/examples/swift_app_with_pod_no_use_frameworks/Podfile))
 - Support compile file extname
     - .c
     - .cc
@@ -52,15 +50,29 @@ bash test.sh
     - .pch
     - .s
     - .swift
-- Support .bundle, .xib, .storyboard, .metal, .xcassets, .appiconset and more
-- Support import header dependency simulation
-- Support objc modules
-- Support objc modules cache with sandbox
-- Support objc auto link framework
-- Support auto remove absolute path
-- Support Cocoapods generated project (100+ in [example](https://github.com/WeijunDeng/xcodeproj2bazel/blob/main/examples/swift_app_with_pod_no_use_frameworks/Podfile))
-- Support static library, static framework, dynamic framework, static xcframework, dynamic xcframework
-- Support iOS app and extension
+- Support rules
+    - apple_bundle_import
+    - apple_bundle_version
+    - apple_dynamic_framework_import
+    - apple_dynamic_xcframework_import
+    - apple_resource_bundle
+    - apple_resource_group
+    - apple_static_framework_import
+    - apple_static_xcframework_import
+    - cc_header
+    - cc_library
+    - dtrace_compile
+    - header_map
+    - ios_application
+    - ios_extension
+    - ios_framework
+    - ios_static_framework
+    - metal_library
+    - module_map
+    - objc_library
+    - static_library
+    - swift_library
+    - system_library
 - Support major xcode build settings
     - ASSETCATALOG_COMPILER_APPICON_NAME
     - ATTRIBUTES

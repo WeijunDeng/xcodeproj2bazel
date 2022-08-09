@@ -345,14 +345,15 @@ class XcodeprojParser
         split_values = []
         values.flatten.each do | value |
             while (value.size > 0)
-                match_result = value.match(/^[\w\-\+\$\{\}\/\.\*=@]+(?: |$)/)
+                normal_chars = /\w\-\+\$\{\}\(\)\/\.\*=@/
+                match_result = value.match(/^[#{normal_chars}]+(?: |$)/)
                 if match_result
                     match_value = match_result[0].strip
                     split_values.push match_value
                     value = value[match_result[0].size..-1].strip
                     next
                 end
-                match_result = value.match(/^[\w\-\+\$\{\}\/\.\*=@]*\"[\w\-\+\$\{\}\/\.\*=@ ]*\"(?: |$)/)
+                match_result = value.match(/^(?:[#{normal_chars}]*\"[#{normal_chars} ]*\"[#{normal_chars}]*)+(?: |$)/)
                 if match_result
                     match_value = match_result[0].strip
                     if match_value.include? " "
@@ -364,10 +365,20 @@ class XcodeprojParser
                     value = value[match_result[0].size..-1].strip
                     next
                 end
-                match_result = value.match(/^[\w\-\+\$\{\}\/\.\*=@]*\'[\w\-\+\$\{\}\/\.\*=@ \"]*\'(?: |$)/)
+                match_result = value.match(/^(?:[#{normal_chars}]*\'[#{normal_chars}\"]*\'[#{normal_chars}]*)+(?: |$)/)
                 if match_result
                     match_value = match_result[0].strip
                     match_value = match_value.gsub("\"", "\\\"")
+                    if match_value.match(/^\'[#{normal_chars}]*\'$/)
+                        match_value = match_value.gsub("'", "")
+                    end
+                    split_values.push match_value
+                    value = value[match_result[0].size..-1].strip
+                    next
+                end
+                match_result = value.match(/^\"[#{normal_chars}]+$/)
+                if match_result
+                    match_value = match_result[0].gsub("\"", "").strip
                     split_values.push match_value
                     value = value[match_result[0].size..-1].strip
                     next
