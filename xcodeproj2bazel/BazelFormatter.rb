@@ -12,8 +12,8 @@ class BazelFormatter
         lines.push 'load("xcodeproj2bazel_rules/module_map.bzl", "module_map")'
         lines.push 'load("xcodeproj2bazel_rules/hmap.bzl", "header_map")'
         
-        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")'
-        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")'
+        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")'
+        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")'
         lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")'
         lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")'
         lines.push 'load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")'
@@ -79,7 +79,10 @@ class BazelFormatter
                     end
                 elsif key == "deps" or key == "frameworks" or key == "extensions" or key.end_with? "header_maps" or key.end_with? "module_maps" or key == "swiftc_inputs"
                     lines.push "    #{key} = [\n#{hash[key].uniq.map{|e| "        \":#{e}\",\n"}.join("")}    ]," if hash[key].size > 0
-                elsif key == "framework_imports" or key == "xcframework_imports"
+                elsif key == "framework_imports"
+                    # use resource rules to import resource in framework
+                    lines.push "    #{key} = glob([\n        \"#{hash[key]}/Info.plist\",\n        \"#{hash[key]}/Headers/**\",\n        \"#{hash[key]}/Modules/**\",\n        \"#{hash[key]}/#{File.basename(hash[key]).split(".")[0]}\"\n    ]),"
+                elsif key == "xcframework_imports"
                     lines.push "    #{key} = glob([\"#{hash[key]}/**\"]),"
                 elsif key == "archives" or key == "bundle_imports"
                     lines.push "    #{key} = [\"#{hash[key]}\"],"

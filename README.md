@@ -66,7 +66,6 @@ bash test.sh
     - ios_application
     - ios_extension
     - ios_framework
-    - ios_static_framework
     - metal_library
     - module_map
     - objc_library

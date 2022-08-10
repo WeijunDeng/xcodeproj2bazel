@@ -16,7 +16,8 @@ class BazelTranslator
             end
 
             next unless module_map_file or umbrella_header
-            next unless moduel_map_headers.size > 0
+            next unless moduel_map_headers and moduel_map_headers.size > 0
+            next if module_map_file and module_map_file.include? ".framework/"
 
             header_target_name = get_bazel_target_name_for_module_map(product_module_name, false)
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -228,7 +229,7 @@ class BazelTranslator
                                 "0 " + x
                             elsif x.end_with? "_private_header_map"
                                 "1 " + x
-                            elsif x.end_with? "_private_header_map"
+                            elsif x.end_with? "_project_header_map"
                                 "2 " + x
                             else
                                 "3 " + x
@@ -255,6 +256,10 @@ class BazelTranslator
                     if file_compiler_flags.size > 0
                         target_info["copts"] = [] unless target_info["copts"]
                         target_info["copts"] = target_info["copts"] + file_compiler_flags
+                    end
+                    if target_link_flags.size > 0
+                        target_info["linkopts"] = [] unless target_info["linkopts"]
+                        target_info["linkopts"] = target_info["linkopts"] + target_link_flags
                     end
                 end
 
@@ -315,7 +320,7 @@ class BazelTranslator
                                 "0 " + x
                             elsif x.end_with? "_private_header_map"
                                 "1 " + x
-                            elsif x.end_with? "_private_header_map"
+                            elsif x.end_with? "_project_header_map"
                                 "2 " + x
                             else
                                 "3 " + x
@@ -341,6 +346,10 @@ class BazelTranslator
                         target_info["copts"] = [] unless target_info["copts"]
                         target_info["copts"] = target_info["copts"] + file_compiler_flags
                     end
+                    if target_link_flags.size > 0
+                        target_info["linkopts"] = [] unless target_info["linkopts"]
+                        target_info["linkopts"] = target_info["linkopts"] + target_link_flags
+                    end
                 end
             end
     
@@ -353,7 +362,7 @@ class BazelTranslator
                 if mach_o_type == "mh_dylib"
                     target_info["rule"] = "ios_framework"
                 else
-                    target_info["rule"] = "ios_static_framework"
+                    target_info["rule"] = "static_library"
                 end
             elsif File.extname(product_file_name) == ".app"
                 target_info["rule"] = "ios_application"
@@ -382,13 +391,7 @@ class BazelTranslator
             end
     
             target_info["deps"] = Set.new unless target_info["deps"]
-    
-            if target_info["rule"] == "static_library" and swift_bazel_target_name
-                target_info["deps"].merge (dep_bazel_source_targets - [swift_bazel_target_name].to_set)
-                target_info["swift_deps"] = [":" + swift_bazel_target_name]
-            else
-                target_info["deps"].merge dep_bazel_source_targets
-            end
+            target_info["deps"].merge dep_bazel_source_targets
 
             target_links_hash[:user_framework_paths].each do | framework_path |
                 dep_bazel_target_name_name = generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
@@ -484,15 +487,10 @@ class BazelTranslator
             if target_info["rule"] == "ios_application" or 
                 target_info["rule"] == "ios_extension" or
                 target_info["rule"] == "ios_framework" or
-                target_info["rule"] == "ios_static_framework" or 
-                target_info["rule"] == "static_library"
+                target_info["rule"] == "ios_static_framework"
                 iphoneos_deployment_target = info_hash[:iphoneos_deployment_target]
                 if iphoneos_deployment_target.size > 0
                     target_info["minimum_os_version"] = iphoneos_deployment_target
-                end
-                if target_link_flags and target_link_flags.size > 0
-                    target_info["linkopts"] = [] unless target_info["linkopts"]
-                    target_info["linkopts"] = target_info["linkopts"] + target_link_flags
                 end
             end
             if target_info["rule"] == "ios_application" or 
@@ -688,6 +686,7 @@ class BazelTranslator
             header_target_name = nil
             if header.downcase.include? ".framework/"
                 framework_path = header.downcase.split(".framework/")[0] + ".framework"
+                framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                 header_target_name = generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
                 if target_info["rule"] == "cc_library"
                     target_info["framework_search_paths"] = Set.new unless target_info["framework_search_paths"]
@@ -695,6 +694,7 @@ class BazelTranslator
                 end
             elsif header.downcase.include? ".xcframework/"
                 framework_path = header.downcase.split(".xcframework/")[0] + ".xcframework"
+                framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                 header_target_name = generate_bazel_target_name_for_xcframework_import(framework_path, target_info_hash_for_bazel)
                 if target_info["rule"] == "cc_library"
                     target_info["framework_search_paths"] = Set.new unless target_info["framework_search_paths"]
@@ -724,34 +724,44 @@ class BazelTranslator
 
         if dep_info[0] == :user_module
             user_module = dep_info[1]
-            binding.pry if target_info["rule"] == "cc_library"
+            return if target_info["rule"] == "cc_library"
             binding.pry unless user_module_hash[user_module]
             
-            is_mixed = true
-            if target_info["rule"] == "swift_library" and target_info["module_name"] == user_module
-                is_mixed = false
-            end
-            header_target_name = get_bazel_target_name_for_module_map(user_module, is_mixed)
-            if not target_info_hash_for_bazel.has_key? header_target_name
-                header_target_name = get_bazel_target_name_for_module_map(user_module, false)
-            end
-            if target_info_hash_for_bazel.has_key? header_target_name
-                if target_info["module_name"] == user_module
-                    if target_info["rule"] == "swift_library"
-                        target_info["copts"] = [] unless target_info["copts"]
-                        target_info["copts"].push "-import-underlying-module" unless target_info["copts"].include? "-import-underlying-module"
-                    end
-                end
-
-                key = "module_maps"
-                key = "objc_" + key if target_info["rule"] == "swift_library"
+            module_map_file = user_module_hash[user_module][:module_map_file]
+            if module_map_file and module_map_file.include? ".framework/"
+                framework_path = module_map_file.split(".framework/")[0] + ".framework"
+                header_target_name = generate_bazel_target_name_for_framework_import(framework_path, target_info_hash_for_bazel)
+                key = "deps"
                 target_info[key] = Set.new unless target_info[key]
                 target_info[key].add header_target_name
-
-                user_module_hash[user_module][:moduel_map_deps].each do | moduel_map_dep |
-                    add_file_deps(moduel_map_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)
+            else
+                is_mixed = true
+                if target_info["rule"] == "swift_library" and target_info["module_name"] == user_module
+                    is_mixed = false
+                end
+                header_target_name = get_bazel_target_name_for_module_map(user_module, is_mixed)
+                if not target_info_hash_for_bazel.has_key? header_target_name
+                    header_target_name = get_bazel_target_name_for_module_map(user_module, false)
+                end
+                if target_info_hash_for_bazel.has_key? header_target_name
+                    if target_info["module_name"] == user_module
+                        if target_info["rule"] == "swift_library"
+                            target_info["copts"] = [] unless target_info["copts"]
+                            target_info["copts"].push "-import-underlying-module" unless target_info["copts"].include? "-import-underlying-module"
+                        end
+                    end
+    
+                    key = "module_maps"
+                    key = "objc_" + key if target_info["rule"] == "swift_library"
+                    target_info[key] = Set.new unless target_info[key]
+                    target_info[key].add header_target_name
+    
+                    user_module_hash[user_module][:moduel_map_deps].each do | moduel_map_dep |
+                        add_file_deps(moduel_map_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)
+                    end
                 end
             end
+
             if target_info["rule"] == "swift_library" and user_module_hash[user_module][:has_swift] and target_info["module_name"] != user_module
                 swift_target_name = get_bazel_target_name_for_swift_module_name(user_module)
                 key = "deps"

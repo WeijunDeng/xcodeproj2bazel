@@ -1,8 +1,8 @@
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
@@ -121,9 +121,6 @@ ios_application(
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Info.plist",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     minimum_os_version = "12.0",
     resources = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Base.lproj/Main.storyboard",
@@ -153,9 +150,6 @@ ios_application(
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Info.plist",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     minimum_os_version = "12.0",
     resources = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Resources/loader.gif",
@@ -182,9 +176,6 @@ ios_application(
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/Info.plist",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     minimum_os_version = "12.0",
     resources = [
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Resources/loader.gif",
@@ -210,9 +201,6 @@ ios_application(
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Info.plist",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     minimum_os_version = "12.0",
     resources = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Base.lproj/Interface.storyboard",
@@ -235,9 +223,6 @@ ios_extension(
     infoplists = [
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/Info.plist",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     minimum_os_version = "12.0",
     resources = glob([
         "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/Assets.xcassets/**",
@@ -257,9 +242,6 @@ ios_framework(
     infoplists = [
         "Kingfisher/Sources/Info.plist",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
     minimum_os_version = "12.0",
     version = ":Kingfisher_framework_version",
 )
@@ -274,6 +256,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":KingfisherTests_project_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     srcs = [
         "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSData+Nocilla.m",
@@ -308,6 +293,9 @@ swift_library(
     alwayslink = True,
     deps = [
         ":Kingfisher_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "KingfisherTests",
     objc_bridging_header = "Kingfisher/Tests/KingfisherTests/KingfisherTests-Bridging-Header.h",
@@ -346,6 +334,9 @@ swift_library(
     alwayslink = True,
     deps = [
         ":Kingfisher_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Kingfisher_Demo",
     objc_defines = [
@@ -390,6 +381,9 @@ swift_library(
     deps = [
         ":Kingfisher_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Kingfisher_macOS_Demo",
     objc_defines = [
         "DEBUG=1",
@@ -408,6 +402,9 @@ swift_library(
     ],
     defines = [
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Kingfisher",
     objc_defines = [
@@ -483,6 +480,9 @@ swift_library(
     deps = [
         ":Kingfisher_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Kingfisher_tvOS_Demo",
     objc_defines = [
         "DEBUG=1",
@@ -501,6 +501,9 @@ swift_library(
     alwayslink = True,
     deps = [
         ":Kingfisher_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Kingfisher_watchOS_Demo_Extension",
     objc_defines = [

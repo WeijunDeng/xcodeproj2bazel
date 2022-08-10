@@ -1,8 +1,8 @@
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension", "ios_unit_test")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework", "ios_static_framework")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
@@ -333,35 +333,75 @@ apple_resource_bundle(
 )
 apple_static_framework_import(
     name = "import_Bugly_framework",
-    framework_imports = glob(["Pods/Bugly/Bugly.framework/**"]),
+    framework_imports = glob([
+        "Pods/Bugly/Bugly.framework/Info.plist",
+        "Pods/Bugly/Bugly.framework/Headers/**",
+        "Pods/Bugly/Bugly.framework/Modules/**",
+        "Pods/Bugly/Bugly.framework/Bugly"
+    ]),
 )
 apple_static_framework_import(
     name = "import_GrowingAutoTrackKit_framework",
-    framework_imports = glob(["Pods/GrowingAutoTrackKit/GrowingIO-iOS-AutoTrackKit/GrowingAutoTrackKit.framework/**"]),
+    framework_imports = glob([
+        "Pods/GrowingAutoTrackKit/GrowingIO-iOS-AutoTrackKit/GrowingAutoTrackKit.framework/Info.plist",
+        "Pods/GrowingAutoTrackKit/GrowingIO-iOS-AutoTrackKit/GrowingAutoTrackKit.framework/Headers/**",
+        "Pods/GrowingAutoTrackKit/GrowingIO-iOS-AutoTrackKit/GrowingAutoTrackKit.framework/Modules/**",
+        "Pods/GrowingAutoTrackKit/GrowingIO-iOS-AutoTrackKit/GrowingAutoTrackKit.framework/GrowingAutoTrackKit"
+    ]),
 )
 apple_static_framework_import(
     name = "import_GrowingCoreKit_framework",
-    framework_imports = glob(["Pods/GrowingCoreKit/GrowingIO-iOS-CoreKit/GrowingCoreKit.framework/**"]),
+    framework_imports = glob([
+        "Pods/GrowingCoreKit/GrowingIO-iOS-CoreKit/GrowingCoreKit.framework/Info.plist",
+        "Pods/GrowingCoreKit/GrowingIO-iOS-CoreKit/GrowingCoreKit.framework/Headers/**",
+        "Pods/GrowingCoreKit/GrowingIO-iOS-CoreKit/GrowingCoreKit.framework/Modules/**",
+        "Pods/GrowingCoreKit/GrowingIO-iOS-CoreKit/GrowingCoreKit.framework/GrowingCoreKit"
+    ]),
 )
 apple_static_framework_import(
     name = "import_TensorFlowLiteTaskTextC_framework",
-    framework_imports = glob(["Pods/TensorFlowLiteTaskText/Frameworks/TensorFlowLiteTaskTextC.framework/**"]),
+    framework_imports = glob([
+        "Pods/TensorFlowLiteTaskText/Frameworks/TensorFlowLiteTaskTextC.framework/Info.plist",
+        "Pods/TensorFlowLiteTaskText/Frameworks/TensorFlowLiteTaskTextC.framework/Headers/**",
+        "Pods/TensorFlowLiteTaskText/Frameworks/TensorFlowLiteTaskTextC.framework/Modules/**",
+        "Pods/TensorFlowLiteTaskText/Frameworks/TensorFlowLiteTaskTextC.framework/TensorFlowLiteTaskTextC"
+    ]),
 )
 apple_static_framework_import(
     name = "import_UMCommon_framework",
-    framework_imports = glob(["Pods/UMCommon/UMCommon_7.3.7/UMCommon.framework/**"]),
+    framework_imports = glob([
+        "Pods/UMCommon/UMCommon_7.3.7/UMCommon.framework/Info.plist",
+        "Pods/UMCommon/UMCommon_7.3.7/UMCommon.framework/Headers/**",
+        "Pods/UMCommon/UMCommon_7.3.7/UMCommon.framework/Modules/**",
+        "Pods/UMCommon/UMCommon_7.3.7/UMCommon.framework/UMCommon"
+    ]),
 )
 apple_static_framework_import(
     name = "import_UMDevice_framework",
-    framework_imports = glob(["Pods/UMDevice/UMDevice_2.2.1/UMDevice.framework/**"]),
+    framework_imports = glob([
+        "Pods/UMDevice/UMDevice_2.2.1/UMDevice.framework/Info.plist",
+        "Pods/UMDevice/UMDevice_2.2.1/UMDevice.framework/Headers/**",
+        "Pods/UMDevice/UMDevice_2.2.1/UMDevice.framework/Modules/**",
+        "Pods/UMDevice/UMDevice_2.2.1/UMDevice.framework/UMDevice"
+    ]),
 )
 apple_static_framework_import(
     name = "import_UMPush_framework",
-    framework_imports = glob(["Pods/UMPush/UMPush/UMPush.framework/**"]),
+    framework_imports = glob([
+        "Pods/UMPush/UMPush/UMPush.framework/Info.plist",
+        "Pods/UMPush/UMPush/UMPush.framework/Headers/**",
+        "Pods/UMPush/UMPush/UMPush.framework/Modules/**",
+        "Pods/UMPush/UMPush/UMPush.framework/UMPush"
+    ]),
 )
 apple_static_framework_import(
     name = "import_WebP_framework",
-    framework_imports = glob(["Pods/YYImage/Vendor/WebP.framework/**"]),
+    framework_imports = glob([
+        "Pods/YYImage/Vendor/WebP.framework/Info.plist",
+        "Pods/YYImage/Vendor/WebP.framework/Headers/**",
+        "Pods/YYImage/Vendor/WebP.framework/Modules/**",
+        "Pods/YYImage/Vendor/WebP.framework/WebP"
+    ]),
 )
 apple_static_xcframework_import(
     name = "import_realm_monorepo_xcframework",
@@ -1097,6 +1137,9 @@ cc_library(
     header_maps = [
         ":AliyunOSSiOS_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/AliyunOSSiOS/AliyunOSSiOS-prefix.pch",
     srcs = [
         "Pods/AliyunOSSiOS/AliyunOSSSDK/aos_crc64.c",
@@ -1114,6 +1157,9 @@ cc_library(
     ],
     header_maps = [
         ":FBRetainCycleDetector_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/FBRetainCycleDetector/FBRetainCycleDetector-prefix.pch",
     srcs = [
@@ -1134,6 +1180,9 @@ cc_library(
     ],
     header_maps = [
         ":FLEX_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/FLEX/FLEX-prefix.pch",
     srcs = [
@@ -1161,6 +1210,9 @@ cc_library(
     ],
     header_maps = [
         ":MMKVCore_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/MMKVCore/MMKVCore-prefix.pch",
     srcs = [
@@ -1206,6 +1258,9 @@ cc_library(
     header_maps = [
         ":MMKVCore_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/MMKVCore/MMKVCore-prefix.pch",
     srcs = [
         "Pods/MMKVCore/Core/InterProcessLock.cpp",
@@ -1232,6 +1287,9 @@ cc_library(
     header_maps = [
         ":MMKVCore_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/MMKVCore/MMKVCore-prefix.pch",
     srcs = [
         "Pods/MMKVCore/Core/aes/openssl/openssl_aes-armv4.S",
@@ -1251,6 +1309,9 @@ cc_library(
     ],
     header_maps = [
         ":MTAppenderFile_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/MTAppenderFile/MTAppenderFile-prefix.pch",
     srcs = [
@@ -1273,6 +1334,9 @@ cc_library(
     header_maps = [
         ":MTAppenderFile_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/MTAppenderFile/MTAppenderFile-prefix.pch",
     srcs = [
         "Pods/MTAppenderFile/comm/mtaf_autobuffer.cc",
@@ -1293,6 +1357,9 @@ cc_library(
     ],
     header_maps = [
         ":MTAppenderFile_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/MTAppenderFile/MTAppenderFile-prefix.pch",
     srcs = [
@@ -1322,6 +1389,9 @@ cc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/MTHawkeye/MTHawkeye-prefix.pch",
     srcs = [
         "Pods/MTHawkeye/MTHawkeye/TimeConsumingPlugins/ObjcCallTrace/Core/MTHCallTraceCore.c",
@@ -1347,6 +1417,9 @@ cc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/MTHawkeye/MTHawkeye-prefix.pch",
     srcs = [
         "Pods/MTHawkeye/MTHawkeye/Utils/MTHawkeyeLFUCache.cpp",
@@ -1364,6 +1437,9 @@ cc_library(
     ],
     header_maps = [
         ":Sentry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/Sentry/Sentry-prefix.pch",
     srcs = [
@@ -1424,6 +1500,9 @@ cc_library(
     header_maps = [
         ":Sentry_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/Sentry/Sentry-prefix.pch",
     srcs = [
         "Pods/Sentry/Sources/Sentry/SentryBacktrace.cpp",
@@ -1449,6 +1528,9 @@ cc_library(
     header_maps = [
         ":ZipArchive_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     pch = "Pods/Target Support Files/ZipArchive/ZipArchive-prefix.pch",
     srcs = [
         "Pods/ZipArchive/minizip/ioapi.c",
@@ -1469,6 +1551,9 @@ cc_library(
     ],
     header_maps = [
         ":fishhook_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/fishhook/fishhook-prefix.pch",
     srcs = [
@@ -1501,6 +1586,9 @@ cc_library(
     ],
     includes = [
         "Pods/libwebp",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/libwebp/libwebp-prefix.pch",
     srcs = [
@@ -1640,6 +1728,9 @@ cc_library(
     ],
     header_maps = [
         ":pop_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     pch = "Pods/Target Support Files/pop/pop-prefix.pch",
     srcs = [
@@ -5269,10 +5360,6 @@ ios_application(
     infoplists = [
         "swift_app_with_pod_no_use_frameworks/Info.plist",
     ],
-    linkopts = [
-        "-ObjC",
-        "-dead_strip",
-    ],
     minimum_os_version = "15.5",
     resources = [
         "swift_app_with_pod_no_use_frameworks/Base.lproj/LaunchScreen.storyboard",
@@ -7096,6 +7183,9 @@ objc_library(
     header_maps = [
         ":AFNetworking_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":AFNetworking_module_map",
     ],
@@ -7130,6 +7220,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":AMPopTip_mixed_module_map",
     ],
@@ -7149,6 +7242,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":AMScrollingNavbar_mixed_module_map",
     ],
@@ -7168,6 +7264,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Alamofire_mixed_module_map",
     ],
@@ -7189,6 +7288,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":AliyunOSSiOS_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":AliyunOSSiOS_module_map",
@@ -7253,6 +7355,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":AnimatedCollectionViewLayout_mixed_module_map",
     ],
@@ -7272,6 +7377,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":AnyImageKit_mixed_module_map",
     ],
@@ -7293,6 +7401,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Aspects_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Aspects_module_map",
@@ -7317,6 +7428,9 @@ objc_library(
     header_maps = [
         ":Bagel_private_header_map",
         ":CocoaAsyncSocket_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Bagel_module_map",
@@ -7351,6 +7465,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":BarcodeScanner_mixed_module_map",
     ],
@@ -7372,6 +7489,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Base64_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Base64_module_map",
@@ -7396,6 +7516,9 @@ objc_library(
     header_maps = [
         ":Base64_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Base64_module_map",
     ],
@@ -7417,6 +7540,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":BlocksKit_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":BlocksKit_module_map",
@@ -7470,6 +7596,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":BLTNBoard_mixed_module_map",
     ],
@@ -7489,6 +7618,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Cartography_mixed_module_map",
     ],
@@ -7508,6 +7640,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Charts_mixed_module_map",
     ],
@@ -7537,6 +7672,9 @@ objc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":CocoaAsyncSocket_module_map",
     ],
@@ -7563,6 +7701,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":CocoaLumberjack_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":CocoaLumberjack_mixed_module_map",
@@ -7599,6 +7740,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":CoconutKit_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":CoconutKit_module_map",
@@ -7752,6 +7896,9 @@ objc_library(
     header_maps = [
         ":CoconutKit_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":CoconutKit_module_map",
     ],
@@ -7775,6 +7922,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":CryptoSwift_mixed_module_map",
     ],
@@ -7794,6 +7944,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":DropDown_mixed_module_map",
     ],
@@ -7813,6 +7966,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Eureka_mixed_module_map",
     ],
@@ -7834,6 +7990,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FBAllocationTracker_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBAllocationTracker_module_map",
@@ -7858,6 +8017,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FBAllocationTracker_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBAllocationTracker_module_map",
@@ -7885,6 +8047,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FBAllocationTracker_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBAllocationTracker_module_map",
@@ -7916,6 +8081,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBMemoryProfiler_module_map",
@@ -7963,6 +8131,9 @@ objc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FBMemoryProfiler_module_map",
     ],
@@ -7985,6 +8156,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FBRetainCycleDetector_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBRetainCycleDetector_module_map",
@@ -8009,6 +8183,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FBRetainCycleDetector_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBRetainCycleDetector_module_map",
@@ -8040,6 +8217,9 @@ objc_library(
     header_maps = [
         ":FBRetainCycleDetector_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FBRetainCycleDetector_module_map",
     ],
@@ -8062,6 +8242,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FBRetainCycleDetector_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FBRetainCycleDetector_module_map",
@@ -8092,6 +8275,9 @@ objc_library(
     header_maps = [
         ":FDFullscreenPopGesture_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FDFullscreenPopGesture_module_map",
     ],
@@ -8114,6 +8300,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FLAnimatedImage_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FLAnimatedImage_module_map",
@@ -8146,6 +8335,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FLEX_module_map",
@@ -8327,6 +8519,9 @@ objc_library(
     header_maps = [
         ":FLEX_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FLEX_module_map",
     ],
@@ -8352,6 +8547,9 @@ objc_library(
     header_maps = [
         ":FLEX_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FLEX_module_map",
     ],
@@ -8374,6 +8572,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FMDB_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FMDB_module_map",
@@ -8401,6 +8602,9 @@ objc_library(
     header_maps = [
         ":FMDB_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FMDB_module_map",
     ],
@@ -8422,6 +8626,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FSCalendar_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":FSCalendar_module_map",
@@ -8460,6 +8667,9 @@ objc_library(
     header_maps = [
         ":FSPagerView_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FSPagerView_mixed_module_map",
     ],
@@ -8480,6 +8690,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":FileKit_mixed_module_map",
     ],
@@ -8501,6 +8714,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":GoogleToolboxForMac_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":GoogleToolboxForMac_module_map",
@@ -8526,6 +8742,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":GoogleToolboxForMac_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":GoogleToolboxForMac_module_map",
@@ -8561,6 +8780,9 @@ objc_library(
     header_maps = [
         ":IQKeyboardManager_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":IQKeyboardManager_module_map",
     ],
@@ -8593,6 +8815,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":InAppPurchase_mixed_module_map",
     ],
@@ -8612,6 +8837,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":InputBarAccessoryView_mixed_module_map",
     ],
@@ -8631,6 +8859,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Instructions_mixed_module_map",
     ],
@@ -8652,6 +8883,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":JLRoutes_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":JLRoutes_module_map",
@@ -8682,6 +8916,9 @@ objc_library(
     header_maps = [
         ":JRSwizzle_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":JRSwizzle_module_map",
     ],
@@ -8704,6 +8941,9 @@ objc_library(
     header_maps = [
         ":JRSwizzle_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":JRSwizzle_module_map",
     ],
@@ -8723,6 +8963,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":JTAppleCalendar_mixed_module_map",
     ],
@@ -8750,6 +8993,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":JWT_module_map",
@@ -8785,6 +9031,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":JXPagingView_mixed_module_map",
     ],
@@ -8804,6 +9053,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":JXSegmentedView_mixed_module_map",
     ],
@@ -8823,6 +9075,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":KeychainAccess_mixed_module_map",
     ],
@@ -8854,6 +9109,9 @@ objc_library(
         "Pods/Headers/Private",
         "Pods/libwebp/src",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":KingfisherWebP_mixed_module_map",
         ":libwebp_module_map",
@@ -8875,6 +9133,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Kingfisher_mixed_module_map",
     ],
@@ -8894,6 +9155,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Koloda_mixed_module_map",
     ],
@@ -8916,6 +9180,9 @@ objc_library(
     header_maps = [
         ":LTMorphingLabel_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":LTMorphingLabel_mixed_module_map",
     ],
@@ -8935,6 +9202,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Lantern_mixed_module_map",
     ],
@@ -8954,6 +9224,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Loading_mixed_module_map",
     ],
@@ -8975,6 +9248,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":LookinServer_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":LookinServer_module_map",
@@ -9069,6 +9345,9 @@ objc_library(
     header_maps = [
         ":MBProgressHUD_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MBProgressHUD_module_map",
     ],
@@ -9091,6 +9370,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":MJExtension_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MJExtension_module_map",
@@ -9123,6 +9405,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":MJRefresh_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MJRefresh_module_map",
@@ -9177,6 +9462,9 @@ objc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MLeaksFinder_module_map",
     ],
@@ -9210,6 +9498,9 @@ objc_library(
     header_maps = [
         ":MMKVCore_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MMKVCore_module_map",
     ],
@@ -9231,6 +9522,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":MMKV_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MMKV_module_map",
@@ -9264,6 +9558,9 @@ objc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MMKV_module_map",
     ],
@@ -9285,6 +9582,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":MTAppenderFile_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MTAppenderFile_module_map",
@@ -9309,6 +9609,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":MTAppenderFile_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MTAppenderFile_module_map",
@@ -9342,6 +9645,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MTHawkeye_module_map",
@@ -9533,6 +9839,9 @@ objc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MTHawkeye_module_map",
     ],
@@ -9561,6 +9870,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":MTHawkeye_module_map",
@@ -9599,6 +9911,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Macaw_mixed_module_map",
     ],
@@ -9620,6 +9935,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Masonry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Masonry_module_map",
@@ -9650,6 +9968,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Material_mixed_module_map",
     ],
@@ -9669,6 +9990,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MessageKit_mixed_module_map",
     ],
@@ -9688,6 +10012,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":MonkeyKing_mixed_module_map",
     ],
@@ -9707,6 +10034,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Motion_mixed_module_map",
     ],
@@ -9726,6 +10056,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Moya_mixed_module_map",
     ],
@@ -9745,6 +10078,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":NSAttributedStringBuilder13_mixed_module_map",
     ],
@@ -9764,6 +10100,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":NVActivityIndicatorView_mixed_module_map",
     ],
@@ -9783,6 +10122,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Nuke_mixed_module_map",
     ],
@@ -9804,6 +10146,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":OHHTTPStubs_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":OHHTTPStubs_module_map",
@@ -9831,6 +10176,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":ObjectMapper_mixed_module_map",
     ],
@@ -9860,6 +10208,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":PINCache_module_map",
@@ -9895,6 +10246,9 @@ objc_library(
     includes = [
         "Pods/Headers/Private",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":PINCache_module_map",
         ":PINOperation_module_map",
@@ -9917,6 +10271,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":PINOperation_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":PINOperation_module_map",
@@ -9953,6 +10310,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":PINCache_module_map",
@@ -10009,6 +10369,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":PPBadgeViewSwift_mixed_module_map",
     ],
@@ -10031,6 +10394,9 @@ objc_library(
     header_maps = [
         ":PanModal_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":PanModal_mixed_module_map",
     ],
@@ -10050,6 +10416,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Permission_mixed_module_map",
     ],
@@ -10069,6 +10438,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":PhoneNumberKit_mixed_module_map",
     ],
@@ -10092,6 +10464,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Pods_swift_app_with_pod_no_use_frameworks_module_map",
     ],
@@ -10117,6 +10492,9 @@ objc_library(
     header_maps = [
         ":PromiseKit_private_header_map",
         ":PromiseKit_swift_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":PromiseKit_mixed_module_map",
@@ -10151,6 +10529,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":QMUIKit_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":QMUIKit_module_map",
@@ -10320,6 +10701,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Rswift_mixed_module_map",
     ],
@@ -10339,6 +10723,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":ReSwift_mixed_module_map",
     ],
@@ -10358,6 +10745,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Reachability_mixed_module_map",
     ],
@@ -10380,6 +10770,9 @@ objc_library(
     header_maps = [
         ":ReactiveObjC_private_header_map",
         ":ReactiveObjC_dtrace_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":ReactiveObjC_module_map",
@@ -10488,6 +10881,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":RealmSwift_mixed_module_map",
     ],
@@ -10501,7 +10897,7 @@ objc_library(
     copts = [
         "-std=gnu11",
         "-DREALM_HAVE_CONFIG",
-        "-DREALM_COCOA_VERSION='@\"10.28.4\"'",
+        "-DREALM_COCOA_VERSION='@\"10.28.5\"'",
         "-D__ASSERTMACROS__",
         "-DREALM_ENABLE_SYNC",
     ],
@@ -10519,6 +10915,9 @@ objc_library(
     ],
     includes = [
         "Pods/Realm/include",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Realm_module_map",
@@ -10544,6 +10943,9 @@ objc_library(
     header_maps = [
         ":Realm_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Realm_module_map",
     ],
@@ -10559,7 +10961,7 @@ objc_library(
         "-std=c++17",
         "-stdlib=libc++",
         "-DREALM_HAVE_CONFIG",
-        "-DREALM_COCOA_VERSION='@\"10.28.4\"'",
+        "-DREALM_COCOA_VERSION='@\"10.28.5\"'",
         "-D__ASSERTMACROS__",
         "-DREALM_ENABLE_SYNC",
     ],
@@ -10592,6 +10994,9 @@ objc_library(
     includes = [
         "Pods/Realm/include",
         "Pods/Realm/include/core",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Realm_module_map",
@@ -10673,6 +11078,9 @@ objc_library(
     header_maps = [
         ":RxCocoa_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":RxCocoa_mixed_module_map",
     ],
@@ -10696,6 +11104,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":RxRelay_mixed_module_map",
     ],
@@ -10715,6 +11126,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":RxSwift_mixed_module_map",
     ],
@@ -10736,6 +11150,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":SDWebImage_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":SDWebImage_module_map",
@@ -10828,6 +11245,9 @@ objc_library(
     header_maps = [
         ":SQLite_swift_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SQLite_mixed_module_map",
     ],
@@ -10850,6 +11270,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":SVProgressHUD_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":SVProgressHUD_module_map",
@@ -10874,6 +11297,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SWXMLHash_mixed_module_map",
     ],
@@ -10895,6 +11321,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Sentry_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":Sentry_module_map",
@@ -11070,6 +11499,9 @@ objc_library(
     header_maps = [
         ":Sentry_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Sentry_module_map",
     ],
@@ -11091,6 +11523,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SideMenu_mixed_module_map",
     ],
@@ -11110,6 +11545,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Siren_mixed_module_map",
     ],
@@ -11129,6 +11567,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SkeletonView_mixed_module_map",
     ],
@@ -11148,6 +11589,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SnapKit_mixed_module_map",
     ],
@@ -11167,6 +11611,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Starscream_mixed_module_map",
     ],
@@ -11186,6 +11633,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Surge_mixed_module_map",
     ],
@@ -11205,6 +11655,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftDate_mixed_module_map",
     ],
@@ -11224,6 +11677,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftEntryKit_mixed_module_map",
     ],
@@ -11243,6 +11699,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftMessages_mixed_module_map",
     ],
@@ -11262,6 +11721,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftRichString_mixed_module_map",
     ],
@@ -11281,6 +11743,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwifterSwift_mixed_module_map",
     ],
@@ -11300,6 +11765,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftyBeaver_mixed_module_map",
     ],
@@ -11319,6 +11787,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftyJSON_mixed_module_map",
     ],
@@ -11338,6 +11809,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwiftyStoreKit_mixed_module_map",
     ],
@@ -11357,6 +11831,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":SwipeCellKit_mixed_module_map",
     ],
@@ -11378,6 +11855,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":TOCropViewController_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":TOCropViewController_module_map",
@@ -11419,6 +11899,9 @@ objc_library(
     includes = [
         "Pods/TensorFlowLiteTaskText",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":TensorFlowLiteTaskText_module_map",
     ],
@@ -11441,6 +11924,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":TextFieldEffects_mixed_module_map",
     ],
@@ -11466,6 +11952,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Texture_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":AsyncDisplayKit_module_map",
@@ -11501,6 +11990,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":AsyncDisplayKit_module_map",
@@ -11691,6 +12183,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":ViewAnimator_mixed_module_map",
     ],
@@ -11713,6 +12208,9 @@ objc_library(
     header_maps = [
         ":WKWebViewJavascriptBridge_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":WKWebViewJavascriptBridge_mixed_module_map",
     ],
@@ -11734,6 +12232,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":YYCache_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":YYCache_module_map",
@@ -11764,6 +12265,9 @@ objc_library(
     header_maps = [
         ":YYImage_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":YYImage_module_map",
     ],
@@ -11790,6 +12294,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":YYModel_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":YYModel_module_map",
@@ -11821,6 +12328,9 @@ objc_library(
     ],
     includes = [
         "Pods/Headers/Private",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":YYText_module_map",
@@ -11873,6 +12383,9 @@ objc_library(
     header_maps = [
         ":ZipArchive_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":ZipArchive_module_map",
     ],
@@ -11895,6 +12408,9 @@ objc_library(
     header_maps = [
         ":ZipArchive_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":ZipArchive_module_map",
     ],
@@ -11916,6 +12432,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":fishhook_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":fishhook_module_map",
@@ -11942,6 +12461,9 @@ objc_library(
     header_maps = [
         ":libwebp_private_header_map",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":libwebp_module_map",
     ],
@@ -11961,6 +12483,9 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
     module_maps = [
         ":Lottie_mixed_module_map",
     ],
@@ -11982,6 +12507,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":pop_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":pop_module_map",
@@ -12005,6 +12533,9 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":pop_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_maps = [
         ":pop_module_map",
@@ -12035,43 +12566,27 @@ static_library(
     deps = [
         ":libAFNetworking_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libAMPopTip_a",
     deps = [
+        ":AMPopTip_swift",
         ":libAMPopTip_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":AMPopTip_swift"],
 )
 static_library(
     name = "libAMScrollingNavbar_a",
     deps = [
+        ":AMScrollingNavbar_swift",
         ":libAMScrollingNavbar_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":AMScrollingNavbar_swift"],
 )
 static_library(
     name = "libAlamofire_a",
     deps = [
+        ":Alamofire_swift",
         ":libAlamofire_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":Alamofire_swift"],
 )
 static_library(
     name = "libAliyunOSSiOS_a",
@@ -12079,63 +12594,39 @@ static_library(
         ":libAliyunOSSiOS_a_c",
         ":libAliyunOSSiOS_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libAnimatedCollectionViewLayout_a",
     deps = [
+        ":AnimatedCollectionViewLayout_swift",
         ":libAnimatedCollectionViewLayout_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":AnimatedCollectionViewLayout_swift"],
 )
 static_library(
     name = "libAnyImageKit_a",
     deps = [
+        ":AnyImageKit_swift",
         ":libAnyImageKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":AnyImageKit_swift"],
 )
 static_library(
     name = "libAspects_a",
     deps = [
         ":libAspects_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libBagel_a",
     deps = [
         ":libBagel_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libBarcodeScanner_a",
     deps = [
+        ":BarcodeScanner_swift",
         ":libBarcodeScanner_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":BarcodeScanner_swift"],
 )
 static_library(
     name = "libBase64_a",
@@ -12143,74 +12634,46 @@ static_library(
         ":libBase64_a_m_0",
         ":libBase64_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "4.3",
 )
 static_library(
     name = "libBlocksKit_a",
     deps = [
         ":libBlocksKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libBulletinBoard_a",
     deps = [
+        ":BLTNBoard_swift",
         ":libBulletinBoard_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":BLTNBoard_swift"],
 )
 static_library(
     name = "libCartography_a",
     deps = [
+        ":Cartography_swift",
         ":libCartography_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":Cartography_swift"],
 )
 static_library(
     name = "libCharts_a",
     deps = [
+        ":Charts_swift",
         ":libCharts_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Charts_swift"],
 )
 static_library(
     name = "libCocoaAsyncSocket_a",
     deps = [
         ":libCocoaAsyncSocket_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libCocoaLumberjack_a",
     deps = [
+        ":CocoaLumberjack_swift",
         ":libCocoaLumberjack_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":CocoaLumberjack_swift"],
 )
 static_library(
     name = "libCoconutKit_a",
@@ -12218,43 +12681,27 @@ static_library(
         ":libCoconutKit_a_m_0",
         ":libCoconutKit_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "7.0",
 )
 static_library(
     name = "libCryptoSwift_a",
     deps = [
+        ":CryptoSwift_swift",
         ":libCryptoSwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":CryptoSwift_swift"],
 )
 static_library(
     name = "libDropDown_a",
     deps = [
+        ":DropDown_swift",
         ":libDropDown_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":DropDown_swift"],
 )
 static_library(
     name = "libEureka_a",
     deps = [
+        ":Eureka_swift",
         ":libEureka_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Eureka_swift"],
 )
 static_library(
     name = "libFBAllocationTracker_a",
@@ -12263,10 +12710,6 @@ static_library(
         ":libFBAllocationTracker_a_mm_0",
         ":libFBAllocationTracker_a_mm_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "7.0",
 )
 static_library(
     name = "libFBMemoryProfiler_a",
@@ -12274,10 +12717,6 @@ static_library(
         ":libFBMemoryProfiler_a_m",
         ":libFBMemoryProfiler_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "7.0",
 )
 static_library(
     name = "libFBRetainCycleDetector_a",
@@ -12288,30 +12727,18 @@ static_library(
         ":libFBRetainCycleDetector_a_mm_0",
         ":libFBRetainCycleDetector_a_mm_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "7.0",
 )
 static_library(
     name = "libFDFullscreenPopGesture_a",
     deps = [
         ":libFDFullscreenPopGesture_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "7.0",
 )
 static_library(
     name = "libFLAnimatedImage_a",
     deps = [
         ":libFLAnimatedImage_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libFLEX_a",
@@ -12321,10 +12748,6 @@ static_library(
         ":libFLEX_a_m_1",
         ":libFLEX_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libFMDB_a",
@@ -12332,42 +12755,26 @@ static_library(
         ":libFMDB_a_m_0",
         ":libFMDB_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "4.3",
 )
 static_library(
     name = "libFSCalendar_a",
     deps = [
         ":libFSCalendar_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libFSPagerView_a",
     deps = [
+        ":FSPagerView_swift",
         ":libFSPagerView_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":FSPagerView_swift"],
 )
 static_library(
     name = "libFileKit_a",
     deps = [
+        ":FileKit_swift",
         ":libFileKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":FileKit_swift"],
 )
 static_library(
     name = "libGoogleToolboxForMac_a",
@@ -12375,63 +12782,39 @@ static_library(
         ":libGoogleToolboxForMac_a_m_0",
         ":libGoogleToolboxForMac_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libIQKeyboardManager_a",
     deps = [
         ":libIQKeyboardManager_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libInAppPurchase_a",
     deps = [
+        ":InAppPurchase_swift",
         ":libInAppPurchase_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":InAppPurchase_swift"],
 )
 static_library(
     name = "libInputBarAccessoryView_a",
     deps = [
+        ":InputBarAccessoryView_swift",
         ":libInputBarAccessoryView_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":InputBarAccessoryView_swift"],
 )
 static_library(
     name = "libInstructions_a",
     deps = [
+        ":Instructions_swift",
         ":libInstructions_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Instructions_swift"],
 )
 static_library(
     name = "libJLRoutes_a",
     deps = [
         ":libJLRoutes_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libJRSwizzle_a",
@@ -12439,180 +12822,112 @@ static_library(
         ":libJRSwizzle_a_m_0",
         ":libJRSwizzle_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "4.3",
 )
 static_library(
     name = "libJTAppleCalendar_a",
     deps = [
+        ":JTAppleCalendar_swift",
         ":libJTAppleCalendar_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":JTAppleCalendar_swift"],
 )
 static_library(
     name = "libJWT_a",
     deps = [
         ":libJWT_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libJXPagingView_a",
     deps = [
+        ":JXPagingView_swift",
         ":libJXPagingView_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":JXPagingView_swift"],
 )
 static_library(
     name = "libJXSegmentedView_a",
     deps = [
+        ":JXSegmentedView_swift",
         ":libJXSegmentedView_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":JXSegmentedView_swift"],
 )
 static_library(
     name = "libKeychainAccess_a",
     deps = [
+        ":KeychainAccess_swift",
         ":libKeychainAccess_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":KeychainAccess_swift"],
 )
 static_library(
     name = "libKingfisherWebP_a",
     deps = [
+        ":KingfisherWebP_swift",
         ":libKingfisherWebP_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":KingfisherWebP_swift"],
 )
 static_library(
     name = "libKingfisher_a",
     deps = [
+        ":Kingfisher_swift",
         ":libKingfisher_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":Kingfisher_swift"],
 )
 static_library(
     name = "libKoloda_a",
     deps = [
+        ":Koloda_swift",
         ":libKoloda_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":Koloda_swift"],
 )
 static_library(
     name = "libLTMorphingLabel_a",
     deps = [
+        ":LTMorphingLabel_swift",
         ":libLTMorphingLabel_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":LTMorphingLabel_swift"],
 )
 static_library(
     name = "libLantern_a",
     deps = [
+        ":Lantern_swift",
         ":libLantern_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Lantern_swift"],
 )
 static_library(
     name = "libLoading_a",
     deps = [
+        ":Loading_swift",
         ":libLoading_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Loading_swift"],
 )
 static_library(
     name = "libLookinServer_a",
     deps = [
         ":libLookinServer_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libMBProgressHUD_a",
     deps = [
         ":libMBProgressHUD_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libMJExtension_a",
     deps = [
         ":libMJExtension_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libMJRefresh_a",
     deps = [
         ":libMJRefresh_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libMLeaksFinder_a",
     deps = [
         ":libMLeaksFinder_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libMMKVCore_a",
@@ -12622,10 +12937,6 @@ static_library(
         ":libMMKVCore_a_m",
         ":libMMKVCore_a_s",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libMMKV_a",
@@ -12633,10 +12944,6 @@ static_library(
         ":libMMKV_a_m",
         ":libMMKV_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libMTAppenderFile_a",
@@ -12648,10 +12955,6 @@ static_library(
         ":libMTAppenderFile_a_mm",
         ":libMTAppenderFile_a_system_library",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libMTHawkeye_a",
@@ -12662,140 +12965,88 @@ static_library(
         ":libMTHawkeye_a_m_1",
         ":libMTHawkeye_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libMacaw_a",
     deps = [
+        ":Macaw_swift",
         ":libMacaw_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Macaw_swift"],
 )
 static_library(
     name = "libMasonry_a",
     deps = [
         ":libMasonry_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libMaterial_a",
     deps = [
+        ":Material_swift",
         ":libMaterial_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":Material_swift"],
 )
 static_library(
     name = "libMessageKit_a",
     deps = [
+        ":MessageKit_swift",
         ":libMessageKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":MessageKit_swift"],
 )
 static_library(
     name = "libMonkeyKing_a",
     deps = [
+        ":MonkeyKing_swift",
         ":libMonkeyKing_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":MonkeyKing_swift"],
 )
 static_library(
     name = "libMotion_a",
     deps = [
+        ":Motion_swift",
         ":libMotion_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":Motion_swift"],
 )
 static_library(
     name = "libMoya_a",
     deps = [
+        ":Moya_swift",
         ":libMoya_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":Moya_swift"],
 )
 static_library(
     name = "libNSAttributedStringBuilder13_a",
     deps = [
+        ":NSAttributedStringBuilder13_swift",
         ":libNSAttributedStringBuilder13_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":NSAttributedStringBuilder13_swift"],
 )
 static_library(
     name = "libNVActivityIndicatorView_a",
     deps = [
+        ":NVActivityIndicatorView_swift",
         ":libNVActivityIndicatorView_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":NVActivityIndicatorView_swift"],
 )
 static_library(
     name = "libNuke_a",
     deps = [
+        ":Nuke_swift",
         ":libNuke_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":Nuke_swift"],
 )
 static_library(
     name = "libOHHTTPStubs_a",
     deps = [
         ":libOHHTTPStubs_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libObjectMapper_a",
     deps = [
+        ":ObjectMapper_swift",
         ":libObjectMapper_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":ObjectMapper_swift"],
 )
 static_library(
     name = "libPINCache_a",
@@ -12803,159 +13054,99 @@ static_library(
         ":libPINCache_a_m_0",
         ":libPINCache_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libPINOperation_a",
     deps = [
         ":libPINOperation_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libPINRemoteImage_a",
     deps = [
         ":libPINRemoteImage_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libPPBadgeViewSwift_a",
     deps = [
+        ":PPBadgeViewSwift_swift",
         ":libPPBadgeViewSwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":PPBadgeViewSwift_swift"],
 )
 static_library(
     name = "libPanModal_a",
     deps = [
+        ":PanModal_swift",
         ":libPanModal_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":PanModal_swift"],
 )
 static_library(
     name = "libPermission_a",
     deps = [
+        ":Permission_swift",
         ":libPermission_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":Permission_swift"],
 )
 static_library(
     name = "libPhoneNumberKit_a",
     deps = [
+        ":PhoneNumberKit_swift",
         ":libPhoneNumberKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":PhoneNumberKit_swift"],
 )
 static_library(
     name = "libPods_swift_app_with_pod_no_use_frameworks_a",
     deps = [
         ":libPods_swift_app_with_pod_no_use_frameworks_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
 )
 static_library(
     name = "libPromiseKit_a",
     deps = [
+        ":PromiseKit_swift",
         ":libPromiseKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":PromiseKit_swift"],
 )
 static_library(
     name = "libQMUIKit_a",
     deps = [
         ":libQMUIKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
 )
 static_library(
     name = "libR_swift_Library_a",
     deps = [
+        ":Rswift_swift",
         ":libR_swift_Library_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Rswift_swift"],
 )
 static_library(
     name = "libReSwift_a",
     deps = [
+        ":ReSwift_swift",
         ":libReSwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":ReSwift_swift"],
 )
 static_library(
     name = "libReachabilitySwift_a",
     deps = [
+        ":Reachability_swift",
         ":libReachabilitySwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":Reachability_swift"],
 )
 static_library(
     name = "libReactiveObjC_a",
     deps = [
         ":libReactiveObjC_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libRealmSwift_a",
     deps = [
+        ":RealmSwift_swift",
         ":libRealmSwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":RealmSwift_swift"],
 )
 static_library(
     name = "libRealm_a",
@@ -12964,85 +13155,53 @@ static_library(
         ":libRealm_a_m_1",
         ":libRealm_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libRxCocoa_a",
     deps = [
+        ":RxCocoa_swift",
         ":libRxCocoa_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":RxCocoa_swift"],
 )
 static_library(
     name = "libRxRelay_a",
     deps = [
+        ":RxRelay_swift",
         ":libRxRelay_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":RxRelay_swift"],
 )
 static_library(
     name = "libRxSwift_a",
     deps = [
+        ":RxSwift_swift",
         ":libRxSwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":RxSwift_swift"],
 )
 static_library(
     name = "libSDWebImage_a",
     deps = [
         ":libSDWebImage_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libSQLite_swift_a",
     deps = [
+        ":SQLite_swift",
         ":libSQLite_swift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SQLite_swift"],
 )
 static_library(
     name = "libSVProgressHUD_a",
     deps = [
         ":libSVProgressHUD_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libSWXMLHash_a",
     deps = [
+        ":SWXMLHash_swift",
         ":libSWXMLHash_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SWXMLHash_swift"],
 )
 static_library(
     name = "libSentry_a",
@@ -13052,206 +13211,130 @@ static_library(
         ":libSentry_a_m",
         ":libSentry_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libSideMenu_a",
     deps = [
+        ":SideMenu_swift",
         ":libSideMenu_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":SideMenu_swift"],
 )
 static_library(
     name = "libSiren_a",
     deps = [
+        ":Siren_swift",
         ":libSiren_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":Siren_swift"],
 )
 static_library(
     name = "libSkeletonView_a",
     deps = [
+        ":SkeletonView_swift",
         ":libSkeletonView_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SkeletonView_swift"],
 )
 static_library(
     name = "libSnapKit_a",
     deps = [
+        ":SnapKit_swift",
         ":libSnapKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":SnapKit_swift"],
 )
 static_library(
     name = "libStarscream_a",
     deps = [
+        ":Starscream_swift",
         ":libStarscream_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":Starscream_swift"],
 )
 static_library(
     name = "libSurge_a",
     deps = [
+        ":Surge_swift",
         ":libSurge_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":Surge_swift"],
 )
 static_library(
     name = "libSwiftDate_a",
     deps = [
+        ":SwiftDate_swift",
         ":libSwiftDate_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwiftDate_swift"],
 )
 static_library(
     name = "libSwiftEntryKit_a",
     deps = [
+        ":SwiftEntryKit_swift",
         ":libSwiftEntryKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwiftEntryKit_swift"],
 )
 static_library(
     name = "libSwiftMessages_a",
     deps = [
+        ":SwiftMessages_swift",
         ":libSwiftMessages_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwiftMessages_swift"],
 )
 static_library(
     name = "libSwiftRichString_a",
     deps = [
+        ":SwiftRichString_swift",
         ":libSwiftRichString_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwiftRichString_swift"],
 )
 static_library(
     name = "libSwifterSwift_a",
     deps = [
+        ":SwifterSwift_swift",
         ":libSwifterSwift_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "10.0",
-    swift_deps = [":SwifterSwift_swift"],
 )
 static_library(
     name = "libSwiftyBeaver_a",
     deps = [
+        ":SwiftyBeaver_swift",
         ":libSwiftyBeaver_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwiftyBeaver_swift"],
 )
 static_library(
     name = "libSwiftyJSON_a",
     deps = [
+        ":SwiftyJSON_swift",
         ":libSwiftyJSON_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwiftyJSON_swift"],
 )
 static_library(
     name = "libSwiftyStoreKit_a",
     deps = [
+        ":SwiftyStoreKit_swift",
         ":libSwiftyStoreKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":SwiftyStoreKit_swift"],
 )
 static_library(
     name = "libSwipeCellKit_a",
     deps = [
+        ":SwipeCellKit_swift",
         ":libSwipeCellKit_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":SwipeCellKit_swift"],
 )
 static_library(
     name = "libTOCropViewController_a",
     deps = [
         ":libTOCropViewController_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 static_library(
     name = "libTensorFlowLiteTaskText_a",
     deps = [
         ":libTensorFlowLiteTaskText_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libTextFieldEffects_a",
     deps = [
+        ":TextFieldEffects_swift",
         ":libTextFieldEffects_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":TextFieldEffects_swift"],
 )
 static_library(
     name = "libTexture_a",
@@ -13259,72 +13342,44 @@ static_library(
         ":libTexture_a_m",
         ":libTexture_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "libViewAnimator_a",
     deps = [
+        ":ViewAnimator_swift",
         ":libViewAnimator_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
-    swift_deps = [":ViewAnimator_swift"],
 )
 static_library(
     name = "libWKWebViewJavascriptBridge_a",
     deps = [
+        ":WKWebViewJavascriptBridge_swift",
         ":libWKWebViewJavascriptBridge_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
-    swift_deps = [":WKWebViewJavascriptBridge_swift"],
 )
 static_library(
     name = "libYYCache_a",
     deps = [
         ":libYYCache_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libYYImage_a",
     deps = [
         ":libYYImage_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libYYModel_a",
     deps = [
         ":libYYModel_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libYYText_a",
     deps = [
         ":libYYText_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "libZipArchive_a",
@@ -13333,10 +13388,6 @@ static_library(
         ":libZipArchive_a_m_0",
         ":libZipArchive_a_m_1",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "4.3",
 )
 static_library(
     name = "libfishhook_a",
@@ -13344,10 +13395,6 @@ static_library(
         ":libfishhook_a_c",
         ":libfishhook_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "6.0",
 )
 static_library(
     name = "liblibwebp_a",
@@ -13355,21 +13402,13 @@ static_library(
         ":liblibwebp_a_c",
         ":liblibwebp_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "9.0",
 )
 static_library(
     name = "liblottie_ios_a",
     deps = [
+        ":Lottie_swift",
         ":liblottie_ios_a_m",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "11.0",
-    swift_deps = [":Lottie_swift"],
 )
 static_library(
     name = "libpop_a",
@@ -13378,10 +13417,6 @@ static_library(
         ":libpop_a_m",
         ":libpop_a_mm",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    minimum_os_version = "8.0",
 )
 swift_library(
     name = "AMPopTip_swift",
@@ -13392,6 +13427,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "AMPopTip",
     objc_defines = [
@@ -13418,6 +13456,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "AMScrollingNavbar",
     objc_defines = [
         "COCOAPODS=1",
@@ -13442,6 +13483,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Alamofire",
     objc_defines = [
@@ -13501,6 +13545,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "AnimatedCollectionViewLayout",
     objc_defines = [
         "COCOAPODS=1",
@@ -13538,6 +13585,9 @@ swift_library(
     deps = [
         ":Kingfisher_swift",
         ":SnapKit_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "AnyImageKit",
     objc_defines = [
@@ -13747,6 +13797,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "BLTNBoard",
     objc_defines = [
         "COCOAPODS=1",
@@ -13797,6 +13850,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "BarcodeScanner",
     objc_defines = [
         "COCOAPODS=1",
@@ -13831,6 +13887,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Cartography",
     objc_defines = [
@@ -13880,6 +13939,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Charts",
     objc_defines = [
@@ -14043,6 +14105,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "CocoaLumberjack",
     objc_defines = [
         "COCOAPODS=1",
@@ -14070,6 +14135,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "CryptoSwift",
     objc_defines = [
@@ -14194,6 +14262,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "DropDown",
     objc_defines = [
         "COCOAPODS=1",
@@ -14221,6 +14292,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Eureka",
     objc_defines = [
@@ -14310,6 +14384,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "FSPagerView",
     objc_defines = [
         "COCOAPODS=1",
@@ -14341,6 +14418,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "FileKit",
     objc_defines = [
@@ -14399,6 +14479,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "InAppPurchase",
     objc_defines = [
         "COCOAPODS=1",
@@ -14431,6 +14514,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "InputBarAccessoryView",
     objc_defines = [
@@ -14487,6 +14573,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Instructions",
     objc_defines = [
@@ -14559,6 +14648,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "JTAppleCalendar",
     objc_defines = [
         "COCOAPODS=1",
@@ -14604,6 +14696,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "JXPagingView",
     objc_defines = [
         "COCOAPODS=1",
@@ -14630,6 +14725,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "JXSegmentedView",
     objc_defines = [
@@ -14696,6 +14794,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "KeychainAccess",
     objc_defines = [
         "COCOAPODS=1",
@@ -14721,6 +14822,9 @@ swift_library(
     ],
     deps = [
         ":Kingfisher_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "KingfisherWebP",
     objc_defines = [
@@ -14750,6 +14854,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Kingfisher",
     objc_defines = [
@@ -14829,6 +14936,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Koloda",
     objc_defines = [
         "COCOAPODS=1",
@@ -14861,6 +14971,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "LTMorphingLabel",
     objc_defines = [
@@ -14900,6 +15013,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Lantern",
     objc_defines = [
         "COCOAPODS=1",
@@ -14935,6 +15051,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Loading",
     objc_defines = [
@@ -14972,6 +15091,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Lottie",
     objc_defines = [
@@ -15177,6 +15299,9 @@ swift_library(
     deps = [
         ":SWXMLHash_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Macaw",
     objc_defines = [
         "COCOAPODS=1",
@@ -15343,6 +15468,9 @@ swift_library(
     deps = [
         ":Motion_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Material",
     objc_defines = [
         "COCOAPODS=1",
@@ -15467,6 +15595,9 @@ swift_library(
     deps = [
         ":InputBarAccessoryView_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "MessageKit",
     objc_defines = [
         "COCOAPODS=1",
@@ -15560,6 +15691,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "MonkeyKing",
     objc_defines = [
         "COCOAPODS=1",
@@ -15598,6 +15732,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Motion",
     objc_defines = [
@@ -15669,6 +15806,9 @@ swift_library(
     deps = [
         ":Alamofire_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Moya",
     objc_defines = [
         "COCOAPODS=1",
@@ -15716,6 +15856,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "NSAttributedStringBuilder13",
     objc_defines = [
         "COCOAPODS=1",
@@ -15743,6 +15886,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "NVActivityIndicatorView",
     objc_defines = [
@@ -15802,6 +15948,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Nuke",
     objc_defines = [
@@ -15883,6 +16032,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "ObjectMapper",
     objc_defines = [
         "COCOAPODS=1",
@@ -15929,6 +16081,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "PPBadgeViewSwift",
     objc_defines = [
         "COCOAPODS=1",
@@ -15955,6 +16110,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "PanModal",
     objc_defines = [
@@ -15994,6 +16152,9 @@ swift_library(
         "COCOAPODS",
         "PERMISSION_MICROPHONE",
         "PERMISSION_PHOTOS",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Permission",
     objc_defines = [
@@ -16039,6 +16200,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "PhoneNumberKit",
     objc_defines = [
         "COCOAPODS=1",
@@ -16077,6 +16241,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
         "PMKCocoaPods",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "PromiseKit",
     objc_defines = [
@@ -16128,6 +16295,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "ReSwift",
     objc_defines = [
         "COCOAPODS=1",
@@ -16163,6 +16333,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Reachability",
     objc_defines = [
         "COCOAPODS=1",
@@ -16185,6 +16358,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "RealmSwift",
     objc_defines = [
@@ -16263,6 +16439,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Rswift",
     objc_defines = [
         "COCOAPODS=1",
@@ -16315,6 +16494,9 @@ swift_library(
     deps = [
         ":RxRelay_swift",
         ":RxSwift_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "RxCocoa",
     objc_defines = [
@@ -16446,6 +16628,9 @@ swift_library(
     deps = [
         ":RxSwift_swift",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "RxRelay",
     objc_defines = [
         "COCOAPODS=1",
@@ -16473,6 +16658,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "RxSwift",
     objc_defines = [
@@ -16656,6 +16844,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SQLite",
     objc_defines = [
         "COCOAPODS=1",
@@ -16705,6 +16896,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SWXMLHash",
     objc_defines = [
         "COCOAPODS=1",
@@ -16753,6 +16947,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SideMenu",
     objc_defines = [
         "COCOAPODS=1",
@@ -16788,6 +16985,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "Siren",
     objc_defines = [
@@ -16830,6 +17030,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "SkeletonView",
     objc_defines = [
@@ -16914,6 +17117,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SnapKit",
     objc_defines = [
         "COCOAPODS=1",
@@ -16973,6 +17179,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Starscream",
     objc_defines = [
         "COCOAPODS=1",
@@ -17015,6 +17224,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "Surge",
     objc_defines = [
         "COCOAPODS=1",
@@ -17053,6 +17265,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "SwiftDate",
     objc_defines = [
@@ -17111,6 +17326,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "SwiftEntryKit",
     objc_defines = [
@@ -17202,6 +17420,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SwiftMessages",
     objc_defines = [
         "COCOAPODS=1",
@@ -17255,6 +17476,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SwiftRichString",
     objc_defines = [
         "COCOAPODS=1",
@@ -17303,6 +17527,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "SwifterSwift",
     objc_defines = [
@@ -17427,6 +17654,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SwiftyBeaver",
     objc_defines = [
         "COCOAPODS=1",
@@ -17460,6 +17690,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "SwiftyJSON",
     objc_defines = [
         "COCOAPODS=1",
@@ -17482,6 +17715,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "SwiftyStoreKit",
     objc_defines = [
@@ -17519,6 +17755,9 @@ swift_library(
     defines = [
         "COCOAPODS",
         "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
     ],
     module_name = "SwipeCellKit",
     objc_defines = [
@@ -17564,6 +17803,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "TextFieldEffects",
     objc_defines = [
         "COCOAPODS=1",
@@ -17596,6 +17838,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "ViewAnimator",
     objc_defines = [
         "COCOAPODS=1",
@@ -17625,6 +17870,9 @@ swift_library(
         "COCOAPODS",
         "DEBUG",
     ],
+    linkopts = [
+        "-dead_strip",
+    ],
     module_name = "WKWebViewJavascriptBridge",
     objc_defines = [
         "COCOAPODS=1",
@@ -17652,6 +17900,10 @@ swift_library(
     ],
     deps = [
         ":Kingfisher_swift",
+    ],
+    linkopts = [
+        "-ObjC",
+        "-dead_strip",
     ],
     module_name = "swift_app_with_pod_no_use_frameworks",
     objc_defines = [
