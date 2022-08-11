@@ -47,16 +47,16 @@ class BazelTranslator
                 header_target_info["direct_hdr_providers"] = [":" + swift_bazel_target_name]
             end
 
-            use_headermap = info_hash[:use_headermap]
-            next unless use_headermap
+            use_header_map = info_hash[:use_header_map]
+            next unless use_header_map
             namespace = info_hash[:namespace]
 
-            target_public_headermap = info_hash[:target_public_headermap]
-            target_private_headermap = info_hash[:target_private_headermap]
+            target_public_header_map = info_hash[:target_public_header_map]
+            target_private_header_map = info_hash[:target_private_header_map]
             
-            next if (target_public_headermap.size + target_private_headermap.size) == 0
+            next if (target_public_header_map.size + target_private_header_map.size) == 0
 
-            public_headers = target_public_headermap.values.map{|x|x.to_a}.flatten.to_set
+            public_headers = target_public_header_map.values.map{|x|x.to_a}.flatten.to_set
             if public_headers.size > 0
                 header_target_name = get_bazel_target_name_for_header_map(target_name, true)
                 header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -66,7 +66,7 @@ class BazelTranslator
                 header_target_info["hdrs"] = public_headers
             end
 
-            private_headers = target_private_headermap.values.map{|x|x.to_a}.flatten.to_set
+            private_headers = target_private_header_map.values.map{|x|x.to_a}.flatten.to_set
             if private_headers.size > 0
                 header_target_name = get_bazel_target_name_for_header_map(target_name, false)
                 header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -99,8 +99,8 @@ class BazelTranslator
     
             pch = info_hash[:pch]
             flags_sources_hash = info_hash[:flags_sources_hash]
-            header_path_hash_for_target_headermap = info_hash[:header_path_hash_for_target_headermap]
-            header_path_hash_for_project_headermap = info_hash[:header_path_hash_for_project_headermap]
+            header_path_hash_for_target_header_map = info_hash[:header_path_hash_for_target_header_map]
+            header_path_hash_for_project_header_map = info_hash[:header_path_hash_for_project_header_map]
 
             module_name = target_module_name_hash[target_name]
             product_name = info_hash[:product_name]
@@ -172,9 +172,9 @@ class BazelTranslator
                     target_info["rule"] = "dtrace_compile"
                     target_info["srcs"] = source_files
 
-                    dtrace_headermap_target_name = target_name + "_dtrace_header_map"
-                    binding.pry if target_info_hash_for_bazel.include? dtrace_headermap_target_name
-                    target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, dtrace_headermap_target_name)
+                    dtrace_header_map_target_name = target_name + "_dtrace_header_map"
+                    binding.pry if target_info_hash_for_bazel.include? dtrace_header_map_target_name
+                    target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, dtrace_header_map_target_name)
                     target_info["rule"] = "header_map"
                     target_info["hdrs"] = [":#{dtrace_target_name}"]
                 end
@@ -629,7 +629,7 @@ class BazelTranslator
             info_hash[:target_links_hash][:system_libraries].add system_library
             return
         end
-        if dep_info[0] == :private_headermap
+        if dep_info[0] == :private_header_map
             header_target_name = get_bazel_target_name_for_header_map(dep_info[2], false)
             key = "header_maps"
             key = "objc_" + key if target_info["rule"] == "swift_library"
@@ -638,7 +638,7 @@ class BazelTranslator
             return
         end
 
-        if dep_info[0] == :public_headermap
+        if dep_info[0] == :public_header_map
             header_target_name = get_bazel_target_name_for_header_map(dep_info[2], true)
             key = "header_maps"
             key = "objc_" + key if target_info["rule"] == "swift_library"
@@ -647,7 +647,7 @@ class BazelTranslator
             return
         end
 
-        if dep_info[0] == :project_headermap
+        if dep_info[0] == :project_header_map
             header = dep_info[1]
             header_target_name = "#{dep_info[2]}_project_header_map"
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -665,10 +665,11 @@ class BazelTranslator
         if dep_info[0] == :virtual_header_map
             header = dep_info[1]
             namespace = dep_info[2]
-            header_target_name = "#{namespace}_vitual_header_map"
+            header_target_name = get_legal_bazel_target_name "#{namespace}_virtual_header_map"
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
             header_target_info["rule"] = "header_map"
             header_target_info["namespace"] = namespace if namespace
+            header_target_info["namespace_only"] = "True"
             header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
             header_target_info["hdrs"].add header
 
@@ -788,11 +789,11 @@ class BazelTranslator
         end
 
         if dep_info[0] == :dtrace_header
-            dtrace_headermap_target_name = dep_info[2] + "_dtrace_header_map"
+            dtrace_header_map_target_name = dep_info[2] + "_dtrace_header_map"
             key = "header_maps"
             key = "objc_" + key if target_info["rule"] == "swift_library"
             target_info[key] = Set.new unless target_info[key]
-            target_info[key].add dtrace_headermap_target_name
+            target_info[key].add dtrace_header_map_target_name
             return
         end
 

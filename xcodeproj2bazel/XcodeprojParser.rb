@@ -445,27 +445,27 @@ class XcodeprojParser
         return nil
     end
 
-    def get_project_headermap(project)
-        project_headermap = {}
+    def get_project_header_map(project)
+        project_header_map = {}
         project.files.each do | file_ref |
             file_paths = get_file_paths_from_file_ref(file_ref)
             file_paths.each do | file_path |
                 next unless FileFilter.get_header_file_extnames.include? File.extname(file_path).downcase
 
                 key = File.basename(file_path).downcase
-                project_headermap[key] = Set.new unless project_headermap[key]
-                project_headermap[key].add file_path
+                project_header_map[key] = Set.new unless project_header_map[key]
+                project_header_map[key].add file_path
             end
         end
-        return project_headermap
+        return project_header_map
     end
 
-    def get_target_headermap(target, use_headermap, product_name)
-        target_public_headermap = {}
-        target_private_headermap = {}
+    def get_target_header_map(target, use_header_map, product_name)
+        target_public_header_map = {}
+        target_private_header_map = {}
         target_headers = []
         namespace = nil
-        if use_headermap
+        if use_header_map
             namespace = product_name
         end
         target.headers_build_phase.files.each do | file |
@@ -488,26 +488,26 @@ class XcodeprojParser
                     end
                 end
 
-                if use_headermap
+                if use_header_map
                     if is_public
                         key = (namespace + "/" + File.basename(file_path)).downcase
-                        target_public_headermap[key] = Set.new unless target_public_headermap[key]
-                        target_public_headermap[key].add file_path
-                        binding.pry if target_public_headermap[key].size > 1
+                        target_public_header_map[key] = Set.new unless target_public_header_map[key]
+                        target_public_header_map[key].add file_path
+                        binding.pry if target_public_header_map[key].size > 1
                     end
 
                     key = (namespace + "/" + File.basename(file_path)).downcase
-                    target_private_headermap[key] = Set.new unless target_private_headermap[key]
-                    target_private_headermap[key].add file_path
+                    target_private_header_map[key] = Set.new unless target_private_header_map[key]
+                    target_private_header_map[key].add file_path
 
                     key = (File.basename(file_path)).downcase
-                    target_private_headermap[key] = Set.new unless target_private_headermap[key]
-                    target_private_headermap[key].add file_path
+                    target_private_header_map[key] = Set.new unless target_private_header_map[key]
+                    target_private_header_map[key].add file_path
                 end
             end           
         end
 
-        return target_headers.uniq, namespace, target_public_headermap, target_private_headermap
+        return target_headers.uniq, namespace, target_public_header_map, target_private_header_map
     end
 
     def get_target_source_files(target, variable_hash)
@@ -695,7 +695,7 @@ class XcodeprojParser
         return target_library_dirs
     end
 
-    def get_target_use_headermap(target, variable_hash)
+    def get_target_use_header_map(target, variable_hash)
         target_build_settings = get_target_build_settings(target, variable_hash, "USE_HEADERMAP", false)
         if target_build_settings.size == 0
             return true
@@ -1299,14 +1299,14 @@ class XcodeprojParser
         projects.each do | project |
             project_path = project.path.to_s + "/project.pbxproj"
             project_variable_hash = get_build_settings_variables(project.build_configurations, {}, project, nil)
-            project_headermap = get_project_headermap(project)
+            project_header_map = get_project_header_map(project)
             project.native_targets.each do | target |
                 if target_info_hash_for_xcode[target.name]
                     raise "unexpected conflicting #{target.name}"
                 end
                 
                 variable_hash = get_build_settings_variables(target.build_configurations, project_variable_hash, project, target)
-                header_path_hash_for_target_headermap = {}
+                header_path_hash_for_target_header_map = {}
 
                 flags_sources_hash, clang_enable_objc_arc, has_swift = get_target_source_files(target, variable_hash)
     
@@ -1328,8 +1328,8 @@ class XcodeprojParser
                 swift_objc_bridging_header = get_targe_swift_setting(target, variable_hash)
                 enable_modules, product_module_name, module_map_file, dep_module_map_files = get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
 
-                use_headermap = get_target_use_headermap(target, variable_hash)
-                target_headers, namespace, target_public_headermap, target_private_headermap = get_target_headermap(target, use_headermap, product_name)
+                use_header_map = get_target_use_header_map(target, variable_hash)
+                target_headers, namespace, target_public_header_map, target_private_header_map = get_target_header_map(target, use_header_map, product_name)
 
                 info_hash = {}
                 info_hash[:product_name] = product_name
@@ -1349,14 +1349,14 @@ class XcodeprojParser
                 info_hash[:dep_module_map_files] = dep_module_map_files
                 info_hash[:swift_objc_bridging_header] = swift_objc_bridging_header
                 info_hash[:target_headers] = target_headers
-                info_hash[:use_headermap] = use_headermap
+                info_hash[:use_header_map] = use_header_map
                 info_hash[:namespace] = namespace
-                info_hash[:target_public_headermap] = target_public_headermap
-                info_hash[:target_private_headermap] = target_private_headermap
-                if use_headermap
-                    info_hash[:project_headermap] = project_headermap
+                info_hash[:target_public_header_map] = target_public_header_map
+                info_hash[:target_private_header_map] = target_private_header_map
+                if use_header_map
+                    info_hash[:project_header_map] = project_header_map
                 else
-                    info_hash[:project_headermap] = {}
+                    info_hash[:project_header_map] = {}
                 end
                 info_hash[:target_header_dirs] = target_header_dirs
                 info_hash[:target_framework_dirs] = target_framework_dirs
