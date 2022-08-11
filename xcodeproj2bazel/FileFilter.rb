@@ -60,6 +60,16 @@ class FileFilter
         return origin_path
     end
 
+    def self.get_real_exist_expand_path_file(origin_path)
+        path = get_exist_expand_path_file(origin_path)
+        if path
+            path = File.realpath path
+            binding.pry unless path.downcase.start_with? $xcodeproj2bazel_pwd.downcase + "/"
+        end
+        return path
+    end
+
+
     def self.get_exist_expand_path_file(origin_path)
         path = get_exist_expand_path(origin_path)
         if path

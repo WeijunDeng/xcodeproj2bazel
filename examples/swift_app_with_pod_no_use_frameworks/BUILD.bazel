@@ -414,252 +414,6 @@ cc_header(
     ],
 )
 cc_header(
-    name = "pods_headers_private_base64_h_header",
-    hdrs = [
-        "Pods/Headers/Private/Base64/MF_Base64Additions.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_cocoalumberjack_h_header",
-    hdrs = [
-        "Pods/Headers/Private/CocoaLumberjack/CLIColor.h",
-        "Pods/Headers/Private/CocoaLumberjack/CocoaLumberjack.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDASLLogCapture.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDASLLogger.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDAbstractDatabaseLogger.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDAssertMacros.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDContextFilterLogFormatter+Deprecated.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDContextFilterLogFormatter.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDDispatchQueueLogFormatter.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDFileLogger+Buffering.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDFileLogger.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDLegacyMacros.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDLog+LOGV.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDLog.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDLogMacros.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDLoggerNames.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDMultiFormatter.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDOSLogger.h",
-        "Pods/Headers/Private/CocoaLumberjack/DDTTYLogger.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_fballocationtracker_h_header",
-    hdrs = [
-        "Pods/Headers/Private/FBAllocationTracker/FBAllocationTrackerManager.h",
-        "Pods/Headers/Private/FBAllocationTracker/FBAllocationTrackerSummary.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_fbretaincycledetector_h_header",
-    hdrs = [
-        "Pods/Headers/Private/FBRetainCycleDetector/FBObjectGraphConfiguration.h",
-        "Pods/Headers/Private/FBRetainCycleDetector/FBObjectiveCGraphElement.h",
-        "Pods/Headers/Private/FBRetainCycleDetector/FBRetainCycleDetector.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_fishhook_h_header",
-    hdrs = [
-        "Pods/Headers/Private/fishhook/fishhook.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_flex_h_header",
-    hdrs = [
-        "Pods/Headers/Private/FLEX/CALayer+FLEX.h",
-        "Pods/Headers/Private/FLEX/FLEX-Categories.h",
-        "Pods/Headers/Private/FLEX/FLEX-Core.h",
-        "Pods/Headers/Private/FLEX/FLEX-ObjectExploring.h",
-        "Pods/Headers/Private/FLEX/FLEX-Runtime.h",
-        "Pods/Headers/Private/FLEX/FLEX.h",
-        "Pods/Headers/Private/FLEX/FLEXAlert.h",
-        "Pods/Headers/Private/FLEX/FLEXBlockDescription.h",
-        "Pods/Headers/Private/FLEX/FLEXBlockShortcuts.h",
-        "Pods/Headers/Private/FLEX/FLEXBundleShortcuts.h",
-        "Pods/Headers/Private/FLEX/FLEXClassBuilder.h",
-        "Pods/Headers/Private/FLEX/FLEXClassShortcuts.h",
-        "Pods/Headers/Private/FLEX/FLEXCodeFontCell.h",
-        "Pods/Headers/Private/FLEX/FLEXCollectionContentSection.h",
-        "Pods/Headers/Private/FLEX/FLEXColorPreviewSection.h",
-        "Pods/Headers/Private/FLEX/FLEXDefaultsContentSection.h",
-        "Pods/Headers/Private/FLEX/FLEXExplorerToolbar.h",
-        "Pods/Headers/Private/FLEX/FLEXExplorerToolbarItem.h",
-        "Pods/Headers/Private/FLEX/FLEXFilteringTableViewController.h",
-        "Pods/Headers/Private/FLEX/FLEXGlobalsEntry.h",
-        "Pods/Headers/Private/FLEX/FLEXImageShortcuts.h",
-        "Pods/Headers/Private/FLEX/FLEXIvar.h",
-        "Pods/Headers/Private/FLEX/FLEXKeyValueTableViewCell.h",
-        "Pods/Headers/Private/FLEX/FLEXLayerShortcuts.h",
-        "Pods/Headers/Private/FLEX/FLEXMacros.h",
-        "Pods/Headers/Private/FLEX/FLEXManager+Extensibility.h",
-        "Pods/Headers/Private/FLEX/FLEXManager+Networking.h",
-        "Pods/Headers/Private/FLEX/FLEXManager.h",
-        "Pods/Headers/Private/FLEX/FLEXMetadataSection.h",
-        "Pods/Headers/Private/FLEX/FLEXMethod.h",
-        "Pods/Headers/Private/FLEX/FLEXMethodBase.h",
-        "Pods/Headers/Private/FLEX/FLEXMirror.h",
-        "Pods/Headers/Private/FLEX/FLEXMultilineTableViewCell.h",
-        "Pods/Headers/Private/FLEX/FLEXMutableListSection.h",
-        "Pods/Headers/Private/FLEX/FLEXNavigationController.h",
-        "Pods/Headers/Private/FLEX/FLEXObjcInternal.h",
-        "Pods/Headers/Private/FLEX/FLEXObjectExplorer.h",
-        "Pods/Headers/Private/FLEX/FLEXObjectExplorerFactory.h",
-        "Pods/Headers/Private/FLEX/FLEXObjectExplorerViewController.h",
-        "Pods/Headers/Private/FLEX/FLEXObjectInfoSection.h",
-        "Pods/Headers/Private/FLEX/FLEXProperty.h",
-        "Pods/Headers/Private/FLEX/FLEXPropertyAttributes.h",
-        "Pods/Headers/Private/FLEX/FLEXProtocol.h",
-        "Pods/Headers/Private/FLEX/FLEXProtocolBuilder.h",
-        "Pods/Headers/Private/FLEX/FLEXResources.h",
-        "Pods/Headers/Private/FLEX/FLEXRuntime+Compare.h",
-        "Pods/Headers/Private/FLEX/FLEXRuntime+UIKitHelpers.h",
-        "Pods/Headers/Private/FLEX/FLEXRuntimeSafety.h",
-        "Pods/Headers/Private/FLEX/FLEXScopeCarousel.h",
-        "Pods/Headers/Private/FLEX/FLEXShortcut.h",
-        "Pods/Headers/Private/FLEX/FLEXShortcutsFactory+Defaults.h",
-        "Pods/Headers/Private/FLEX/FLEXShortcutsSection.h",
-        "Pods/Headers/Private/FLEX/FLEXSingleRowSection.h",
-        "Pods/Headers/Private/FLEX/FLEXSubtitleTableViewCell.h",
-        "Pods/Headers/Private/FLEX/FLEXTableView.h",
-        "Pods/Headers/Private/FLEX/FLEXTableViewCell.h",
-        "Pods/Headers/Private/FLEX/FLEXTableViewController.h",
-        "Pods/Headers/Private/FLEX/FLEXTableViewSection.h",
-        "Pods/Headers/Private/FLEX/FLEXTypeEncodingParser.h",
-        "Pods/Headers/Private/FLEX/FLEXViewControllerShortcuts.h",
-        "Pods/Headers/Private/FLEX/FLEXViewShortcuts.h",
-        "Pods/Headers/Private/FLEX/NSArray+FLEX.h",
-        "Pods/Headers/Private/FLEX/NSDictionary+ObjcRuntime.h",
-        "Pods/Headers/Private/FLEX/NSMapTable+FLEX_Subscripting.h",
-        "Pods/Headers/Private/FLEX/NSObject+FLEX_Reflection.h",
-        "Pods/Headers/Private/FLEX/NSString+FLEX.h",
-        "Pods/Headers/Private/FLEX/NSString+ObjcRuntime.h",
-        "Pods/Headers/Private/FLEX/NSTimer+FLEX.h",
-        "Pods/Headers/Private/FLEX/NSUserDefaults+FLEX.h",
-        "Pods/Headers/Private/FLEX/UIBarButtonItem+FLEX.h",
-        "Pods/Headers/Private/FLEX/UIFont+FLEX.h",
-        "Pods/Headers/Private/FLEX/UIGestureRecognizer+Blocks.h",
-        "Pods/Headers/Private/FLEX/UIMenu+FLEX.h",
-        "Pods/Headers/Private/FLEX/UIPasteboard+FLEX.h",
-        "Pods/Headers/Private/FLEX/UITextField+Range.h",
-        "Pods/Headers/Private/FLEX/UIView+FLEX_Layout.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_libwebp_h_header",
-    hdrs = [
-        "Pods/Headers/Private/libwebp/decode.h",
-        "Pods/Headers/Private/libwebp/demux.h",
-        "Pods/Headers/Private/libwebp/encode.h",
-        "Pods/Headers/Private/libwebp/mux.h",
-        "Pods/Headers/Private/libwebp/mux_types.h",
-        "Pods/Headers/Private/libwebp/types.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_mmkvcore_h_header",
-    hdrs = [
-        "Pods/Headers/Private/MMKVCore/MMKV.h",
-        "Pods/Headers/Private/MMKVCore/MMKVLog.h",
-        "Pods/Headers/Private/MMKVCore/ThreadLock.h",
-        "Pods/Headers/Private/MMKVCore/openssl_md5.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_mmkvcore_hpp_header",
-    hdrs = [
-        "Pods/Headers/Private/MMKVCore/ScopedLock.hpp",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_mtappenderfile_h_header",
-    hdrs = [
-        "Pods/Headers/Private/MTAppenderFile/MTAppenderFile.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_pincache_h_header",
-    hdrs = [
-        "Pods/Headers/Private/PINCache/PINCache.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_pinoperation_h_header",
-    hdrs = [
-        "Pods/Headers/Private/PINOperation/PINOperation.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_pinremoteimage_h_header",
-    hdrs = [
-        "Pods/Headers/Private/PINRemoteImage/NSData+ImageDetectors.h",
-        "Pods/Headers/Private/PINRemoteImage/PINAlternateRepresentationProvider.h",
-        "Pods/Headers/Private/PINRemoteImage/PINCachedAnimatedImage.h",
-        "Pods/Headers/Private/PINRemoteImage/PINRemoteImageCaching.h",
-        "Pods/Headers/Private/PINRemoteImage/PINRemoteImageManager.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_realm_h_header",
-    hdrs = [
-        "Pods/Headers/Private/Realm/NSError+RLMSync.h",
-        "Pods/Headers/Private/Realm/RLMAPIKeyAuth.h",
-        "Pods/Headers/Private/Realm/RLMApp.h",
-        "Pods/Headers/Private/Realm/RLMArray.h",
-        "Pods/Headers/Private/Realm/RLMBSON.h",
-        "Pods/Headers/Private/Realm/RLMCollection.h",
-        "Pods/Headers/Private/Realm/RLMConstants.h",
-        "Pods/Headers/Private/Realm/RLMCredentials.h",
-        "Pods/Headers/Private/Realm/RLMDecimal128.h",
-        "Pods/Headers/Private/Realm/RLMDictionary.h",
-        "Pods/Headers/Private/Realm/RLMEmailPasswordAuth.h",
-        "Pods/Headers/Private/Realm/RLMEmbeddedObject.h",
-        "Pods/Headers/Private/Realm/RLMFindOneAndModifyOptions.h",
-        "Pods/Headers/Private/Realm/RLMFindOptions.h",
-        "Pods/Headers/Private/Realm/RLMMigration.h",
-        "Pods/Headers/Private/Realm/RLMMongoClient.h",
-        "Pods/Headers/Private/Realm/RLMMongoCollection.h",
-        "Pods/Headers/Private/Realm/RLMMongoDatabase.h",
-        "Pods/Headers/Private/Realm/RLMNetworkTransport.h",
-        "Pods/Headers/Private/Realm/RLMObject.h",
-        "Pods/Headers/Private/Realm/RLMObjectBase.h",
-        "Pods/Headers/Private/Realm/RLMObjectId.h",
-        "Pods/Headers/Private/Realm/RLMObjectSchema.h",
-        "Pods/Headers/Private/Realm/RLMPlatform.h",
-        "Pods/Headers/Private/Realm/RLMProperty.h",
-        "Pods/Headers/Private/Realm/RLMProviderClient.h",
-        "Pods/Headers/Private/Realm/RLMPushClient.h",
-        "Pods/Headers/Private/Realm/RLMRealm+Sync.h",
-        "Pods/Headers/Private/Realm/RLMRealm.h",
-        "Pods/Headers/Private/Realm/RLMRealmConfiguration.h",
-        "Pods/Headers/Private/Realm/RLMRealm_Dynamic.h",
-        "Pods/Headers/Private/Realm/RLMResults.h",
-        "Pods/Headers/Private/Realm/RLMSchema.h",
-        "Pods/Headers/Private/Realm/RLMSet.h",
-        "Pods/Headers/Private/Realm/RLMSyncConfiguration.h",
-        "Pods/Headers/Private/Realm/RLMSyncManager.h",
-        "Pods/Headers/Private/Realm/RLMSyncSession.h",
-        "Pods/Headers/Private/Realm/RLMSyncSubscription.h",
-        "Pods/Headers/Private/Realm/RLMSyncUtil.h",
-        "Pods/Headers/Private/Realm/RLMThreadSafeReference.h",
-        "Pods/Headers/Private/Realm/RLMUpdateResult.h",
-        "Pods/Headers/Private/Realm/RLMUser.h",
-        "Pods/Headers/Private/Realm/RLMUserAPIKey.h",
-        "Pods/Headers/Private/Realm/RLMValue.h",
-        "Pods/Headers/Private/Realm/Realm.h",
-    ],
-)
-cc_header(
-    name = "pods_headers_private_yyimage_h_header",
-    hdrs = [
-        "Pods/Headers/Private/YYImage/YYAnimatedImageView.h",
-        "Pods/Headers/Private/YYImage/YYFrameImage.h",
-        "Pods/Headers/Private/YYImage/YYImage.h",
-        "Pods/Headers/Private/YYImage/YYImageCoder.h",
-        "Pods/Headers/Private/YYImage/YYSpriteSheetImage.h",
-    ],
-)
-cc_header(
     name = "pods_libwebp_sharpyuv_h_header",
     hdrs = [
         "Pods/libwebp/sharpyuv/sharpyuv.h",
@@ -1379,15 +1133,10 @@ cc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_cocoalumberjack_h_header",
-        ":pods_headers_private_fishhook_h_header",
-    ],
     header_maps = [
         ":MTHawkeye_private_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":CocoaLumberjack_vitual_header_map",
+        ":fishhook_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -1408,14 +1157,9 @@ cc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_cocoalumberjack_h_header",
-    ],
     header_maps = [
         ":MTHawkeye_private_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":CocoaLumberjack_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -1895,6 +1639,241 @@ header_map(
     namespace = "Aspects",
 )
 header_map(
+    name = "AsyncDisplayKit_vitual_header_map",
+    hdrs = [
+        "Pods/Texture/Source/ASBlockTypes.h",
+        "Pods/Texture/Source/ASButtonNode+Private.h",
+        "Pods/Texture/Source/ASButtonNode+Yoga.h",
+        "Pods/Texture/Source/ASButtonNode.h",
+        "Pods/Texture/Source/ASCellNode.h",
+        "Pods/Texture/Source/ASCollectionNode+Beta.h",
+        "Pods/Texture/Source/ASCollectionNode.h",
+        "Pods/Texture/Source/ASCollectionView.h",
+        "Pods/Texture/Source/ASCollectionViewLayoutFacilitatorProtocol.h",
+        "Pods/Texture/Source/ASCollectionViewProtocols.h",
+        "Pods/Texture/Source/ASCollections.h",
+        "Pods/Texture/Source/ASConfiguration.h",
+        "Pods/Texture/Source/ASConfigurationDelegate.h",
+        "Pods/Texture/Source/ASConfigurationInternal.h",
+        "Pods/Texture/Source/ASContextTransitioning.h",
+        "Pods/Texture/Source/ASControlNode+Subclasses.h",
+        "Pods/Texture/Source/ASControlNode.h",
+        "Pods/Texture/Source/ASDKNavigationController.h",
+        "Pods/Texture/Source/ASDKViewController.h",
+        "Pods/Texture/Source/ASDisplayNode+Beta.h",
+        "Pods/Texture/Source/ASDisplayNode+Convenience.h",
+        "Pods/Texture/Source/ASDisplayNode+InterfaceState.h",
+        "Pods/Texture/Source/ASDisplayNode+LayoutSpec.h",
+        "Pods/Texture/Source/ASDisplayNode+Subclasses.h",
+        "Pods/Texture/Source/ASDisplayNode+Yoga.h",
+        "Pods/Texture/Source/ASDisplayNode.h",
+        "Pods/Texture/Source/ASDisplayNodeExtras.h",
+        "Pods/Texture/Source/ASEditableTextNode.h",
+        "Pods/Texture/Source/ASExperimentalFeatures.h",
+        "Pods/Texture/Source/ASImageNode.h",
+        "Pods/Texture/Source/ASLocking.h",
+        "Pods/Texture/Source/ASMainThreadDeallocation.h",
+        "Pods/Texture/Source/ASMapNode.h",
+        "Pods/Texture/Source/ASMultiplexImageNode.h",
+        "Pods/Texture/Source/ASNetworkImageLoadInfo.h",
+        "Pods/Texture/Source/ASNetworkImageNode.h",
+        "Pods/Texture/Source/ASNodeController+Beta.h",
+        "Pods/Texture/Source/ASPagerFlowLayout.h",
+        "Pods/Texture/Source/ASPagerNode+Beta.h",
+        "Pods/Texture/Source/ASPagerNode.h",
+        "Pods/Texture/Source/ASRangeManagingNode.h",
+        "Pods/Texture/Source/ASRunLoopQueue.h",
+        "Pods/Texture/Source/ASScrollNode.h",
+        "Pods/Texture/Source/ASSectionController.h",
+        "Pods/Texture/Source/ASSupplementaryNodeSource.h",
+        "Pods/Texture/Source/ASTabBarController.h",
+        "Pods/Texture/Source/ASTableNode+Beta.h",
+        "Pods/Texture/Source/ASTableNode.h",
+        "Pods/Texture/Source/ASTableView.h",
+        "Pods/Texture/Source/ASTableViewInternal.h",
+        "Pods/Texture/Source/ASTableViewProtocols.h",
+        "Pods/Texture/Source/ASTextNode+Beta.h",
+        "Pods/Texture/Source/ASTextNode.h",
+        "Pods/Texture/Source/ASTextNode2.h",
+        "Pods/Texture/Source/ASTextNodeCommon.h",
+        "Pods/Texture/Source/ASVideoNode.h",
+        "Pods/Texture/Source/ASVideoPlayerNode.h",
+        "Pods/Texture/Source/ASVisibilityProtocols.h",
+        "Pods/Texture/Source/AsyncDisplayKit+IGListKitMethods.h",
+        "Pods/Texture/Source/AsyncDisplayKit.h",
+        "Pods/Texture/Source/Base/ASAssert.h",
+        "Pods/Texture/Source/Base/ASAvailability.h",
+        "Pods/Texture/Source/Base/ASBaseDefines.h",
+        "Pods/Texture/Source/Base/ASDisplayNode+Ancestry.h",
+        "Pods/Texture/Source/Base/ASEqualityHelpers.h",
+        "Pods/Texture/Source/Base/ASLog.h",
+        "Pods/Texture/Source/Base/ASSignpost.h",
+        "Pods/Texture/Source/Debug/AsyncDisplayKit+Debug.h",
+        "Pods/Texture/Source/Debug/AsyncDisplayKit+Tips.h",
+        "Pods/Texture/Source/Details/ASAbstractLayoutController.h",
+        "Pods/Texture/Source/Details/ASBasicImageDownloader.h",
+        "Pods/Texture/Source/Details/ASBatchContext.h",
+        "Pods/Texture/Source/Details/ASBatchFetchingDelegate.h",
+        "Pods/Texture/Source/Details/ASCollectionElement.h",
+        "Pods/Texture/Source/Details/ASCollectionFlowLayoutDelegate.h",
+        "Pods/Texture/Source/Details/ASCollectionGalleryLayoutDelegate.h",
+        "Pods/Texture/Source/Details/ASCollectionInternal.h",
+        "Pods/Texture/Source/Details/ASCollectionLayoutContext.h",
+        "Pods/Texture/Source/Details/ASCollectionLayoutDelegate.h",
+        "Pods/Texture/Source/Details/ASCollectionLayoutState.h",
+        "Pods/Texture/Source/Details/ASCollectionViewLayoutController.h",
+        "Pods/Texture/Source/Details/ASCollectionViewLayoutInspector.h",
+        "Pods/Texture/Source/Details/ASDataController.h",
+        "Pods/Texture/Source/Details/ASDelegateProxy.h",
+        "Pods/Texture/Source/Details/ASElementMap.h",
+        "Pods/Texture/Source/Details/ASGraphicsContext.h",
+        "Pods/Texture/Source/Details/ASHashing.h",
+        "Pods/Texture/Source/Details/ASHighlightOverlayLayer.h",
+        "Pods/Texture/Source/Details/ASImageContainerProtocolCategories.h",
+        "Pods/Texture/Source/Details/ASImageProtocols.h",
+        "Pods/Texture/Source/Details/ASIntegerMap.h",
+        "Pods/Texture/Source/Details/ASLayoutController.h",
+        "Pods/Texture/Source/Details/ASLayoutRangeType.h",
+        "Pods/Texture/Source/Details/ASMainSerialQueue.h",
+        "Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.h",
+        "Pods/Texture/Source/Details/ASObjectDescriptionHelpers.h",
+        "Pods/Texture/Source/Details/ASPINRemoteImageDownloader.h",
+        "Pods/Texture/Source/Details/ASPageTable.h",
+        "Pods/Texture/Source/Details/ASPhotosFrameworkImageRequest.h",
+        "Pods/Texture/Source/Details/ASRangeController.h",
+        "Pods/Texture/Source/Details/ASRangeControllerUpdateRangeProtocol+Beta.h",
+        "Pods/Texture/Source/Details/ASRecursiveUnfairLock.h",
+        "Pods/Texture/Source/Details/ASScrollDirection.h",
+        "Pods/Texture/Source/Details/ASSectionContext.h",
+        "Pods/Texture/Source/Details/ASTableLayoutController.h",
+        "Pods/Texture/Source/Details/ASThread.h",
+        "Pods/Texture/Source/Details/ASTraitCollection.h",
+        "Pods/Texture/Source/Details/ASWeakProxy.h",
+        "Pods/Texture/Source/Details/ASWeakSet.h",
+        "Pods/Texture/Source/Details/CoreGraphics+ASConvenience.h",
+        "Pods/Texture/Source/Details/NSArray+Diffing.h",
+        "Pods/Texture/Source/Details/NSIndexSet+ASHelpers.h",
+        "Pods/Texture/Source/Details/NSMutableAttributedString+TextKitAdditions.h",
+        "Pods/Texture/Source/Details/Transactions/_ASAsyncTransaction.h",
+        "Pods/Texture/Source/Details/Transactions/_ASAsyncTransactionContainer+Private.h",
+        "Pods/Texture/Source/Details/Transactions/_ASAsyncTransactionContainer.h",
+        "Pods/Texture/Source/Details/Transactions/_ASAsyncTransactionGroup.h",
+        "Pods/Texture/Source/Details/UICollectionViewLayout+ASConvenience.h",
+        "Pods/Texture/Source/Details/UIView+ASConvenience.h",
+        "Pods/Texture/Source/Details/_ASCollectionReusableView.h",
+        "Pods/Texture/Source/Details/_ASCollectionViewCell.h",
+        "Pods/Texture/Source/Details/_ASDisplayLayer.h",
+        "Pods/Texture/Source/Details/_ASDisplayView.h",
+        "Pods/Texture/Source/Details/_ASDisplayViewAccessiblity.h",
+        "Pods/Texture/Source/IGListAdapter+AsyncDisplayKit.h",
+        "Pods/Texture/Source/Layout/ASAbsoluteLayoutElement.h",
+        "Pods/Texture/Source/Layout/ASAbsoluteLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASAsciiArtBoxCreator.h",
+        "Pods/Texture/Source/Layout/ASBackgroundLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASCenterLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASCornerLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASDimension.h",
+        "Pods/Texture/Source/Layout/ASDimensionInternal.h",
+        "Pods/Texture/Source/Layout/ASInsetLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASLayout+IGListDiffKit.h",
+        "Pods/Texture/Source/Layout/ASLayout.h",
+        "Pods/Texture/Source/Layout/ASLayoutElement.h",
+        "Pods/Texture/Source/Layout/ASLayoutElementExtensibility.h",
+        "Pods/Texture/Source/Layout/ASLayoutElementPrivate.h",
+        "Pods/Texture/Source/Layout/ASLayoutSpec+Subclasses.h",
+        "Pods/Texture/Source/Layout/ASLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASOverlayLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASRatioLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASRelativeLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASStackLayoutDefines.h",
+        "Pods/Texture/Source/Layout/ASStackLayoutElement.h",
+        "Pods/Texture/Source/Layout/ASStackLayoutSpec.h",
+        "Pods/Texture/Source/Layout/ASYogaUtilities.h",
+        "Pods/Texture/Source/Private/ASAbstractLayoutController+FrameworkPrivate.h",
+        "Pods/Texture/Source/Private/ASBasicImageDownloaderInternal.h",
+        "Pods/Texture/Source/Private/ASBatchFetching.h",
+        "Pods/Texture/Source/Private/ASCellNode+Internal.h",
+        "Pods/Texture/Source/Private/ASCollectionLayout.h",
+        "Pods/Texture/Source/Private/ASCollectionLayoutCache.h",
+        "Pods/Texture/Source/Private/ASCollectionLayoutContext+Private.h",
+        "Pods/Texture/Source/Private/ASCollectionLayoutDefines.h",
+        "Pods/Texture/Source/Private/ASCollectionLayoutState+Private.h",
+        "Pods/Texture/Source/Private/ASCollectionView+Undeprecated.h",
+        "Pods/Texture/Source/Private/ASCollectionViewFlowLayoutInspector.h",
+        "Pods/Texture/Source/Private/ASControlNode+Private.h",
+        "Pods/Texture/Source/Private/ASControlTargetAction.h",
+        "Pods/Texture/Source/Private/ASDefaultPlayButton.h",
+        "Pods/Texture/Source/Private/ASDefaultPlaybackButton.h",
+        "Pods/Texture/Source/Private/ASDispatch.h",
+        "Pods/Texture/Source/Private/ASDisplayNode+DebugTiming.h",
+        "Pods/Texture/Source/Private/ASDisplayNode+FrameworkPrivate.h",
+        "Pods/Texture/Source/Private/ASDisplayNodeCornerLayerDelegate.h",
+        "Pods/Texture/Source/Private/ASDisplayNodeInternal.h",
+        "Pods/Texture/Source/Private/ASDisplayNodeLayout.h",
+        "Pods/Texture/Source/Private/ASDisplayNodeTipState.h",
+        "Pods/Texture/Source/Private/ASIGListAdapterBasedDataSource.h",
+        "Pods/Texture/Source/Private/ASImageNode+AnimatedImagePrivate.h",
+        "Pods/Texture/Source/Private/ASImageNode+CGExtras.h",
+        "Pods/Texture/Source/Private/ASImageNode+Private.h",
+        "Pods/Texture/Source/Private/ASInternalHelpers.h",
+        "Pods/Texture/Source/Private/ASLayerBackingTipProvider.h",
+        "Pods/Texture/Source/Private/ASLayoutTransition.h",
+        "Pods/Texture/Source/Private/ASMutableElementMap.h",
+        "Pods/Texture/Source/Private/ASNetworkImageLoadInfo+Private.h",
+        "Pods/Texture/Source/Private/ASPendingStateController.h",
+        "Pods/Texture/Source/Private/ASResponderChainEnumerator.h",
+        "Pods/Texture/Source/Private/ASSection.h",
+        "Pods/Texture/Source/Private/ASTableView+Undeprecated.h",
+        "Pods/Texture/Source/Private/ASTip.h",
+        "Pods/Texture/Source/Private/ASTipNode.h",
+        "Pods/Texture/Source/Private/ASTipProvider.h",
+        "Pods/Texture/Source/Private/ASTipsController.h",
+        "Pods/Texture/Source/Private/ASTipsWindow.h",
+        "Pods/Texture/Source/Private/ASTwoDimensionalArrayUtils.h",
+        "Pods/Texture/Source/Private/ASWeakMap.h",
+        "Pods/Texture/Source/Private/Layout/ASLayoutElementStylePrivate.h",
+        "Pods/Texture/Source/Private/Layout/ASLayoutSpecPrivate.h",
+        "Pods/Texture/Source/Private/Layout/ASLayoutSpecUtilities.h",
+        "Pods/Texture/Source/Private/Layout/ASStackLayoutSpecUtilities.h",
+        "Pods/Texture/Source/Private/Layout/ASStackPositionedLayout.h",
+        "Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.h",
+        "Pods/Texture/Source/Private/_ASCollectionGalleryLayoutInfo.h",
+        "Pods/Texture/Source/Private/_ASCollectionGalleryLayoutItem.h",
+        "Pods/Texture/Source/Private/_ASCoreAnimationExtras.h",
+        "Pods/Texture/Source/Private/_ASHierarchyChangeSet.h",
+        "Pods/Texture/Source/Private/_ASPendingState.h",
+        "Pods/Texture/Source/Private/_ASScopeTimer.h",
+        "Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.h",
+        "Pods/Texture/Source/TextExperiment/Component/ASTextInput.h",
+        "Pods/Texture/Source/TextExperiment/Component/ASTextLayout.h",
+        "Pods/Texture/Source/TextExperiment/Component/ASTextLine.h",
+        "Pods/Texture/Source/TextExperiment/String/ASTextAttribute.h",
+        "Pods/Texture/Source/TextExperiment/String/ASTextRunDelegate.h",
+        "Pods/Texture/Source/TextExperiment/Utility/ASTextUtilities.h",
+        "Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h",
+        "Pods/Texture/Source/TextExperiment/Utility/NSParagraphStyle+ASText.h",
+        "Pods/Texture/Source/TextKit/ASLayoutManager.h",
+        "Pods/Texture/Source/TextKit/ASTextKitAttributes.h",
+        "Pods/Texture/Source/TextKit/ASTextKitComponents.h",
+        "Pods/Texture/Source/TextKit/ASTextKitContext.h",
+        "Pods/Texture/Source/TextKit/ASTextKitCoreTextAdditions.h",
+        "Pods/Texture/Source/TextKit/ASTextKitEntityAttribute.h",
+        "Pods/Texture/Source/TextKit/ASTextKitFontSizeAdjuster.h",
+        "Pods/Texture/Source/TextKit/ASTextKitRenderer+Positioning.h",
+        "Pods/Texture/Source/TextKit/ASTextKitRenderer+TextChecking.h",
+        "Pods/Texture/Source/TextKit/ASTextKitRenderer.h",
+        "Pods/Texture/Source/TextKit/ASTextKitShadower.h",
+        "Pods/Texture/Source/TextKit/ASTextKitTailTruncater.h",
+        "Pods/Texture/Source/TextKit/ASTextKitTruncating.h",
+        "Pods/Texture/Source/TextKit/ASTextNodeTypes.h",
+        "Pods/Texture/Source/TextKit/ASTextNodeWordKerner.h",
+        "Pods/Texture/Source/UIImage+ASConvenience.h",
+        "Pods/Texture/Source/UIResponder+AsyncDisplayKit.h",
+        "Pods/Texture/Source/_ASTransitionContext.h",
+    ],
+    namespace = "AsyncDisplayKit",
+)
+header_map(
     name = "BLTNBoard_swift_header_map",
     direct_hdr_providers = [":BLTNBoard_swift"],
     namespace = "BLTNBoard",
@@ -1937,6 +1916,13 @@ header_map(
     hdrs = [
         "Pods/Base64/Base64/MF_Base64Additions.h",
         "Pods/Target Support Files/Base64/Base64-umbrella.h",
+    ],
+    namespace = "Base64",
+)
+header_map(
+    name = "Base64_vitual_header_map",
+    hdrs = [
+        "Pods/Base64/Base64/MF_Base64Additions.h",
     ],
     namespace = "Base64",
 )
@@ -1990,7 +1976,7 @@ header_map(
         "Pods/BulletinBoard/Sources/Support/BLTNBoardSwiftSupport.h",
         "Pods/Target Support Files/BulletinBoard/BulletinBoard-umbrella.h",
     ],
-    namespace = "BLTNBoard",
+    namespace = "BulletinBoard",
 )
 header_map(
     name = "Cartography_private_header_map",
@@ -2062,6 +2048,31 @@ header_map(
 header_map(
     name = "CocoaLumberjack_swift_header_map",
     direct_hdr_providers = [":CocoaLumberjack_swift"],
+    namespace = "CocoaLumberjack",
+)
+header_map(
+    name = "CocoaLumberjack_vitual_header_map",
+    hdrs = [
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/Supporting Files/CocoaLumberjack.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/Supporting Files/DDLegacyMacros.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/CLIColor.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDASLLogCapture.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDASLLogger.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDAbstractDatabaseLogger.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDAssertMacros.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDContextFilterLogFormatter+Deprecated.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDContextFilterLogFormatter.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDDispatchQueueLogFormatter.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDFileLogger+Buffering.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDFileLogger.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDLog+LOGV.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDLog.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDLogMacros.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDLoggerNames.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDMultiFormatter.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDOSLogger.h",
+        "Pods/CocoaLumberjack/Sources/CocoaLumberjack/include/CocoaLumberjack/DDTTYLogger.h",
+    ],
     namespace = "CocoaLumberjack",
 )
 header_map(
@@ -2279,6 +2290,14 @@ header_map(
     namespace = "FBAllocationTracker",
 )
 header_map(
+    name = "FBAllocationTracker_vitual_header_map",
+    hdrs = [
+        "Pods/FBAllocationTracker/FBAllocationTracker/FBAllocationTrackerManager.h",
+        "Pods/FBAllocationTracker/FBAllocationTracker/FBAllocationTrackerSummary.h",
+    ],
+    namespace = "FBAllocationTracker",
+)
+header_map(
     name = "FBMemoryProfiler_private_header_map",
     hdrs = [
         "Pods/FBMemoryProfiler/FBMemoryProfiler/Controllers/FBMemoryProfilerDataSource.h",
@@ -2350,6 +2369,15 @@ header_map(
         "Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/Reference/FBObjectReference.h",
         "Pods/FBRetainCycleDetector/fishhook/fishhook.h",
         "Pods/Target Support Files/FBRetainCycleDetector/FBRetainCycleDetector-umbrella.h",
+    ],
+    namespace = "FBRetainCycleDetector",
+)
+header_map(
+    name = "FBRetainCycleDetector_vitual_header_map",
+    hdrs = [
+        "Pods/FBRetainCycleDetector/FBRetainCycleDetector/Detector/FBRetainCycleDetector.h",
+        "Pods/FBRetainCycleDetector/FBRetainCycleDetector/Graph/FBObjectGraphConfiguration.h",
+        "Pods/FBRetainCycleDetector/FBRetainCycleDetector/Graph/FBObjectiveCGraphElement.h",
     ],
     namespace = "FBRetainCycleDetector",
 )
@@ -2547,6 +2575,88 @@ header_map(
         "Pods/FLEX/Classes/ViewHierarchy/TreeExplorer/FLEXHierarchyTableViewCell.h",
         "Pods/FLEX/Classes/ViewHierarchy/TreeExplorer/FLEXHierarchyTableViewController.h",
         "Pods/Target Support Files/FLEX/FLEX-umbrella.h",
+    ],
+    namespace = "FLEX",
+)
+header_map(
+    name = "FLEX_vitual_header_map",
+    hdrs = [
+        "Pods/FLEX/Classes/Core/Controllers/FLEXFilteringTableViewController.h",
+        "Pods/FLEX/Classes/Core/Controllers/FLEXNavigationController.h",
+        "Pods/FLEX/Classes/Core/Controllers/FLEXTableViewController.h",
+        "Pods/FLEX/Classes/Core/FLEXSingleRowSection.h",
+        "Pods/FLEX/Classes/Core/FLEXTableViewSection.h",
+        "Pods/FLEX/Classes/Core/Views/Carousel/FLEXScopeCarousel.h",
+        "Pods/FLEX/Classes/Core/Views/Cells/FLEXCodeFontCell.h",
+        "Pods/FLEX/Classes/Core/Views/Cells/FLEXKeyValueTableViewCell.h",
+        "Pods/FLEX/Classes/Core/Views/Cells/FLEXMultilineTableViewCell.h",
+        "Pods/FLEX/Classes/Core/Views/Cells/FLEXSubtitleTableViewCell.h",
+        "Pods/FLEX/Classes/Core/Views/Cells/FLEXTableViewCell.h",
+        "Pods/FLEX/Classes/Core/Views/FLEXTableView.h",
+        "Pods/FLEX/Classes/FLEX-Categories.h",
+        "Pods/FLEX/Classes/FLEX-Core.h",
+        "Pods/FLEX/Classes/FLEX-ObjectExploring.h",
+        "Pods/FLEX/Classes/FLEX-Runtime.h",
+        "Pods/FLEX/Classes/FLEX.h",
+        "Pods/FLEX/Classes/GlobalStateExplorers/Globals/FLEXGlobalsEntry.h",
+        "Pods/FLEX/Classes/Manager/FLEXManager+Extensibility.h",
+        "Pods/FLEX/Classes/Manager/FLEXManager+Networking.h",
+        "Pods/FLEX/Classes/Manager/FLEXManager.h",
+        "Pods/FLEX/Classes/ObjectExplorers/FLEXObjectExplorer.h",
+        "Pods/FLEX/Classes/ObjectExplorers/FLEXObjectExplorerFactory.h",
+        "Pods/FLEX/Classes/ObjectExplorers/FLEXObjectExplorerViewController.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/FLEXCollectionContentSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/FLEXColorPreviewSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/FLEXDefaultsContentSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/FLEXMetadataSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/FLEXMutableListSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/FLEXObjectInfoSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXBlockShortcuts.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXBundleShortcuts.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXClassShortcuts.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXImageShortcuts.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXLayerShortcuts.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXShortcut.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXShortcutsFactory+Defaults.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXShortcutsSection.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXViewControllerShortcuts.h",
+        "Pods/FLEX/Classes/ObjectExplorers/Sections/Shortcuts/FLEXViewShortcuts.h",
+        "Pods/FLEX/Classes/Toolbar/FLEXExplorerToolbar.h",
+        "Pods/FLEX/Classes/Toolbar/FLEXExplorerToolbarItem.h",
+        "Pods/FLEX/Classes/Utility/Categories/CALayer+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/FLEXRuntime+Compare.h",
+        "Pods/FLEX/Classes/Utility/Categories/FLEXRuntime+UIKitHelpers.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSArray+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSDictionary+ObjcRuntime.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSMapTable+FLEX_Subscripting.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSObject+FLEX_Reflection.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSString+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSString+ObjcRuntime.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSTimer+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/NSUserDefaults+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/UIBarButtonItem+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/UIFont+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/UIGestureRecognizer+Blocks.h",
+        "Pods/FLEX/Classes/Utility/Categories/UIMenu+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/UIPasteboard+FLEX.h",
+        "Pods/FLEX/Classes/Utility/Categories/UITextField+Range.h",
+        "Pods/FLEX/Classes/Utility/Categories/UIView+FLEX_Layout.h",
+        "Pods/FLEX/Classes/Utility/FLEXAlert.h",
+        "Pods/FLEX/Classes/Utility/FLEXMacros.h",
+        "Pods/FLEX/Classes/Utility/FLEXResources.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/FLEXObjcInternal.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/FLEXRuntimeSafety.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/FLEXTypeEncodingParser.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXBlockDescription.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXClassBuilder.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXIvar.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXMethod.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXMethodBase.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXMirror.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXProperty.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXPropertyAttributes.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXProtocol.h",
+        "Pods/FLEX/Classes/Utility/Runtime/Objc/Reflection/FLEXProtocolBuilder.h",
     ],
     namespace = "FLEX",
 )
@@ -3082,6 +3192,17 @@ header_map(
     namespace = "MMKVCore",
 )
 header_map(
+    name = "MMKVCore_vitual_header_map",
+    hdrs = [
+        "Pods/MMKVCore/Core/MMKV.h",
+        "Pods/MMKVCore/Core/MMKVLog.h",
+        "Pods/MMKVCore/Core/ScopedLock.hpp",
+        "Pods/MMKVCore/Core/ThreadLock.h",
+        "Pods/MMKVCore/Core/aes/openssl/openssl_md5.h",
+    ],
+    namespace = "MMKVCore",
+)
+header_map(
     name = "MMKV_private_header_map",
     hdrs = [
         "Pods/MMKV/iOS/MMKV/MMKV/MMKV.h",
@@ -3119,6 +3240,13 @@ header_map(
         "Pods/MTAppenderFile/loglib/mtaf_log_buffer.h",
         "Pods/MTAppenderFile/loglib/mtaf_mmap_file.h",
         "Pods/Target Support Files/MTAppenderFile/MTAppenderFile-umbrella.h",
+    ],
+    namespace = "MTAppenderFile",
+)
+header_map(
+    name = "MTAppenderFile_vitual_header_map",
+    hdrs = [
+        "Pods/MTAppenderFile/loglib/MTAppenderFile.h",
     ],
     namespace = "MTAppenderFile",
 )
@@ -3535,6 +3663,13 @@ header_map(
     ],
 )
 header_map(
+    name = "PINCache_vitual_header_map",
+    hdrs = [
+        "Pods/PINCache/Source/PINCache.h",
+    ],
+    namespace = "PINCache",
+)
+header_map(
     name = "PINOperation_private_header_map",
     hdrs = [
         "Pods/PINOperation/Source/PINOperation.h",
@@ -3543,6 +3678,13 @@ header_map(
         "Pods/PINOperation/Source/PINOperationQueue.h",
         "Pods/PINOperation/Source/PINOperationTypes.h",
         "Pods/Target Support Files/PINOperation/PINOperation-umbrella.h",
+    ],
+    namespace = "PINOperation",
+)
+header_map(
+    name = "PINOperation_vitual_header_map",
+    hdrs = [
+        "Pods/PINOperation/Source/PINOperation.h",
     ],
     namespace = "PINOperation",
 )
@@ -3607,6 +3749,17 @@ header_map(
     ],
 )
 header_map(
+    name = "PINRemoteImage_vitual_header_map",
+    hdrs = [
+        "Pods/PINRemoteImage/Source/Classes/include/NSData+ImageDetectors.h",
+        "Pods/PINRemoteImage/Source/Classes/include/PINAlternateRepresentationProvider.h",
+        "Pods/PINRemoteImage/Source/Classes/include/PINCachedAnimatedImage.h",
+        "Pods/PINRemoteImage/Source/Classes/include/PINRemoteImageCaching.h",
+        "Pods/PINRemoteImage/Source/Classes/include/PINRemoteImageManager.h",
+    ],
+    namespace = "PINRemoteImage",
+)
+header_map(
     name = "PPBadgeViewSwift_private_header_map",
     hdrs = [
         "Pods/Target Support Files/PPBadgeViewSwift/PPBadgeViewSwift-umbrella.h",
@@ -3660,7 +3813,7 @@ header_map(
     hdrs = [
         "Pods/Target Support Files/Pods-swift_app_with_pod_no_use_frameworks/Pods-swift_app_with_pod_no_use_frameworks-umbrella.h",
     ],
-    namespace = "Pods_swift_app_with_pod_no_use_frameworks",
+    namespace = "Pods-swift_app_with_pod_no_use_frameworks",
 )
 header_map(
     name = "PromiseKit_private_header_map",
@@ -3806,6 +3959,10 @@ header_map(
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/NSPointerArray+QMUI.h",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/NSString+QMUI.h",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/NSURL+QMUI.h",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/QMUIBarProtocol.h",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/QMUIBarProtocolPrivate.h",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/UINavigationBar+QMUIBarProtocol.h",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/UITabBar+QMUIBarProtocol.h",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIStringPrivate.h",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/UIActivityIndicatorView+QMUI.h",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/UIApplication+QMUI.h",
@@ -3856,7 +4013,7 @@ header_map(
     hdrs = [
         "Pods/Target Support Files/R.swift.Library/R.swift.Library-umbrella.h",
     ],
-    namespace = "Rswift",
+    namespace = "R.swift.Library",
 )
 header_map(
     name = "ReSwift_private_header_map",
@@ -3875,7 +4032,7 @@ header_map(
     hdrs = [
         "Pods/Target Support Files/ReachabilitySwift/ReachabilitySwift-umbrella.h",
     ],
-    namespace = "Reachability",
+    namespace = "ReachabilitySwift",
 )
 header_map(
     name = "Reachability_swift_header_map",
@@ -4080,6 +4237,57 @@ header_map(
     namespace = "Realm",
 )
 header_map(
+    name = "Realm_vitual_header_map",
+    hdrs = [
+        "Pods/Realm/include/NSError+RLMSync.h",
+        "Pods/Realm/include/RLMAPIKeyAuth.h",
+        "Pods/Realm/include/RLMApp.h",
+        "Pods/Realm/include/RLMArray.h",
+        "Pods/Realm/include/RLMBSON.h",
+        "Pods/Realm/include/RLMCollection.h",
+        "Pods/Realm/include/RLMConstants.h",
+        "Pods/Realm/include/RLMCredentials.h",
+        "Pods/Realm/include/RLMDecimal128.h",
+        "Pods/Realm/include/RLMDictionary.h",
+        "Pods/Realm/include/RLMEmailPasswordAuth.h",
+        "Pods/Realm/include/RLMEmbeddedObject.h",
+        "Pods/Realm/include/RLMFindOneAndModifyOptions.h",
+        "Pods/Realm/include/RLMFindOptions.h",
+        "Pods/Realm/include/RLMMigration.h",
+        "Pods/Realm/include/RLMMongoClient.h",
+        "Pods/Realm/include/RLMMongoCollection.h",
+        "Pods/Realm/include/RLMMongoDatabase.h",
+        "Pods/Realm/include/RLMNetworkTransport.h",
+        "Pods/Realm/include/RLMObject.h",
+        "Pods/Realm/include/RLMObjectBase.h",
+        "Pods/Realm/include/RLMObjectId.h",
+        "Pods/Realm/include/RLMObjectSchema.h",
+        "Pods/Realm/include/RLMPlatform.h",
+        "Pods/Realm/include/RLMProperty.h",
+        "Pods/Realm/include/RLMProviderClient.h",
+        "Pods/Realm/include/RLMPushClient.h",
+        "Pods/Realm/include/RLMRealm+Sync.h",
+        "Pods/Realm/include/RLMRealm.h",
+        "Pods/Realm/include/RLMRealmConfiguration.h",
+        "Pods/Realm/include/RLMRealm_Dynamic.h",
+        "Pods/Realm/include/RLMResults.h",
+        "Pods/Realm/include/RLMSchema.h",
+        "Pods/Realm/include/RLMSet.h",
+        "Pods/Realm/include/RLMSyncConfiguration.h",
+        "Pods/Realm/include/RLMSyncManager.h",
+        "Pods/Realm/include/RLMSyncSession.h",
+        "Pods/Realm/include/RLMSyncSubscription.h",
+        "Pods/Realm/include/RLMSyncUtil.h",
+        "Pods/Realm/include/RLMThreadSafeReference.h",
+        "Pods/Realm/include/RLMUpdateResult.h",
+        "Pods/Realm/include/RLMUser.h",
+        "Pods/Realm/include/RLMUserAPIKey.h",
+        "Pods/Realm/include/RLMValue.h",
+        "Pods/Realm/include/Realm.h",
+    ],
+    namespace = "Realm",
+)
+header_map(
     name = "Rswift_swift_header_map",
     direct_hdr_providers = [":Rswift_swift"],
     namespace = "Rswift",
@@ -4219,7 +4427,7 @@ header_map(
         "Pods/SQLite.swift/Sources/SQLiteObjc/include/SQLiteObjc.h",
         "Pods/Target Support Files/SQLite.swift/SQLite.swift-umbrella.h",
     ],
-    namespace = "SQLite",
+    namespace = "SQLite.swift",
 )
 header_map(
     name = "SVProgressHUD_private_header_map",
@@ -4961,7 +5169,7 @@ header_map(
         "Pods/Texture/Source/UIResponder+AsyncDisplayKit.h",
         "Pods/Texture/Source/_ASTransitionContext.h",
     ],
-    namespace = "AsyncDisplayKit",
+    namespace = "Texture",
 )
 header_map(
     name = "Texture_project_header_map",
@@ -5012,6 +5220,17 @@ header_map(
     name = "YYImage_private_header_map",
     hdrs = [
         "Pods/Target Support Files/YYImage/YYImage-umbrella.h",
+        "Pods/YYImage/YYImage/YYAnimatedImageView.h",
+        "Pods/YYImage/YYImage/YYFrameImage.h",
+        "Pods/YYImage/YYImage/YYImage.h",
+        "Pods/YYImage/YYImage/YYImageCoder.h",
+        "Pods/YYImage/YYImage/YYSpriteSheetImage.h",
+    ],
+    namespace = "YYImage",
+)
+header_map(
+    name = "YYImage_vitual_header_map",
+    hdrs = [
         "Pods/YYImage/YYImage/YYAnimatedImageView.h",
         "Pods/YYImage/YYImage/YYFrameImage.h",
         "Pods/YYImage/YYImage/YYImage.h",
@@ -5094,6 +5313,13 @@ header_map(
     namespace = "fishhook",
 )
 header_map(
+    name = "fishhook_vitual_header_map",
+    hdrs = [
+        "Pods/fishhook/fishhook.h",
+    ],
+    namespace = "fishhook",
+)
+header_map(
     name = "libwebp_private_header_map",
     hdrs = [
         "Pods/Target Support Files/libwebp/libwebp-umbrella.h",
@@ -5150,11 +5376,21 @@ header_map(
     namespace = "libwebp",
 )
 header_map(
+    name = "libwebp_vitual_header_map",
+    hdrs = [
+        "Pods/libwebp/src/webp/decode.h",
+        "Pods/libwebp/src/webp/demux.h",
+        "Pods/libwebp/src/webp/encode.h",
+        "Pods/libwebp/src/webp/mux.h",
+    ],
+    namespace = "libwebp",
+)
+header_map(
     name = "lottie_ios_private_header_map",
     hdrs = [
         "Pods/Target Support Files/lottie-ios/lottie-ios-umbrella.h",
     ],
-    namespace = "Lottie",
+    namespace = "lottie-ios",
 )
 header_map(
     name = "pop_private_header_map",
@@ -7661,16 +7897,11 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_cocoalumberjack_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":CocoaAsyncSocket_private_header_map",
         ":CocoaAsyncSocket_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":CocoaLumberjack_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -8070,17 +8301,12 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_fballocationtracker_h_header",
-        ":pods_headers_private_fbretaincycledetector_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":FBMemoryProfiler_private_header_map",
         ":FBMemoryProfiler_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":FBAllocationTracker_vitual_header_map",
+        ":FBRetainCycleDetector_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -8119,17 +8345,12 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_fballocationtracker_h_header",
-        ":pods_headers_private_fbretaincycledetector_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":FBMemoryProfiler_private_header_map",
         ":FBMemoryProfiler_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":FBAllocationTracker_vitual_header_map",
+        ":FBRetainCycleDetector_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -8326,15 +8547,10 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_realm_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":FLEX_private_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":Realm_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -8984,15 +9200,10 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_base64_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":JWT_private_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":Base64_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -9097,16 +9308,15 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_headers_private_libwebp_h_header",
         ":pods_libwebp_src_webp_h_header",
     ],
     enable_modules = True,
     header_maps = [
         ":KingfisherWebP_private_header_map",
         ":libwebp_private_header_map",
+        ":libwebp_vitual_header_map",
     ],
     includes = [
-        "Pods/Headers/Private",
         "Pods/libwebp/src",
     ],
     linkopts = [
@@ -9451,16 +9661,11 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_fbretaincycledetector_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":MLeaksFinder_private_header_map",
         ":MLeaksFinder_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":FBRetainCycleDetector_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -9546,17 +9751,11 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_mmkvcore_h_header",
-        ":pods_headers_private_mmkvcore_hpp_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":MMKV_private_header_map",
         ":MMKV_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":MMKVCore_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -9632,19 +9831,14 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_cocoalumberjack_h_header",
-        ":pods_headers_private_fbretaincycledetector_h_header",
-        ":pods_headers_private_flex_h_header",
-        ":pods_headers_private_mtappenderfile_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":MTHawkeye_private_header_map",
         ":MTHawkeye_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":CocoaLumberjack_vitual_header_map",
+        ":FBRetainCycleDetector_vitual_header_map",
+        ":FLEX_vitual_header_map",
+        ":MTAppenderFile_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -9829,15 +10023,10 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_cocoalumberjack_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":MTHawkeye_private_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":CocoaLumberjack_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -9861,15 +10050,10 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_cocoalumberjack_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":MTHawkeye_private_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":CocoaLumberjack_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -10197,17 +10381,12 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_pinoperation_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":PINCache_private_header_map",
         ":PINOperation_private_header_map",
         ":PINCache_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":PINOperation_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -10234,17 +10413,12 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_pinoperation_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":PINCache_private_header_map",
         ":PINOperation_private_header_map",
         ":PINCache_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":PINOperation_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -10296,8 +10470,6 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_headers_private_pincache_h_header",
-        ":pods_headers_private_pinoperation_h_header",
         ":pods_libwebp_src_webp_h_header",
     ],
     enable_modules = True,
@@ -10307,9 +10479,8 @@ objc_library(
         ":PINRemoteImage_private_header_map",
         ":libwebp_private_header_map",
         ":PINRemoteImage_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":PINCache_vitual_header_map",
+        ":PINOperation_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -10646,6 +10817,9 @@ objc_library(
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/NSPointerArray+QMUI.m",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/NSString+QMUI.m",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/NSURL+QMUI.m",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/QMUIBarProtocolPrivate.m",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/UINavigationBar+QMUIBarProtocol.m",
+        "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIBarProtocol/UITabBar+QMUIBarProtocol.m",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/QMUIStringPrivate.m",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/UIActivityIndicatorView+QMUI.m",
         "Pods/QMUIKit/QMUIKit/UIKitExtensions/UIApplication+QMUI.m",
@@ -10912,6 +11086,7 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Realm_private_header_map",
+        ":Realm_vitual_header_map",
     ],
     includes = [
         "Pods/Realm/include",
@@ -10942,6 +11117,7 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Realm_private_header_map",
+        ":Realm_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -10990,6 +11166,7 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Realm_private_header_map",
+        ":Realm_vitual_header_map",
     ],
     includes = [
         "Pods/Realm/include",
@@ -11952,6 +12129,7 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":Texture_private_header_map",
+        ":AsyncDisplayKit_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -11980,16 +12158,12 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_pinremoteimage_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":Texture_private_header_map",
         ":Texture_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":AsyncDisplayKit_vitual_header_map",
+        ":PINRemoteImage_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -12318,16 +12492,11 @@ objc_library(
         "DEBUG=1",
         "POD_CONFIGURATION_DEBUG=1",
     ],
-    deps = [
-        ":pods_headers_private_yyimage_h_header",
-    ],
     enable_modules = True,
     header_maps = [
         ":YYText_private_header_map",
         ":YYText_project_header_map",
-    ],
-    includes = [
-        "Pods/Headers/Private",
+        ":YYImage_vitual_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -16370,6 +16539,7 @@ swift_library(
     ],
     objc_header_maps = [
         ":Realm_private_header_map",
+        ":Realm_vitual_header_map",
     ],
     objc_module_maps = [
         ":RealmSwift_module_map",

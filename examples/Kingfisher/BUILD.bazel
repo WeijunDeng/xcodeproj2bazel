@@ -21,7 +21,7 @@ apple_bundle_version(
 )
 apple_bundle_version(
     name = "Kingfisher_framework_version",
-    build_version = "2510",
+    build_version = "2513",
 )
 apple_bundle_version(
     name = "Kingfisher_macOS_Demo_app_version",
@@ -110,7 +110,7 @@ ios_application(
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Images.xcassets/AppIcon.appiconset/**",
     ]),
     bundle_id = "com.onevcat.Kingfisher-Demo",
-    bundle_name = "Kingfisher_Demo",
+    bundle_name = "Kingfisher-Demo",
     deps = [
         ":Kingfisher_Demo_swift",
     ],
@@ -139,7 +139,7 @@ ios_application(
         "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Assets.xcassets/AppIcon.appiconset/**",
     ]),
     bundle_id = "com.onevcat.Kingfisher-OSX-Demo",
-    bundle_name = "Kingfisher_macOS_Demo",
+    bundle_name = "Kingfisher-macOS-Demo",
     deps = [
         ":Kingfisher_macOS_Demo_swift",
     ],
@@ -165,7 +165,7 @@ ios_application(
 ios_application(
     name = "Kingfisher_tvOS_Demo_app",
     bundle_id = "com.onevcat.Kingfisher-tvOS-Demo",
-    bundle_name = "Kingfisher_tvOS_Demo",
+    bundle_name = "Kingfisher-tvOS-Demo",
     deps = [
         ":Kingfisher_tvOS_Demo_swift",
     ],
@@ -214,7 +214,7 @@ ios_application(
 ios_extension(
     name = "Kingfisher_watchOS_Demo_Extension_appex",
     bundle_id = "com.onevcat.Kingfisher-Demo.watchkitapp.watchkitextension",
-    bundle_name = "Kingfisher_watchOS_Demo_Extension",
+    bundle_name = "Kingfisher-watchOS-Demo Extension",
     deps = [
         ":Kingfisher_framework",
         ":Kingfisher_watchOS_Demo_Extension_swift",

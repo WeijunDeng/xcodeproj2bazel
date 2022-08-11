@@ -29,7 +29,7 @@ pushd examples/swift_app_with_pod_use_frameworks
 bazel build swift_app_with_pod_use_frameworks_app
 popd
 
-rm -rf examples/Kingfisher
+rm -rf examples/Kingfisher/Kingfisher
 mkdir -p examples/Kingfisher/Kingfisher
 git clone https://github.com/onevcat/Kingfisher.git examples/Kingfisher/Kingfisher --depth=1
 bash xcodeproj2bazel.sh --pwd=examples/Kingfisher --workspace=examples/Kingfisher/Kingfisher/Kingfisher.xcworkspace
