@@ -126,7 +126,9 @@ class FileFilter
         dirs = @@recursive_dirs_hash[path]
         unless dirs
             dirs = []
-            Find.find(path).each{|e| dirs.push e if not File.file? e}
+            # export EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES\=\*.nib\ \*.lproj\ \*.framework\ \*.gch\ \*.xcode\*\ \*.xcassets\ \(\*\)\ .DS_Store\ CVS\ .svn\ .git\ .hg\ \*.pbproj\ \*.pbxproj
+            exclude_patten = /(\.nib($|\/))|(\.lproj($|\/))|(\.framework($|\/))|(\.gch($|\/))|(\.xcode($|\/))|(\.xcassets($|\/))|(\.svn($|\/))|(\.git($|\/))|(\.hg($|\/))|(\.pbproj($|\/))|(\.pbxproj($|\/))/
+            Find.find(path).each{|e| dirs.push e if not File.file? e and not e.match exclude_patten}
             @@recursive_dirs_hash[path] = dirs
         end
         return dirs

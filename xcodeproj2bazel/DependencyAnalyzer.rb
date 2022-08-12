@@ -35,7 +35,7 @@ class DependencyAnalyzer
         end
     end
 
-    def parse_dependency_for_file(file, pch, target_name, file_deps_hash, total_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+    def parse_dependency_for_file(file, pch, target_name, file_deps_hash, total_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
         if file_deps_hash.has_key? file
             return
         end
@@ -140,25 +140,25 @@ class DependencyAnalyzer
                     end
                 end
             end
-            unless match_header
+            if not match_header and not import_file_path.include? "/" and total_public_header_map
                 target_header_dirs.each do | dir |
-                   if dir.class == Array and dir[0] == :unknown and not import_file_path.include? "/" and total_public_header_map
-                        header = dir[1]
-                        match_result = header.match(/(\w+)\.framework\/Headers/)
-                        if match_result 
-                            key = (match_result[1] + "/" + import_file_path).downcase
-                            match_header_set = total_public_header_map[key]
-                            if match_header_set and match_header_set.size == 1
-                                a = match_header_set.to_a[0]
-                                header = a[0]
-                                other_target_name = a[1]
-                                header = FileFilter.get_exist_expand_path_file(header)
-                                if header
-                                    match_header = header
-                                    # private header_map
-                                    FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by framework private header_map"
-                                    file_deps_hash[file].add [:private_header_map, match_header, other_target_name]
-                                end
+                    next unless dir.class == Array
+                    next unless dir[0] == :unknown
+                    header = dir[1]
+                    match_result = header.match(/(\w+)\.framework\/Headers/)
+                    if match_result 
+                        key = (match_result[1] + "/" + import_file_path).downcase
+                        match_header_set = total_public_header_map[key]
+                        if match_header_set and match_header_set.size == 1
+                            a = match_header_set.to_a[0]
+                            header = a[0]
+                            other_target_name = a[1]
+                            header = FileFilter.get_exist_expand_path_file(header)
+                            if header
+                                match_header = header
+                                # private header_map
+                                FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by framework private header_map"
+                                file_deps_hash[file].add [:private_header_map, match_header, other_target_name]
                             end
                         end
                     end
@@ -192,6 +192,7 @@ class DependencyAnalyzer
                 match_result = import_file_path.match(/^(\w+)\/(.*)$/)
                 if match_result
                     target_framework_dirs.each do | dir |
+                        next unless dir.class == String
                         framework_name = match_result[1]
                         file_name = match_result[2]
                         header = dir + "/" + framework_name + ".framework/Headers/" + file_name
@@ -208,30 +209,64 @@ class DependencyAnalyzer
             end
             unless match_header
                 target_header_dirs.each do | dir |
-                    if dir.class == String
-                        header = dir + "/" + import_file_path
-                        header = FileFilter.get_exist_expand_path_file(header)
-                        if header
-                            # find by header search path
-                            match_header = header
-                            if not import_file_path.include? "../" and import_file_path.include? "/"
-                                real_match_header = FileFilter.get_real_exist_expand_path_file(header)
-                                if real_match_header != match_header
-                                    namespace = import_file_path.split("/")[0..-2].join("/")
-                                    file_deps_hash[file].add [:virtual_header_map, real_match_header, namespace]
-                                    match_header = real_match_header
-                                    FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) (virtual_header_map #{namespace}) by search header dir #{dir}"
+                    next unless dir.class == String
+                    header = dir + "/" + import_file_path
+                    header = FileFilter.get_exist_expand_path_file(header)
+                    if header
+                        # find by header search path
+                        match_header = header
+                        if not import_file_path.include? "../"
+                            real_match_header = FileFilter.get_real_exist_expand_path_file(header)
+                            if real_match_header != match_header
+                                match_header = real_match_header
+                                if import_file_path.include? "/"
+                                    namespace = File.dirname(import_file_path)
+                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace]
+                                else
+                                    file_deps_hash[file].add [:headers, match_header, File.dirname(match_header)]
+                                end
+                                break
+                            end
+                        end
+                        FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
+                        file_deps_hash[file].add [:headers, match_header, dir]
+                        break
+                    end
+                end
+            end
+            unless match_header
+                if not import_file_path.include? "../"
+                    target_framework_dirs.each do | dir |
+                        next unless dir.class == Array
+                        next unless dir[0] == :unknown
+                        copy_dst_file = dir[1] + "/" + import_file_path.split("/")[0] + ".framework/Headers/" + import_file_path.split("/")[1..-1].join("/")
+                        if total_header_copy_map[copy_dst_file]
+                            match_header = total_header_copy_map[copy_dst_file]
+                            break
+                        end
+                    end
+                    unless match_header
+                        current_header_copy_dsts = total_header_copy_map.to_a.select{|x|File.basename(x[1])==File.basename(file)}.map{|x|x[0]}
+                        current_header_copy_dsts.each do | current_header_copy_dst |
+                            if current_header_copy_dst.include? ".framework/Headers/"
+                                copy_dst_file = current_header_copy_dst.split(".framework/Headers/")[0] + ".framework/Headers/" + import_file_path
+                                if total_header_copy_map[copy_dst_file]
+                                    match_header = total_header_copy_map[copy_dst_file]
                                     break
                                 end
                             end
-                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
-                            file_deps_hash[file].add [:headers, match_header, dir]
-                            break
+                        end
+                    end
+                    if match_header
+                        if import_file_path.include? "/"
+                            namespace = File.dirname(import_file_path)
+                            file_deps_hash[file].add [:virtual_header_map, match_header, namespace]
+                        else
+                            file_deps_hash[file].add [:headers, match_header, File.dirname(match_header)]
                         end
                     end
                 end
             end
-
             unless match_header
                 if import_file_path.end_with? ".h" and not import_file_path.include? "../" and not import_file_path.include? "/"
                     d_file_path = import_file_path.sub(/\.h$/, ".d").downcase
@@ -256,7 +291,7 @@ class DependencyAnalyzer
             if match_header
                 binding.pry if match_header != FileFilter.get_real_exist_expand_path_file(match_header)
 
-                parse_dependency_for_file(match_header, nil, target_name, file_deps_hash, total_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                parse_dependency_for_file(match_header, nil, target_name, file_deps_hash, total_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
             end
         end
         file_deps_hash[file].sort.each do | dep_info |
@@ -368,12 +403,24 @@ class DependencyAnalyzer
         return total_public_header_map
     end
 
+    def merge_header_copy_map(target_info_hash_for_xcode)
+        total_header_copy_map = {}
+        target_info_hash_for_xcode.each do | target_name, info_hash |
+            info_hash[:target_header_copy_map].each do | k, v |
+                binding.pry if total_header_copy_map[k] and total_header_copy_map[k] == v
+                total_header_copy_map[k] = v
+            end
+        end
+        return total_header_copy_map
+    end
+
     def analyze(target_info_hash_for_xcode)
 
         analyze_result = {}
 
         user_module_hash, target_module_name_hash = analyze_modules(target_info_hash_for_xcode)
         total_public_header_map = merge_public_header_map(target_info_hash_for_xcode)
+        total_header_copy_map = merge_header_copy_map(target_info_hash_for_xcode)
         
         analyze_result[:user_module_hash] = user_module_hash
         analyze_result[:target_module_name_hash] = target_module_name_hash
@@ -402,22 +449,22 @@ class DependencyAnalyzer
 
             file_deps_hash = KeyValueStore.get_key_value_store_in_container(analyze_result, target_name)
             if pch
-                parse_dependency_for_file(pch, nil, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                parse_dependency_for_file(pch, nil, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
             end
             if module_name and user_module_hash[module_name]
                 user_module_hash[module_name][:moduel_map_headers].each do | file |
-                    parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                    parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
                 end
             end
             if info_hash[:swift_objc_bridging_header]
                 file = info_hash[:swift_objc_bridging_header]
-                parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
             end
             flags_sources_hash.each do | flags, source_files |
                 extname = flags[0]
                 if FileFilter.get_source_file_extnames_c_type.include? extname
                     source_files.each do | file |
-                        parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, target_dtrace_files)
+                        parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
                     end   
                 elsif FileFilter.get_source_file_extnames_swift.include? extname
                     source_files.each do | file |

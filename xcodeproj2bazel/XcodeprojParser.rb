@@ -242,6 +242,9 @@ class XcodeprojParser
             unless variable_hash["PROJECT_DIR"]
                 variable_hash["PROJECT_DIR"] = File.dirname(project.path.to_s)
             end
+            unless variable_hash["CONFIGURATION_BUILD_DIR"]
+                variable_hash["CONFIGURATION_BUILD_DIR"] = "${BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)"
+            end
         end
 
         return variable_hash
@@ -408,23 +411,19 @@ class XcodeprojParser
         binding.pry if path.include? "\""
         origin_path = path
 
-        binding.pry if get_target_build_settings(target, variable_hash, "EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", true).size > 0
-
         recursive = false
         if path.end_with? "/**"
             recursive = true
             path = File.dirname(path)
         end
+        binding.pry if path.include? "**"
 
-        new_path = get_target_src_root(target, variable_hash) + "/" + path
-        if File.exist? new_path
-            path = new_path
+        unless path.start_with? "/"
+            path = get_target_src_root(target, variable_hash) + "/" + path
         end
-
         path = FileFilter.get_exist_expand_path(path)
         if path
             if recursive
-                # FIXME, support EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES
                 dirs = FileFilter.get_recursive_dirs(path)
                 return dirs
             else
@@ -432,14 +431,11 @@ class XcodeprojParser
             end
         end
 
-        if origin_path.start_with? "/usr/"
-            if File.exist? origin_path
+        if File.exist? origin_path
+            if origin_path.start_with? "/usr/"
                 return origin_path
             end
-        end
-
-        if File.exist? origin_path
-            binding.pry # FIXME
+            binding.pry
         end
 
         return nil
@@ -460,7 +456,7 @@ class XcodeprojParser
         return project_header_map
     end
 
-    def get_target_header_map(target, use_header_map, product_name)
+    def get_target_header_map(target, use_header_map, product_name, target_header_copy_map, product_file_name, configuration_build_dir)
         target_public_header_map = {}
         target_private_header_map = {}
         target_headers = []
@@ -479,12 +475,38 @@ class XcodeprojParser
                 end
                 target_headers.push file_path
                 is_public = false
+                is_private = false
                 if file.settings
                     file.settings.each do | k, v |
-                        binding.pry if k != "ATTRIBUTES"
-                        if v and v.include? "Public"
-                            is_public = true
+                        if k == "ATTRIBUTES"
+                            v.each do | vv |
+                                if vv == "Public"
+                                    is_public = true
+                                elsif vv == "Private"
+                                    is_private = true
+                                elsif vv == "Project"
+
+                                else
+                                    binding.pry
+                                end
+                            end
+                        else
+                            binding.pry
                         end
+                    end
+                end
+
+                if target.product_type == "com.apple.product-type.framework"
+                    binding.pry unless configuration_build_dir
+                    if is_public
+                        copy_dst_file = configuration_build_dir + "/" + product_file_name + "/Headers/" + File.basename(file_path)
+                        binding.pry if target_header_copy_map[copy_dst_file] and target_header_copy_map[copy_dst_file] == file_path
+                        target_header_copy_map[copy_dst_file] = file_path
+                    end
+                    if is_private
+                        copy_dst_file = configuration_build_dir + "/" + product_file_name + "/PrivateHeaders/" + File.basename(file_path)
+                        binding.pry if target_header_copy_map[copy_dst_file] and target_header_copy_map[copy_dst_file] == file_path
+                        target_header_copy_map[copy_dst_file] = file_path
                     end
                 end
 
@@ -611,7 +633,6 @@ class XcodeprojParser
                 end
                 next
             end
-            # beta
             target_header_dirs.push [:unknown, origin_search_path]
         end
 
@@ -651,17 +672,19 @@ class XcodeprojParser
             end
         end
 
-        search_paths.uniq.each do | search_path |
-            search_path = get_exist_build_settings_path(target, variable_hash, search_path)
+        search_paths.uniq.each do | origin_search_path |
+            search_path = get_exist_build_settings_path(target, variable_hash, origin_search_path)
             if search_path and search_path.size > 0
                 if search_path.class == Array
                     target_framework_dirs = (target_framework_dirs + search_path).uniq
                 else
                     target_framework_dirs.push search_path unless target_framework_dirs.include? search_path
                 end
+            else
+                target_framework_dirs.push [:unknown, origin_search_path]
             end
         end
-        return target_framework_dirs
+        return target_framework_dirs.uniq
     end
     
     def get_target_library_dirs(target, variable_hash, target_link_flags)
@@ -750,6 +773,60 @@ class XcodeprojParser
         return target_link_flags
     end
 
+    # https://github.com/CocoaPods/Xcodeproj/blob/29cd0821d47f864abbd1ca80f23ff2aded0adfed/lib/xcodeproj/constants.rb#L428
+    # COPY_FILES_BUILD_PHASE_DESTINATIONS = {
+    #     :absolute_path      =>  '0',
+    #     :products_directory => '16',
+    #     :wrapper            =>  '1',
+    #     :resources          =>  '7', # default
+    #     :executables        =>  '6',
+    #     :java_resources     => '15',
+    #     :frameworks         => '10',
+    #     :shared_frameworks  => '11',
+    #     :shared_support     => '12',
+    #     :plug_ins           => '13',
+    #   }.freeze
+    def get_target_header_copy_map(target, variable_hash, product_file_name)
+        target_header_copy_map = {}
+        configuration_build_dir = get_target_build_settings(target, variable_hash, "CONFIGURATION_BUILD_DIR", false)[0]
+        target.copy_files_build_phases.each do | build_phase |
+            if build_phase.dst_subfolder_spec == "16"
+                key = nil
+                match_result = nil
+                unless match_result
+                    match_result = build_phase.dst_path.match(/^\$\(PUBLIC_HEADERS_FOLDER_PATH\)\/([\w\/\.\-]+)$/)
+                    if match_result
+                        binding.pry unless target.product_type == "com.apple.product-type.framework"
+                        binding.pry unless configuration_build_dir
+                        key = configuration_build_dir + "/" + product_file_name + "/Headers/" + match_result[1]
+                    end
+                end
+                unless match_result
+                    match_result = build_phase.dst_path.match(/^\$\(PRIVATE_HEADERS_FOLDER_PATH\)\/([\w\/\.\-]+)$/)
+                    if match_result
+                        binding.pry unless target.product_type == "com.apple.product-type.framework"
+                        binding.pry unless configuration_build_dir
+                        key = configuration_build_dir + "/" + product_file_name + "/PrivateHeaders/" + match_result[1]
+                    end
+                end
+                binding.pry unless match_result
+                build_phase.files.each do | file |
+                    file_paths = get_file_paths_from_build_file(file)
+                    if file_paths.size > 0
+                        file_paths.each do | file_path |
+                            copy_dst_file = (key + "/" + File.basename(file_path)).gsub("/./", "/")
+                            binding.pry if target_header_copy_map[copy_dst_file] and target_header_copy_map[copy_dst_file] == file_path
+                            target_header_copy_map[copy_dst_file] = file_path
+                        end
+                    else
+                        binding.pry
+                    end
+                end
+            end
+        end
+        return configuration_build_dir, target_header_copy_map
+    end
+
     def get_target_links_hash(target, variable_hash, target_library_dirs, target_framework_dirs, target_link_flags, product_file_name)
         user_framework_paths = []
         user_library_paths = []
@@ -759,14 +836,13 @@ class XcodeprojParser
         dependency_target_product_file_names = []
     
         frameworks_build_files = []
-    
         target.copy_files_build_phases.each do | build_phase |
-            if build_phase.dst_subfolder_spec == "10" or # Framework 
-                build_phase.dst_subfolder_spec == "13" # Plugin
+            if build_phase.dst_subfolder_spec == "10" or
+                build_phase.dst_subfolder_spec == "13"
                 frameworks_build_files = frameworks_build_files + build_phase.files
             end
         end
-    
+
         if target.frameworks_build_phases
             frameworks_build_files = frameworks_build_files + target.frameworks_build_phases.files
         end
@@ -801,14 +877,25 @@ class XcodeprojParser
                     end
                 end
             else
+                binding.pry unless file.file_ref.class == Xcodeproj::Project::Object::PBXFileReference
+                
                 file_path = file.file_ref.real_path.to_s
-                file_dir = File.dirname(file_path)
                 extname = File.extname(file_path).downcase
     
                 weak_framework = false
-                if file.settings and file.settings["ATTRIBUTES"]
-                    if file.settings["ATTRIBUTES"].include? "Weak"
-                        weak_framework = true
+                if file.settings
+                    file.settings.each do | k, v |
+                        if k == "ATTRIBUTES"
+                            v.each do | vv |
+                                if vv == "Weak"
+                                    weak_framework = true
+                                # else
+                                #     binding.pry
+                                end
+                            end
+                        else
+                            binding.pry
+                        end
                     end
                 end
     
@@ -823,6 +910,7 @@ class XcodeprojParser
                     else
                         found = false
                         target_framework_dirs.each do | dir |
+                            next unless dir.class == String
                             framework_path = dir + "/" + File.basename(file_path)
                             framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                             if framework_path
@@ -865,6 +953,7 @@ class XcodeprojParser
                             found = false
                             framework_file_name = framework_name + ".framework"
                             target_framework_dirs.each do | dir |
+                                next unless dir.class == String
                                 framework_path = dir + "/" + framework_file_name
                                 framework_path = FileFilter.get_exist_expand_path_dir(framework_path)
                                 if framework_path
@@ -875,6 +964,7 @@ class XcodeprojParser
                             end
                             unless found
                                 target_framework_dirs.each do | dir |
+                                    next unless dir.class == String
                                     Dir.glob("#{dir}/*.xcframework").sort.each do | xcframework_path | 
                                         xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
                                         next unless xcframework_info
@@ -919,6 +1009,7 @@ class XcodeprojParser
                         end
                         unless found
                             target_framework_dirs.each do | dir |
+                                next unless dir.class == String
                                 Dir.glob("#{dir}/*.xcframework").sort.each do | xcframework_path | 
                                     xcframework_info = FileFilter.get_match_xcframework_info(xcframework_path)
                                     next unless xcframework_info
@@ -1306,7 +1397,7 @@ class XcodeprojParser
                 end
                 
                 variable_hash = get_build_settings_variables(target.build_configurations, project_variable_hash, project, target)
-                header_path_hash_for_target_header_map = {}
+                virtual_build_files = {}
 
                 flags_sources_hash, clang_enable_objc_arc, has_swift = get_target_source_files(target, variable_hash)
     
@@ -1328,8 +1419,9 @@ class XcodeprojParser
                 swift_objc_bridging_header = get_targe_swift_setting(target, variable_hash)
                 enable_modules, product_module_name, module_map_file, dep_module_map_files = get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
 
+                configuration_build_dir, target_header_copy_map = get_target_header_copy_map(target, variable_hash, product_file_name)
                 use_header_map = get_target_use_header_map(target, variable_hash)
-                target_headers, namespace, target_public_header_map, target_private_header_map = get_target_header_map(target, use_header_map, product_name)
+                target_headers, namespace, target_public_header_map, target_private_header_map = get_target_header_map(target, use_header_map, product_name, target_header_copy_map, product_file_name, configuration_build_dir)
 
                 info_hash = {}
                 info_hash[:product_name] = product_name
@@ -1365,6 +1457,7 @@ class XcodeprojParser
                 info_hash[:cxx_target_defines] = cxx_target_defines
                 info_hash[:swift_target_defines] = swift_target_defines
                 info_hash[:target_links_hash] = target_links_hash
+                info_hash[:target_header_copy_map] = target_header_copy_map
                 info_hash[:resources_files] = resources_files
                 info_hash[:dependency_resource_product_file_names] = dependency_resource_product_file_names
                 info_hash[:target_app_icon] = target_app_icon

@@ -1580,7 +1580,7 @@ PODS:
   - Sentry/Core (7.23.0)
   - SideMenu (6.5.0)
   - Siren (5.7.1)
-  - SkeletonView (1.29.2)
+  - SkeletonView (1.30.0)
   - SnapKit (5.6.0)
   - Sourcery (1.8.2):
     - Sourcery/CLI-Only (= 1.8.2)
@@ -2085,7 +2085,7 @@ SPEC CHECKSUMS:
   Sentry: a0d4563fa4ddacba31fdcc35daaa8573d87224d6
   SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   Siren: 76ac728f4f2f4a3576c322272e94a0e37955664f
-  SkeletonView: 915a80ecc2b6421ab7ac0f0212321c0cc1406472
+  SkeletonView: 939a2cc7d1ea697cdb41d4c2dea6257d3dc74987
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Sourcery: ad4aba88367fbaf0c1ae6ec4ba3282db1b571624
   SQLite.swift: 903bfa3bc9ab06345fdfbb578e34f47cfcf417da
