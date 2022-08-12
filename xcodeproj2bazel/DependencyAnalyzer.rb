@@ -140,30 +140,6 @@ class DependencyAnalyzer
                     end
                 end
             end
-            if not match_header and not import_file_path.include? "/" and total_public_header_map
-                target_header_dirs.each do | dir |
-                    next unless dir.class == Array
-                    next unless dir[0] == :unknown
-                    header = dir[1]
-                    match_result = header.match(/(\w+)\.framework\/Headers/)
-                    if match_result 
-                        key = (match_result[1] + "/" + import_file_path).downcase
-                        match_header_set = total_public_header_map[key]
-                        if match_header_set and match_header_set.size == 1
-                            a = match_header_set.to_a[0]
-                            header = a[0]
-                            other_target_name = a[1]
-                            header = FileFilter.get_exist_expand_path_file(header)
-                            if header
-                                match_header = header
-                                # private header_map
-                                FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by framework private header_map"
-                                file_deps_hash[file].add [:private_header_map, match_header, other_target_name]
-                            end
-                        end
-                    end
-                end
-            end
             unless match_header
                 header = import_file_path
                 header = FileFilter.get_exist_expand_path_file(header)
@@ -192,83 +168,100 @@ class DependencyAnalyzer
                 match_result = import_file_path.match(/^(\w+)\/(.*)$/)
                 if match_result
                     target_framework_dirs.each do | dir |
-                        next unless dir.class == String
-                        framework_name = match_result[1]
-                        file_name = match_result[2]
-                        header = dir + "/" + framework_name + ".framework/Headers/" + file_name
-                        header = FileFilter.get_exist_expand_path_file(header)
-                        if header
-                            # find by framework search path
-                            match_header = header
-                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search framework dir #{dir}"
-                            file_deps_hash[file].add [:headers, match_header]
-                            break
+                        if dir.class == String
+                            framework_name = match_result[1]
+                            file_name = match_result[2]
+                            header = dir + "/" + framework_name + ".framework/Headers/" + file_name
+                            header = FileFilter.get_exist_expand_path_file(header)
+                            if header
+                                # find by framework search path
+                                match_header = header
+                                FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search framework dir #{dir}"
+                                file_deps_hash[file].add [:headers, match_header]
+                                break
+                            end
+                        end
+                        if dir.class == Array and not import_file_path.include? "./"
+                            copy_dst_file = dir[1] + "/" + import_file_path.split("/")[0] + ".framework/Headers/" + import_file_path.split("/")[1..-1].join("/")
+                            if import_file_path.include? "/" and total_header_copy_map[copy_dst_file]
+                                match_header = total_header_copy_map[copy_dst_file]
+                                namespace = File.dirname(import_file_path)
+                                file_deps_hash[file].add [:virtual_header_map, match_header, namespace, namespace]
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+            if not match_header and not import_file_path.include? "./"
+                total_header_copy_map_reverse = total_header_copy_map[:reverse]
+                current_header_copy_dsts = total_header_copy_map_reverse[file]
+                if current_header_copy_dsts
+                    current_header_copy_dsts.each do | current_header_copy_dst |
+                        if current_header_copy_dst.include? ".framework/Headers/"
+                            copy_dst_file = current_header_copy_dst.split(".framework/Headers/")[0] + ".framework/Headers/" + import_file_path
+                            if total_header_copy_map[copy_dst_file]
+                                match_header = total_header_copy_map[copy_dst_file]
+                                if match_header.end_with? "/" + import_file_path
+                                    file_deps_hash[file].add [:headers, match_header, match_header.sub("/" + import_file_path, "")]
+                                else
+                                    binding.pry unless import_file_path.include? "/"
+                                    namespace = File.dirname(import_file_path)
+                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.basename(current_header_copy_dst.split(".framework/Headers/")[0])]
+                                end
+                                break
+                            end
                         end
                     end
                 end
             end
             unless match_header
                 target_header_dirs.each do | dir |
-                    next unless dir.class == String
-                    header = dir + "/" + import_file_path
-                    header = FileFilter.get_exist_expand_path_file(header)
-                    if header
-                        # find by header search path
-                        match_header = header
-                        if not import_file_path.include? "../"
-                            real_match_header = FileFilter.get_real_exist_expand_path_file(header)
-                            if real_match_header != match_header
-                                match_header = real_match_header
-                                if import_file_path.include? "/"
-                                    namespace = File.dirname(import_file_path)
-                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace]
+                    if dir.class == String
+                        header = dir + "/" + import_file_path
+                        header = FileFilter.get_exist_expand_path_file(header)
+                        if header
+                            # find by header search path
+                            match_header = header
+                            if not import_file_path.include? "./"
+                                real_match_header = FileFilter.get_real_exist_expand_path_file(match_header)
+                                if real_match_header != match_header
+                                    match_header = real_match_header
+                                    if match_header.end_with? "/" + import_file_path
+                                        file_deps_hash[file].add [:headers, match_header, match_header.sub("/" + import_file_path, "")]
+                                    else
+                                        binding.pry unless import_file_path.include? "/"
+                                        namespace = File.dirname(import_file_path)
+                                        file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.dirname(header).downcase]
+                                    end
+                                    break
+                                end
+                            end
+                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
+                            file_deps_hash[file].add [:headers, match_header, dir]
+                            break
+                        end
+                    end
+                    if dir.class == Array and not import_file_path.include? "./"
+                        if dir[1].include? ".framework/Headers/"
+                            copy_dst_file = dir[1].split(".framework/Headers/")[0] + ".framework/Headers/" + import_file_path
+                            if total_header_copy_map[copy_dst_file]
+                                match_header = total_header_copy_map[copy_dst_file]
+                                if match_header.end_with? "/" + import_file_path
+                                    file_deps_hash[file].add [:headers, match_header, match_header.sub("/" + import_file_path, "")]
                                 else
-                                    file_deps_hash[file].add [:headers, match_header, File.dirname(match_header)]
+                                    binding.pry unless import_file_path.include? "/"
+                                    namespace = File.dirname(import_file_path)
+                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.basename(current_header_copy_dst.split(".framework/Headers/")[0])]
                                 end
                                 break
                             end
                         end
-                        FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
-                        file_deps_hash[file].add [:headers, match_header, dir]
-                        break
                     end
                 end
             end
             unless match_header
-                if not import_file_path.include? "../"
-                    target_framework_dirs.each do | dir |
-                        next unless dir.class == Array
-                        next unless dir[0] == :unknown
-                        copy_dst_file = dir[1] + "/" + import_file_path.split("/")[0] + ".framework/Headers/" + import_file_path.split("/")[1..-1].join("/")
-                        if total_header_copy_map[copy_dst_file]
-                            match_header = total_header_copy_map[copy_dst_file]
-                            break
-                        end
-                    end
-                    unless match_header
-                        current_header_copy_dsts = total_header_copy_map.to_a.select{|x|File.basename(x[1])==File.basename(file)}.map{|x|x[0]}
-                        current_header_copy_dsts.each do | current_header_copy_dst |
-                            if current_header_copy_dst.include? ".framework/Headers/"
-                                copy_dst_file = current_header_copy_dst.split(".framework/Headers/")[0] + ".framework/Headers/" + import_file_path
-                                if total_header_copy_map[copy_dst_file]
-                                    match_header = total_header_copy_map[copy_dst_file]
-                                    break
-                                end
-                            end
-                        end
-                    end
-                    if match_header
-                        if import_file_path.include? "/"
-                            namespace = File.dirname(import_file_path)
-                            file_deps_hash[file].add [:virtual_header_map, match_header, namespace]
-                        else
-                            file_deps_hash[file].add [:headers, match_header, File.dirname(match_header)]
-                        end
-                    end
-                end
-            end
-            unless match_header
-                if import_file_path.end_with? ".h" and not import_file_path.include? "../" and not import_file_path.include? "/"
+                if import_file_path.end_with? ".h" and not import_file_path.include? "./" and not import_file_path.include? "/"
                     d_file_path = import_file_path.sub(/\.h$/, ".d").downcase
                     target_dtrace_files.each do | target_dtrace_file |
                         if target_dtrace_file.downcase.end_with? d_file_path
@@ -405,12 +398,16 @@ class DependencyAnalyzer
 
     def merge_header_copy_map(target_info_hash_for_xcode)
         total_header_copy_map = {}
+        total_header_copy_map_reverse = {}
         target_info_hash_for_xcode.each do | target_name, info_hash |
             info_hash[:target_header_copy_map].each do | k, v |
                 binding.pry if total_header_copy_map[k] and total_header_copy_map[k] == v
                 total_header_copy_map[k] = v
+                total_header_copy_map_reverse[v] = Set.new unless total_header_copy_map_reverse[v]
+                total_header_copy_map_reverse[v].add k
             end
         end
+        total_header_copy_map[:reverse] = total_header_copy_map_reverse
         return total_header_copy_map
     end
 

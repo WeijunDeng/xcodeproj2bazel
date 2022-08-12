@@ -665,10 +665,11 @@ class BazelTranslator
         if dep_info[0] == :virtual_header_map
             header = dep_info[1]
             namespace = dep_info[2]
-            header_target_name = get_legal_bazel_target_name "#{namespace}_virtual_header_map"
+            name = dep_info[3]
+            header_target_name = get_legal_bazel_target_name "#{name}_virtual_header_map"
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
             header_target_info["rule"] = "header_map"
-            header_target_info["namespace"] = namespace if namespace
+            header_target_info["namespace"] = namespace if namespace and namespace.size > 0
             header_target_info["namespace_only"] = "True"
             header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
             header_target_info["hdrs"].add header
