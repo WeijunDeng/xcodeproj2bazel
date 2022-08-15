@@ -109,7 +109,7 @@ target 'swift_app_with_pod_no_use_frameworks' do
   pod 'SwiftEntryKit'
   pod 'SwifterSwift'
   pod 'SwiftMessages'
-  # pod 'SwiftNIO'
+  pod 'SwiftNIO'
   pod 'SwiftRichString'
   pod 'SwiftyBeaver'
   pod 'SwiftyJSON'

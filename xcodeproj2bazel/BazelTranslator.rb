@@ -2,12 +2,12 @@ class BazelTranslator
     def translate_module_map(analyze_result, user_module_hash, target_module_name_hash, target_info_hash_for_bazel)
         user_module_hash.each do | module_name, hash |
             umbrella_header = hash[:umbrella_header]
-            moduel_map_headers = hash[:moduel_map_headers]
+            module_map_headers = hash[:module_map_headers]
             module_map_file = hash[:module_map_file]
             has_swift = hash[:has_swift]
 
             next unless module_map_file or umbrella_header
-            next unless moduel_map_headers and moduel_map_headers.size > 0
+            next unless module_map_headers and module_map_headers.size > 0
             next if module_map_file and module_map_file.include? ".framework/"
 
             header_target_name = get_bazel_target_name_for_module_map(module_name, false)
@@ -16,7 +16,7 @@ class BazelTranslator
             header_target_info["module_name"] = module_name
             header_target_info["module_map_file"] = module_map_file if module_map_file
             header_target_info["umbrella_header"] = umbrella_header if umbrella_header
-            header_target_info["hdrs"] = moduel_map_headers
+            header_target_info["hdrs"] = module_map_headers
 
             if has_swift
                 swift_bazel_target_name = get_bazel_target_name_for_swift_module_name(module_name)
@@ -26,7 +26,7 @@ class BazelTranslator
                 header_target_info["module_name"] = module_name
                 header_target_info["module_map_file"] = module_map_file if module_map_file
                 header_target_info["umbrella_header"] = umbrella_header if umbrella_header
-                header_target_info["hdrs"] = moduel_map_headers
+                header_target_info["hdrs"] = module_map_headers
                 header_target_info["deps"] = [swift_bazel_target_name]
             end
         end
@@ -134,7 +134,7 @@ class BazelTranslator
     
             relative_sources_files = Set.new
             if module_name
-                relative_sources_files.merge user_module_hash[module_name][:moduel_map_headers]
+                relative_sources_files.merge user_module_hash[module_name][:module_map_headers]
             end
             if pch
                 relative_sources_files.add pch
@@ -757,8 +757,8 @@ class BazelTranslator
                     target_info[key] = Set.new unless target_info[key]
                     target_info[key].add header_target_name
     
-                    user_module_hash[user_module][:moduel_map_deps].each do | moduel_map_dep |
-                        add_file_deps(moduel_map_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)
+                    user_module_hash[user_module][:module_deps].each do | module_dep |
+                        add_file_deps(module_dep, target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, file_deps_set)
                     end
                 end
             end

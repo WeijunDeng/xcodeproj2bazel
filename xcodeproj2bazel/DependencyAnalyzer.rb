@@ -18,19 +18,31 @@ class DependencyAnalyzer
         return content
     end
 
-    def parse_import_for_swift_file(file, user_module_hash, file_deps_hash)
+    def parse_module_deps_hash(module_name, module_deps_hash, module_deps_set)
+        return if module_deps_set.include? module_name
+        module_deps_set.add module_name
+        if module_deps_hash[module_name]
+            module_deps_hash[module_name].each do | import_module_name |
+                parse_module_deps_hash(import_module_name, module_deps_hash, module_deps_set)
+            end
+        end
+    end
+
+    def parse_import_for_swift_file(file, module_name, module_deps_hash, user_module_hash, file_deps_hash)
         content = read_source_file(file)
         modules = content.scan(/import (\w+)/).flatten
         file_deps_hash[file] = Set.new unless file_deps_hash[file]
         
-        modules.each do | module_name |
-            system_framework = FileFilter.get_system_framework_by_name(module_name)
+        modules.each do | import_module_name |
+            system_framework = FileFilter.get_system_framework_by_name(import_module_name)
             if system_framework
                 file_deps_hash[file].add [:system_framework, system_framework]
                 next
             end
-            if user_module_hash.has_key? module_name
-                file_deps_hash[file].add [:user_module, module_name]
+            if user_module_hash.has_key? import_module_name
+                file_deps_hash[file].add [:user_module, import_module_name]
+                module_deps_hash[module_name] = Set.new unless module_deps_hash[module_name]
+                module_deps_hash[module_name].add import_module_name
             end
         end
     end
@@ -361,14 +373,14 @@ class DependencyAnalyzer
             target_headers = info_hash[:target_headers]
 
             umbrella_header = nil
-            moduel_map_headers = Set.new
+            module_map_headers = Set.new
             if module_map_file
                 module_map_file_headers = user_module_hash[module_name][:module_map_file_headers]
                 module_map_file_headers.each do | module_map_file_header |
                     has_match_header = false
                     target_headers.each do | header |
                         if header.end_with? "/" + module_map_file_header
-                            moduel_map_headers.add header
+                            module_map_headers.add header
                             has_match_header = true
                             break
                         end
@@ -378,7 +390,7 @@ class DependencyAnalyzer
             else
                 target_headers.each do | header |
                     if not umbrella_header and File.basename(header) == module_name + ".h"
-                        moduel_map_headers.add header
+                        module_map_headers.add header
                         umbrella_header = header
                         break
                     end
@@ -386,18 +398,18 @@ class DependencyAnalyzer
             end
 
             binding.pry unless user_module_hash[module_name]
-            binding.pry if module_map_file and moduel_map_headers.size == 0
+            binding.pry if module_map_file and module_map_headers.size == 0
             user_module_hash[module_name][:umbrella_header] = umbrella_header
-            user_module_hash[module_name][:moduel_map_headers] = moduel_map_headers
+            user_module_hash[module_name][:module_map_headers] = module_map_headers
             user_module_hash[module_name][:has_swift] = has_swift
         end
 
         user_module_hash.keys.each do | module_name |
             hash = user_module_hash[module_name]
             if hash[:module_map_file]
-                if not hash[:moduel_map_headers] or hash[:moduel_map_headers].size == 0
+                if not hash[:module_map_headers] or hash[:module_map_headers].size == 0
                     if hash[:module_map_file].include? ".framework/"
-                        moduel_map_headers = Set.new
+                        module_map_headers = Set.new
                         module_map_file_headers = user_module_hash[module_name][:module_map_file_headers]
                         framework_headers = Dir.glob(hash[:module_map_file].split(".framework/Modules/")[0] + ".framework/Headers/**")
                         invalid = false
@@ -405,7 +417,7 @@ class DependencyAnalyzer
                             has_match_header = false
                             framework_headers.each do | header |
                                 if header.end_with? "/" + module_map_file_header
-                                    moduel_map_headers.add header
+                                    module_map_headers.add header
                                     has_match_header = true
                                     break
                                 end
@@ -418,7 +430,7 @@ class DependencyAnalyzer
                         if invalid
                             user_module_hash.delete(module_name)
                         else
-                            hash[:moduel_map_headers] = moduel_map_headers
+                            hash[:module_map_headers] = module_map_headers
                         end
                         next
                     end
@@ -477,6 +489,8 @@ class DependencyAnalyzer
         analyze_result[:user_module_hash] = user_module_hash
         analyze_result[:target_module_name_hash] = target_module_name_hash
 
+        module_deps_hash = {}
+
         target_info_hash_for_xcode.each do | target_name, info_hash |
             pch = info_hash[:pch]
             flags_sources_hash = info_hash[:flags_sources_hash]
@@ -504,7 +518,7 @@ class DependencyAnalyzer
                 parse_dependency_for_file(pch, nil, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
             end
             if module_name and user_module_hash[module_name]
-                user_module_hash[module_name][:moduel_map_headers].each do | file |
+                user_module_hash[module_name][:module_map_headers].each do | file |
                     parse_dependency_for_file(file, pch, target_name, file_deps_hash, target_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_header_copy_map, target_dtrace_files)
                 end
             end
@@ -520,7 +534,7 @@ class DependencyAnalyzer
                     end   
                 elsif FileFilter.get_source_file_extnames_swift.include? extname
                     source_files.each do | file |
-                        parse_import_for_swift_file(file, user_module_hash, file_deps_hash)
+                        parse_import_for_swift_file(file, module_name, module_deps_hash, user_module_hash, file_deps_hash)
                     end
                 end
             end
@@ -551,18 +565,19 @@ class DependencyAnalyzer
         end
 
         user_module_hash.each do | module_name, hash |
-            moduel_map_deps = Set.new
-            moduel_map_headers = hash[:moduel_map_headers]
-            if moduel_map_headers
+            module_map_deps = Set.new
+            module_map_headers = hash[:module_map_headers]
+            if module_map_headers
                 target_info_hash_for_xcode.each do | target_name, info_hash |
                     file_deps_hash = KeyValueStore.get_key_value_store_in_container(analyze_result, target_name)
-                    next unless file_deps_hash
-                    moduel_map_headers.each do | file |
-                        moduel_map_deps.merge file_deps_hash[file] if file_deps_hash[file]
+                    module_map_headers.each do | file |
+                        module_map_deps.merge file_deps_hash[file] if file_deps_hash[file]
                     end
                 end
             end
-            hash[:moduel_map_deps] = moduel_map_deps
+            module_deps_set = Set.new
+            parse_module_deps_hash(module_name, module_deps_hash, module_deps_set)
+            hash[:module_deps] = module_map_deps + module_deps_set.map{|x| [:user_module, x] }.to_set
         end
 
         return analyze_result

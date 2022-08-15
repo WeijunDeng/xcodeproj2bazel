@@ -426,6 +426,12 @@ cc_header(
     ],
 )
 cc_header(
+    name = "pods_cnioatomics_sources_cnioatomics_include_h_header",
+    hdrs = [
+        "Pods/CNIOAtomics/Sources/CNIOAtomics/include/CNIOAtomics.h",
+    ],
+)
+cc_header(
     name = "pods_cocoalumberjack_sources_cocoalumberjack_h_header",
     hdrs = [
         "Pods/CocoaLumberjack/Sources/CocoaLumberjack/DDFileLogger+Internal.h",
@@ -1766,6 +1772,97 @@ cc_library(
     ],
 )
 cc_library(
+    name = "libCNIOAtomics_a_c",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    deps = [
+        ":pods_cnioatomics_sources_cnioatomics_include_h_header",
+    ],
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/CNIOAtomics/CNIOAtomics-prefix.pch",
+    srcs = [
+        "Pods/CNIOAtomics/Sources/CNIOAtomics/src/c-atomics.c",
+        "Pods/CNIOAtomics/Sources/CNIOAtomics/src/c-nioatomics.c",
+    ],
+)
+cc_library(
+    name = "libCNIODarwin_a_c",
+    copts = [
+        "-std=gnu11",
+        "-D__APPLE_USE_RFC_3542=1",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":CNIODarwin_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/CNIODarwin/CNIODarwin-prefix.pch",
+    srcs = [
+        "Pods/CNIODarwin/Sources/CNIODarwin/shim.c",
+    ],
+)
+cc_library(
+    name = "libCNIOLinux_a_c",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":CNIOLinux_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/CNIOLinux/CNIOLinux-prefix.pch",
+    srcs = [
+        "Pods/CNIOLinux/Sources/CNIOLinux/liburing_shims.c",
+        "Pods/CNIOLinux/Sources/CNIOLinux/shim.c",
+    ],
+)
+cc_library(
+    name = "libCNIOWindows_a_c",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":CNIOWindows_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/CNIOWindows/CNIOWindows-prefix.pch",
+    srcs = [
+        "Pods/CNIOWindows/Sources/CNIOWindows/WSAStartup.c",
+        "Pods/CNIOWindows/Sources/CNIOWindows/shim.c",
+    ],
+)
+cc_library(
     name = "libFBRetainCycleDetector_a_c",
     copts = [
         "-std=gnu11",
@@ -2757,6 +2854,40 @@ header_map(
         "Pods/Target Support Files/BulletinBoard/BulletinBoard-umbrella.h",
     ],
     namespace = "BulletinBoard",
+)
+header_map(
+    name = "CNIOAtomics_private_header_map",
+    hdrs = [
+        "Pods/CNIOAtomics/Sources/CNIOAtomics/include/CNIOAtomics.h",
+        "Pods/CNIOAtomics/Sources/CNIOAtomics/src/cpp_magic.h",
+        "Pods/Target Support Files/CNIOAtomics/CNIOAtomics-umbrella.h",
+    ],
+    namespace = "CNIOAtomics",
+)
+header_map(
+    name = "CNIODarwin_private_header_map",
+    hdrs = [
+        "Pods/CNIODarwin/Sources/CNIODarwin/include/CNIODarwin.h",
+        "Pods/Target Support Files/CNIODarwin/CNIODarwin-umbrella.h",
+    ],
+    namespace = "CNIODarwin",
+)
+header_map(
+    name = "CNIOLinux_private_header_map",
+    hdrs = [
+        "Pods/CNIOLinux/Sources/CNIOLinux/include/CNIOLinux.h",
+        "Pods/CNIOLinux/Sources/CNIOLinux/include/liburing_nio.h",
+        "Pods/Target Support Files/CNIOLinux/CNIOLinux-umbrella.h",
+    ],
+    namespace = "CNIOLinux",
+)
+header_map(
+    name = "CNIOWindows_private_header_map",
+    hdrs = [
+        "Pods/CNIOWindows/Sources/CNIOWindows/include/CNIOWindows.h",
+        "Pods/Target Support Files/CNIOWindows/CNIOWindows-umbrella.h",
+    ],
+    namespace = "CNIOWindows",
 )
 header_map(
     name = "Cartography_private_header_map",
@@ -4818,6 +4949,31 @@ header_map(
     namespace = "Moya",
 )
 header_map(
+    name = "NIOConcurrencyHelpers_swift_header_map",
+    direct_hdr_providers = [":NIOConcurrencyHelpers_swift"],
+    namespace = "NIOConcurrencyHelpers",
+)
+header_map(
+    name = "NIOCore_swift_header_map",
+    direct_hdr_providers = [":NIOCore_swift"],
+    namespace = "NIOCore",
+)
+header_map(
+    name = "NIOEmbedded_swift_header_map",
+    direct_hdr_providers = [":NIOEmbedded_swift"],
+    namespace = "NIOEmbedded",
+)
+header_map(
+    name = "NIOPosix_swift_header_map",
+    direct_hdr_providers = [":NIOPosix_swift"],
+    namespace = "NIOPosix",
+)
+header_map(
+    name = "NIO_swift_header_map",
+    direct_hdr_providers = [":NIO_swift"],
+    namespace = "NIO",
+)
+header_map(
     name = "NSAttributedStringBuilder13_private_header_map",
     hdrs = [
         "Pods/Target Support Files/NSAttributedStringBuilder13/NSAttributedStringBuilder13-umbrella.h",
@@ -6006,6 +6162,41 @@ header_map(
     namespace = "SwiftMessages",
 )
 header_map(
+    name = "SwiftNIOConcurrencyHelpers_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers-umbrella.h",
+    ],
+    namespace = "SwiftNIOConcurrencyHelpers",
+)
+header_map(
+    name = "SwiftNIOCore_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore-umbrella.h",
+    ],
+    namespace = "SwiftNIOCore",
+)
+header_map(
+    name = "SwiftNIOEmbedded_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded-umbrella.h",
+    ],
+    namespace = "SwiftNIOEmbedded",
+)
+header_map(
+    name = "SwiftNIOPosix_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix-umbrella.h",
+    ],
+    namespace = "SwiftNIOPosix",
+)
+header_map(
+    name = "SwiftNIO_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIO/SwiftNIO-umbrella.h",
+    ],
+    namespace = "SwiftNIO",
+)
+header_map(
     name = "SwiftRichString_private_header_map",
     hdrs = [
         "Pods/Target Support Files/SwiftRichString/SwiftRichString-umbrella.h",
@@ -6483,6 +6674,18 @@ header_map(
         "Pods/ZipArchive/minizip/zip.h",
     ],
     namespace = "ZipArchive",
+)
+header_map(
+    name = "_NIODataStructures_private_header_map",
+    hdrs = [
+        "Pods/Target Support Files/_NIODataStructures/_NIODataStructures-umbrella.h",
+    ],
+    namespace = "_NIODataStructures",
+)
+header_map(
+    name = "_NIODataStructures_swift_header_map",
+    direct_hdr_providers = [":_NIODataStructures_swift"],
+    namespace = "_NIODataStructures",
 )
 header_map(
     name = "fishhook_private_header_map",
@@ -7104,6 +7307,10 @@ ios_application(
         ":libBase64_a",
         ":libBlocksKit_a",
         ":libBulletinBoard_a",
+        ":libCNIOAtomics_a",
+        ":libCNIODarwin_a",
+        ":libCNIOLinux_a",
+        ":libCNIOWindows_a",
         ":libCartography_a",
         ":libCharts_a",
         ":libCocoaAsyncSocket_a",
@@ -7203,6 +7410,11 @@ ios_application(
         ":libSwiftDate_a",
         ":libSwiftEntryKit_a",
         ":libSwiftMessages_a",
+        ":libSwiftNIOConcurrencyHelpers_a",
+        ":libSwiftNIOCore_a",
+        ":libSwiftNIOEmbedded_a",
+        ":libSwiftNIOPosix_a",
+        ":libSwiftNIO_a",
         ":libSwiftRichString_a",
         ":libSwifterSwift_a",
         ":libSwiftyBeaver_a",
@@ -7220,6 +7432,7 @@ ios_application(
         ":libYYModel_a",
         ":libYYText_a",
         ":libZipArchive_a",
+        ":lib_NIODataStructures_a",
         ":libfishhook_a",
         ":liblibwebp_a",
         ":liblottie_ios_a",
@@ -7431,6 +7644,38 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/BlocksKit/BlocksKit.modulemap",
     module_name = "BlocksKit",
+)
+module_map(
+    name = "CNIOAtomics_module_map",
+    hdrs = [
+        "Pods/Target Support Files/CNIOAtomics/CNIOAtomics-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/CNIOAtomics/CNIOAtomics.modulemap",
+    module_name = "CNIOAtomics",
+)
+module_map(
+    name = "CNIODarwin_module_map",
+    hdrs = [
+        "Pods/Target Support Files/CNIODarwin/CNIODarwin-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/CNIODarwin/CNIODarwin.modulemap",
+    module_name = "CNIODarwin",
+)
+module_map(
+    name = "CNIOLinux_module_map",
+    hdrs = [
+        "Pods/Target Support Files/CNIOLinux/CNIOLinux-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/CNIOLinux/CNIOLinux.modulemap",
+    module_name = "CNIOLinux",
+)
+module_map(
+    name = "CNIOWindows_module_map",
+    hdrs = [
+        "Pods/Target Support Files/CNIOWindows/CNIOWindows-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/CNIOWindows/CNIOWindows.modulemap",
+    module_name = "CNIOWindows",
 )
 module_map(
     name = "Cartography_mixed_module_map",
@@ -8235,6 +8480,101 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/Moya/Moya.modulemap",
     module_name = "Moya",
+)
+module_map(
+    name = "NIOConcurrencyHelpers_mixed_module_map",
+    deps = [
+        ":NIOConcurrencyHelpers_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers.modulemap",
+    module_name = "NIOConcurrencyHelpers",
+)
+module_map(
+    name = "NIOConcurrencyHelpers_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers.modulemap",
+    module_name = "NIOConcurrencyHelpers",
+)
+module_map(
+    name = "NIOCore_mixed_module_map",
+    deps = [
+        ":NIOCore_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore.modulemap",
+    module_name = "NIOCore",
+)
+module_map(
+    name = "NIOCore_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore.modulemap",
+    module_name = "NIOCore",
+)
+module_map(
+    name = "NIOEmbedded_mixed_module_map",
+    deps = [
+        ":NIOEmbedded_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded.modulemap",
+    module_name = "NIOEmbedded",
+)
+module_map(
+    name = "NIOEmbedded_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded.modulemap",
+    module_name = "NIOEmbedded",
+)
+module_map(
+    name = "NIOPosix_mixed_module_map",
+    deps = [
+        ":NIOPosix_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix.modulemap",
+    module_name = "NIOPosix",
+)
+module_map(
+    name = "NIOPosix_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix.modulemap",
+    module_name = "NIOPosix",
+)
+module_map(
+    name = "NIO_mixed_module_map",
+    deps = [
+        ":NIO_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIO/SwiftNIO-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIO/SwiftNIO.modulemap",
+    module_name = "NIO",
+)
+module_map(
+    name = "NIO_module_map",
+    hdrs = [
+        "Pods/Target Support Files/SwiftNIO/SwiftNIO-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/SwiftNIO/SwiftNIO.modulemap",
+    module_name = "NIO",
 )
 module_map(
     name = "NSAttributedStringBuilder13_mixed_module_map",
@@ -9090,6 +9430,25 @@ module_map(
     module_name = "ZipArchive",
 )
 module_map(
+    name = "_NIODataStructures_mixed_module_map",
+    deps = [
+        ":_NIODataStructures_swift",
+    ],
+    hdrs = [
+        "Pods/Target Support Files/_NIODataStructures/_NIODataStructures-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/_NIODataStructures/_NIODataStructures.modulemap",
+    module_name = "_NIODataStructures",
+)
+module_map(
+    name = "_NIODataStructures_module_map",
+    hdrs = [
+        "Pods/Target Support Files/_NIODataStructures/_NIODataStructures-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/_NIODataStructures/_NIODataStructures.modulemap",
+    module_name = "_NIODataStructures",
+)
+module_map(
     name = "fishhook_module_map",
     hdrs = [
         "Pods/Target Support Files/fishhook/fishhook-umbrella.h",
@@ -9334,6 +9693,8 @@ objc_library(
     ],
     module_maps = [
         ":AnyImageKit_mixed_module_map",
+        ":Kingfisher_mixed_module_map",
+        ":SnapKit_mixed_module_map",
     ],
     pch = "Pods/Target Support Files/AnyImageKit/AnyImageKit-prefix.pch",
     srcs = [
@@ -9557,6 +9918,106 @@ objc_library(
     pch = "Pods/Target Support Files/BulletinBoard/BulletinBoard-prefix.pch",
     srcs = [
         "Pods/Target Support Files/BulletinBoard/BulletinBoard-dummy.m",
+    ],
+)
+objc_library(
+    name = "libCNIOAtomics_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOAtomics_module_map",
+    ],
+    pch = "Pods/Target Support Files/CNIOAtomics/CNIOAtomics-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/CNIOAtomics/CNIOAtomics-dummy.m",
+    ],
+)
+objc_library(
+    name = "libCNIODarwin_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIODarwin_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIODarwin_module_map",
+    ],
+    pch = "Pods/Target Support Files/CNIODarwin/CNIODarwin-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/CNIODarwin/CNIODarwin-dummy.m",
+    ],
+)
+objc_library(
+    name = "libCNIOLinux_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOLinux_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOLinux_module_map",
+    ],
+    pch = "Pods/Target Support Files/CNIOLinux/CNIOLinux-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/CNIOLinux/CNIOLinux-dummy.m",
+    ],
+)
+objc_library(
+    name = "libCNIOWindows_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOWindows_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOWindows_module_map",
+    ],
+    pch = "Pods/Target Support Files/CNIOWindows/CNIOWindows-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/CNIOWindows/CNIOWindows-dummy.m",
     ],
 )
 objc_library(
@@ -10879,11 +11340,15 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    header_maps = [
+        ":GoogleUtilities_private_header_map",
+    ],
     linkopts = [
         "-dead_strip",
     ],
     module_maps = [
         ":FirebaseCoreInternal_mixed_module_map",
+        ":GoogleUtilities_module_map",
     ],
     pch = "Pods/Target Support Files/FirebaseCoreInternal/FirebaseCoreInternal-prefix.pch",
     srcs = [
@@ -10913,6 +11378,7 @@ objc_library(
     enable_modules = True,
     header_maps = [
         ":FirebaseCore_private_header_map",
+        ":GoogleUtilities_private_header_map",
         ":FirebaseCore_project_header_map",
     ],
     includes = [
@@ -10926,6 +11392,7 @@ objc_library(
     module_maps = [
         ":FirebaseCoreInternal_mixed_module_map",
         ":FirebaseCore_module_map",
+        ":GoogleUtilities_module_map",
     ],
     srcs = [
         "Pods/FirebaseCore/FirebaseCore/Sources/FIRAnalyticsConfiguration.m",
@@ -11758,6 +12225,7 @@ objc_library(
     ],
     module_maps = [
         ":KingfisherWebP_mixed_module_map",
+        ":Kingfisher_mixed_module_map",
         ":libwebp_module_map",
     ],
     pch = "Pods/Target Support Files/KingfisherWebP/KingfisherWebP-prefix.pch",
@@ -11799,11 +12267,15 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    header_maps = [
+        ":pop_private_header_map",
+    ],
     linkopts = [
         "-dead_strip",
     ],
     module_maps = [
         ":Koloda_mixed_module_map",
+        ":pop_module_map",
     ],
     pch = "Pods/Target Support Files/Koloda/Koloda-prefix.pch",
     srcs = [
@@ -12552,6 +13024,7 @@ objc_library(
     ],
     module_maps = [
         ":Macaw_mixed_module_map",
+        ":SWXMLHash_mixed_module_map",
     ],
     pch = "Pods/Target Support Files/Macaw/Macaw-prefix.pch",
     srcs = [
@@ -12609,6 +13082,7 @@ objc_library(
     ],
     module_maps = [
         ":Material_mixed_module_map",
+        ":Motion_mixed_module_map",
     ],
     pch = "Pods/Target Support Files/Material/Material-prefix.pch",
     srcs = [
@@ -12674,6 +13148,7 @@ objc_library(
         "-dead_strip",
     ],
     module_maps = [
+        ":Alamofire_mixed_module_map",
         ":Moya_mixed_module_map",
     ],
     pch = "Pods/Target Support Files/Moya/Moya-prefix.pch",
@@ -13531,11 +14006,16 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     enable_modules = True,
+    header_maps = [
+        ":Realm_private_header_map",
+        ":pods_headers_private_realm_virtual_header_map",
+    ],
     linkopts = [
         "-dead_strip",
     ],
     module_maps = [
         ":RealmSwift_mixed_module_map",
+        ":Realm_module_map",
     ],
     pch = "Pods/Target Support Files/RealmSwift/RealmSwift-prefix.pch",
     srcs = [
@@ -13736,6 +14216,8 @@ objc_library(
     ],
     module_maps = [
         ":RxCocoa_mixed_module_map",
+        ":RxRelay_mixed_module_map",
+        ":RxSwift_mixed_module_map",
     ],
     pch = "Pods/Target Support Files/RxCocoa/RxCocoa-prefix.pch",
     srcs = [
@@ -13762,6 +14244,7 @@ objc_library(
     ],
     module_maps = [
         ":RxRelay_mixed_module_map",
+        ":RxSwift_mixed_module_map",
     ],
     pch = "Pods/Target Support Files/RxRelay/RxRelay-prefix.pch",
     srcs = [
@@ -14361,6 +14844,168 @@ objc_library(
     pch = "Pods/Target Support Files/SwiftMessages/SwiftMessages-prefix.pch",
     srcs = [
         "Pods/Target Support Files/SwiftMessages/SwiftMessages-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftNIOConcurrencyHelpers_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOAtomics_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftNIOConcurrencyHelpers/SwiftNIOConcurrencyHelpers-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftNIOCore_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftNIOCore/SwiftNIOCore-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftNIOEmbedded_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+        ":NIOEmbedded_mixed_module_map",
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftNIOEmbedded/SwiftNIOEmbedded-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftNIOPosix_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIODarwin_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIODarwin_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+        ":NIOPosix_mixed_module_map",
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftNIOPosix/SwiftNIOPosix-dummy.m",
+    ],
+)
+objc_library(
+    name = "libSwiftNIO_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIODarwin_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIODarwin_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+        ":NIOEmbedded_mixed_module_map",
+        ":NIOPosix_mixed_module_map",
+        ":NIO_mixed_module_map",
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/SwiftNIO/SwiftNIO-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/SwiftNIO/SwiftNIO-dummy.m",
     ],
 )
 objc_library(
@@ -15070,6 +15715,28 @@ objc_library(
     ],
 )
 objc_library(
+    name = "lib_NIODataStructures_a_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    pch = "Pods/Target Support Files/_NIODataStructures/_NIODataStructures-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/_NIODataStructures/_NIODataStructures-dummy.m",
+    ],
+)
+objc_library(
     name = "libfishhook_a_m",
     copts = [
         "-std=gnu11",
@@ -15324,6 +15991,34 @@ static_library(
     deps = [
         ":BLTNBoard_swift",
         ":libBulletinBoard_a_m",
+    ],
+)
+static_library(
+    name = "libCNIOAtomics_a",
+    deps = [
+        ":libCNIOAtomics_a_c",
+        ":libCNIOAtomics_a_m",
+    ],
+)
+static_library(
+    name = "libCNIODarwin_a",
+    deps = [
+        ":libCNIODarwin_a_c",
+        ":libCNIODarwin_a_m",
+    ],
+)
+static_library(
+    name = "libCNIOLinux_a",
+    deps = [
+        ":libCNIOLinux_a_c",
+        ":libCNIOLinux_a_m",
+    ],
+)
+static_library(
+    name = "libCNIOWindows_a",
+    deps = [
+        ":libCNIOWindows_a_c",
+        ":libCNIOWindows_a_m",
     ],
 )
 static_library(
@@ -16012,6 +16707,41 @@ static_library(
     ],
 )
 static_library(
+    name = "libSwiftNIOConcurrencyHelpers_a",
+    deps = [
+        ":NIOConcurrencyHelpers_swift",
+        ":libSwiftNIOConcurrencyHelpers_a_m",
+    ],
+)
+static_library(
+    name = "libSwiftNIOCore_a",
+    deps = [
+        ":NIOCore_swift",
+        ":libSwiftNIOCore_a_m",
+    ],
+)
+static_library(
+    name = "libSwiftNIOEmbedded_a",
+    deps = [
+        ":NIOEmbedded_swift",
+        ":libSwiftNIOEmbedded_a_m",
+    ],
+)
+static_library(
+    name = "libSwiftNIOPosix_a",
+    deps = [
+        ":NIOPosix_swift",
+        ":libSwiftNIOPosix_a_m",
+    ],
+)
+static_library(
+    name = "libSwiftNIO_a",
+    deps = [
+        ":NIO_swift",
+        ":libSwiftNIO_a_m",
+    ],
+)
+static_library(
     name = "libSwiftRichString_a",
     deps = [
         ":SwiftRichString_swift",
@@ -16123,6 +16853,13 @@ static_library(
         ":libZipArchive_a_c",
         ":libZipArchive_a_m_0",
         ":libZipArchive_a_m_1",
+    ],
+)
+static_library(
+    name = "lib_NIODataStructures_a",
+    deps = [
+        ":_NIODataStructures_swift",
+        ":lib_NIODataStructures_a_m",
     ],
 )
 static_library(
@@ -18531,6 +19268,301 @@ swift_library(
     ],
 )
 swift_library(
+    name = "NIOConcurrencyHelpers_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_name = "NIOConcurrencyHelpers",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":CNIOAtomics_private_header_map",
+    ],
+    objc_module_maps = [
+        ":CNIOAtomics_module_map",
+        ":NIOConcurrencyHelpers_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftNIOConcurrencyHelpers/Sources/NIOConcurrencyHelpers/NIOAtomic.swift",
+        "Pods/SwiftNIOConcurrencyHelpers/Sources/NIOConcurrencyHelpers/atomics.swift",
+        "Pods/SwiftNIOConcurrencyHelpers/Sources/NIOConcurrencyHelpers/lock.swift",
+    ],
+)
+swift_library(
+    name = "NIOCore_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    deps = [
+        ":NIOConcurrencyHelpers_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_name = "NIOCore",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    objc_module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftNIOCore/Sources/NIOCore/AddressedEnvelope.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/AsyncAwaitSupport+OldXcodes.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/AsyncAwaitSupport.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/BSDSocketAPI.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-aux.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-conversions.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-core.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-int.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-lengthPrefix.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-multi-int.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ByteBuffer-views.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/Channel.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ChannelHandler.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ChannelHandlers.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ChannelInvoker.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ChannelOption.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ChannelPipeline.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/CircularBuffer.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/Codec.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/ConvenienceOptionSupport.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/DeadChannel.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/DispatchQueue+WithFuture.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/EventLoop+Deprecated.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/EventLoop.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/EventLoopFuture+Deprecated.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/EventLoopFuture+WithEventLoop.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/EventLoopFuture.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/FileDescriptor.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/FileHandle.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/FileRegion.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/IO.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/IOData.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/IntegerBitPacking.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/IntegerTypes.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/Interfaces.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/Linux.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/MarkedCircularBuffer.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/MulticastChannel.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/NIOAny.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/NIOCloseOnErrorHandler.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/PointerHelpers.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/RecvByteBufferAllocator.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/SingleStepByteToMessageDecoder.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/SocketAddresses.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/SocketOptionProvider.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/SystemCallHelpers.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/TypeAssistedChannelHandler.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/UniversalBootstrapSupport.swift",
+        "Pods/SwiftNIOCore/Sources/NIOCore/Utilities.swift",
+    ],
+)
+swift_library(
+    name = "NIOEmbedded_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    deps = [
+        ":NIOConcurrencyHelpers_swift",
+        ":NIOCore_swift",
+        ":_NIODataStructures_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_name = "NIOEmbedded",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    objc_module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+        ":NIOEmbedded_module_map",
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftNIOEmbedded/Sources/NIOEmbedded/Embedded.swift",
+    ],
+)
+swift_library(
+    name = "NIOPosix_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    deps = [
+        ":NIOConcurrencyHelpers_swift",
+        ":NIOCore_swift",
+        ":_NIODataStructures_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_name = "NIOPosix",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIODarwin_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    objc_module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIODarwin_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+        ":NIOPosix_module_map",
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BSDSocketAPICommon.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BSDSocketAPIPosix.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BSDSocketAPIWindows.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BaseSocket.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BaseSocketChannel+SocketOptionProvider.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BaseSocketChannel.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/BaseStreamSocketChannel.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Bootstrap.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/ControlMessage.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/DatagramVectorReadManager.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/FileDescriptor.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/GetaddrinfoResolver.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/HappyEyeballs.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/IO.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/IntegerBitPacking.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/IntegerTypes.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Linux.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/LinuxCPUSet.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/LinuxUring.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/MultiThreadedEventLoopGroup.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/NIOThreadPool.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/NonBlockingFileIO.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/PendingDatagramWritesManager.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/PendingWritesManager.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/PipeChannel.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/PipePair.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/PointerHelpers.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Resolver.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Selectable.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SelectableChannel.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SelectableEventLoop.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SelectorEpoll.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SelectorGeneric.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SelectorKqueue.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SelectorUring.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/ServerSocket.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Socket.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SocketChannel.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/SocketProtocols.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/System.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Thread.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/ThreadPosix.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/ThreadWindows.swift",
+        "Pods/SwiftNIOPosix/Sources/NIOPosix/Utilities.swift",
+    ],
+)
+swift_library(
+    name = "NIO_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    deps = [
+        ":NIOConcurrencyHelpers_swift",
+        ":NIOCore_swift",
+        ":NIOEmbedded_swift",
+        ":NIOPosix_swift",
+        ":_NIODataStructures_swift",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_name = "NIO",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_header_maps = [
+        ":CNIOAtomics_private_header_map",
+        ":CNIODarwin_private_header_map",
+        ":CNIOLinux_private_header_map",
+        ":CNIOWindows_private_header_map",
+    ],
+    objc_module_maps = [
+        ":CNIOAtomics_module_map",
+        ":CNIODarwin_module_map",
+        ":CNIOLinux_module_map",
+        ":CNIOWindows_module_map",
+        ":NIOConcurrencyHelpers_mixed_module_map",
+        ":NIOCore_mixed_module_map",
+        ":NIOEmbedded_mixed_module_map",
+        ":NIOPosix_mixed_module_map",
+        ":NIO_module_map",
+        ":_NIODataStructures_mixed_module_map",
+    ],
+    srcs = [
+        "Pods/SwiftNIO/Sources/NIO/Exports.swift",
+    ],
+)
+swift_library(
     name = "NSAttributedStringBuilder13_swift",
     alwayslink = True,
     copts = [
@@ -20574,6 +21606,33 @@ swift_library(
         "Pods/WKWebViewJavascriptBridge/WKWebViewJavascriptBridge/WKWebViewJavascriptBridge.swift",
         "Pods/WKWebViewJavascriptBridge/WKWebViewJavascriptBridge/WKWebViewJavascriptBridgeBase.swift",
         "Pods/WKWebViewJavascriptBridge/WKWebViewJavascriptBridge/WKWebViewJavascriptBridgeJS.swift",
+    ],
+)
+swift_library(
+    name = "_NIODataStructures_swift",
+    alwayslink = True,
+    copts = [
+        "-import-underlying-module",
+    ],
+    defines = [
+        "COCOAPODS",
+        "DEBUG",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_name = "_NIODataStructures",
+    objc_defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    objc_module_maps = [
+        ":_NIODataStructures_module_map",
+    ],
+    srcs = [
+        "Pods/_NIODataStructures/Sources/_NIODataStructures/Heap.swift",
+        "Pods/_NIODataStructures/Sources/_NIODataStructures/PriorityQueue.swift",
     ],
 )
 swift_library(

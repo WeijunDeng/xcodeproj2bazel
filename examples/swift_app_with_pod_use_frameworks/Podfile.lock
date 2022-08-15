@@ -1,4 +1,5 @@
 PODS:
+  - _NIODataStructures (2.40.0)
   - AFNetworking (4.0.1):
     - AFNetworking/NSURLSession (= 4.0.1)
     - AFNetworking/Reachability (= 4.0.1)
@@ -68,6 +69,10 @@ PODS:
   - Charts (3.6.0):
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
+  - CNIOAtomics (2.40.0)
+  - CNIODarwin (2.40.0)
+  - CNIOLinux (2.40.0)
+  - CNIOWindows (2.40.0)
   - CocoaAsyncSocket (7.6.5)
   - CocoaLumberjack (3.7.4):
     - CocoaLumberjack/Core (= 3.7.4)
@@ -942,6 +947,36 @@ PODS:
   - SwiftMessages (9.0.6):
     - SwiftMessages/App (= 9.0.6)
   - SwiftMessages/App (9.0.6)
+  - SwiftNIO (2.40.0):
+    - _NIODataStructures (= 2.40.0)
+    - CNIOAtomics (= 2.40.0)
+    - CNIODarwin (= 2.40.0)
+    - CNIOLinux (= 2.40.0)
+    - CNIOWindows (= 2.40.0)
+    - SwiftNIOConcurrencyHelpers (= 2.40.0)
+    - SwiftNIOCore (= 2.40.0)
+    - SwiftNIOEmbedded (= 2.40.0)
+    - SwiftNIOPosix (= 2.40.0)
+  - SwiftNIOConcurrencyHelpers (2.40.0):
+    - CNIOAtomics (= 2.40.0)
+  - SwiftNIOCore (2.40.0):
+    - CNIOAtomics (= 2.40.0)
+    - CNIOLinux (= 2.40.0)
+    - SwiftNIOConcurrencyHelpers (= 2.40.0)
+  - SwiftNIOEmbedded (2.40.0):
+    - _NIODataStructures (= 2.40.0)
+    - CNIOAtomics (= 2.40.0)
+    - CNIOLinux (= 2.40.0)
+    - SwiftNIOConcurrencyHelpers (= 2.40.0)
+    - SwiftNIOCore (= 2.40.0)
+  - SwiftNIOPosix (2.40.0):
+    - _NIODataStructures (= 2.40.0)
+    - CNIOAtomics (= 2.40.0)
+    - CNIODarwin (= 2.40.0)
+    - CNIOLinux (= 2.40.0)
+    - CNIOWindows (= 2.40.0)
+    - SwiftNIOConcurrencyHelpers (= 2.40.0)
+    - SwiftNIOCore (= 2.40.0)
   - SwiftRichString (3.7.2)
   - SwiftyBeaver (1.9.5)
   - SwiftyJSON (5.0.1)
@@ -1097,6 +1132,7 @@ DEPENDENCIES:
   - SwiftEntryKit
   - SwifterSwift
   - SwiftMessages
+  - SwiftNIO
   - SwiftRichString
   - SwiftyBeaver
   - SwiftyJSON
@@ -1120,6 +1156,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - _NIODataStructures
     - AFNetworking
     - AgoraAudio_iOS
     - Alamofire
@@ -1137,6 +1174,10 @@ SPEC REPOS:
     - BulletinBoard
     - Cartography
     - Charts
+    - CNIOAtomics
+    - CNIODarwin
+    - CNIOLinux
+    - CNIOWindows
     - CocoaAsyncSocket
     - CocoaLumberjack
     - CoconutKit
@@ -1249,6 +1290,11 @@ SPEC REPOS:
     - SwiftEntryKit
     - SwifterSwift
     - SwiftMessages
+    - SwiftNIO
+    - SwiftNIOConcurrencyHelpers
+    - SwiftNIOCore
+    - SwiftNIOEmbedded
+    - SwiftNIOPosix
     - SwiftRichString
     - SwiftyBeaver
     - SwiftyJSON
@@ -1271,6 +1317,7 @@ SPEC REPOS:
     - ZipArchive
 
 SPEC CHECKSUMS:
+  _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   AgoraAudio_iOS: 44733ff59c533292ba5bceb8ccf140aeb31290a0
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
@@ -1288,6 +1335,10 @@ SPEC CHECKSUMS:
   BulletinBoard: dba77053c2a7b64953f63073f7534165af2edd21
   Cartography: c5626d29056b20f1e95c017326ee4df57cc39ad8
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
+  CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
+  CNIODarwin: 93850990d29f2626b05306c6c9309f9be0d74c2f
+  CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
+  CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   CoconutKit: 47f102a2fc729ab100819ac1173011c236045e8e
@@ -1400,6 +1451,11 @@ SPEC CHECKSUMS:
   SwiftEntryKit: 61b5fa36f34a97dd8013e48a7345bc4c4720be9a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
   SwiftMessages: f0c7ef4705a570ad6c5e208b611f4333e660ed92
+  SwiftNIO: 829958aab300642625091f82fc2f49cb7cf4ef24
+  SwiftNIOConcurrencyHelpers: 697370136789b1074e4535eaae75cbd7f900370e
+  SwiftNIOCore: 473fdfe746534d7aa25766916459eeaf6f92ef49
+  SwiftNIOEmbedded: ffcb5147db67d9686c8366b7f8427b36132f2c8a
+  SwiftNIOPosix: b49af4bdbecaadfadd5c93dfe28594d6722b75e4
   SwiftRichString: d61b807db1f8834c26fee92b6dd3e1be2dc5af03
   SwiftyBeaver: 84069991dd5dca07d7069100985badaca7f0ce82
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
@@ -1421,6 +1477,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   ZipArchive: e25a4373192673e3229ac8d6e9f64a3e5713c966
 
-PODFILE CHECKSUM: d67bf7517e4c0f3bd6f94d95089b0db92c411390
+PODFILE CHECKSUM: eb198f9e0a5d5fad7796ffe06d87a2959cb0bd1e
 
 COCOAPODS: 1.11.3
