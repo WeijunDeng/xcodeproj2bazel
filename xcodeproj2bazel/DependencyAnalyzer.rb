@@ -203,11 +203,11 @@ class DependencyAnalyzer
                             if total_header_copy_map[copy_dst_file]
                                 match_header = total_header_copy_map[copy_dst_file]
                                 if match_header.end_with? "/" + import_file_path
-                                    file_deps_hash[file].add [:headers, match_header, match_header.sub("/" + import_file_path, "")]
+                                    file_deps_hash[file].add [:headers, match_header, match_header[0..-(import_file_path.size+2)]]
                                 else
                                     binding.pry unless import_file_path.include? "/"
                                     namespace = File.dirname(import_file_path)
-                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.basename(current_header_copy_dst.split(".framework/Headers/")[0])]
+                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.dirname(copy_dst_file)]
                                 end
                                 break
                             end
@@ -228,7 +228,7 @@ class DependencyAnalyzer
                                 if real_match_header != match_header
                                     match_header = real_match_header
                                     if match_header.end_with? "/" + import_file_path
-                                        file_deps_hash[file].add [:headers, match_header, match_header.sub("/" + import_file_path, "")]
+                                        file_deps_hash[file].add [:headers, match_header, match_header[0..-(import_file_path.size+2)]]
                                     else
                                         binding.pry unless import_file_path.include? "/"
                                         namespace = File.dirname(import_file_path)
@@ -243,16 +243,30 @@ class DependencyAnalyzer
                         end
                     end
                     if dir.class == Array and not import_file_path.include? "./"
-                        if dir[1].include? ".framework/Headers/"
-                            copy_dst_file = dir[1].split(".framework/Headers/")[0] + ".framework/Headers/" + import_file_path
+                        next unless dir[1].start_with? "${BUILD_DIR}/"
+                        build_dirs = []
+                        if dir[1].include? "*"
+                            build_dirs = total_header_copy_map[:pattern][dir[1]]
+                            unless build_dirs
+                                build_dirs = total_header_copy_map.keys.select{|x| x.class == String and File.fnmatch(dir[1], x) }.map{|x|File.dirname(x)}.uniq
+                                total_header_copy_map[:pattern][dir[1]] = build_dirs
+                            end
+                        else
+                            build_dirs = [dir[1]]
+                        end
+                        build_dirs.each do | build_dir |
+                            binding.pry if build_dir.include? "./"
+                            binding.pry if build_dir.include? "//"
+                            binding.pry if build_dir.end_with? "/"
+                            copy_dst_file = build_dir + "/" + import_file_path
                             if total_header_copy_map[copy_dst_file]
                                 match_header = total_header_copy_map[copy_dst_file]
                                 if match_header.end_with? "/" + import_file_path
-                                    file_deps_hash[file].add [:headers, match_header, match_header.sub("/" + import_file_path, "")]
+                                    file_deps_hash[file].add [:headers, match_header, match_header[0..-(import_file_path.size+2)]]
                                 else
                                     binding.pry unless import_file_path.include? "/"
                                     namespace = File.dirname(import_file_path)
-                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.basename(current_header_copy_dst.split(".framework/Headers/")[0])]
+                                    file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.dirname(copy_dst_file)]
                                 end
                                 break
                             end
@@ -372,9 +386,45 @@ class DependencyAnalyzer
             end
 
             binding.pry unless user_module_hash[module_name]
+            binding.pry if module_map_file and moduel_map_headers.size == 0
             user_module_hash[module_name][:umbrella_header] = umbrella_header
             user_module_hash[module_name][:moduel_map_headers] = moduel_map_headers
             user_module_hash[module_name][:has_swift] = has_swift
+        end
+
+        user_module_hash.keys.each do | module_name |
+            hash = user_module_hash[module_name]
+            if hash[:module_map_file]
+                if not hash[:moduel_map_headers] or hash[:moduel_map_headers].size == 0
+                    if hash[:module_map_file].include? ".framework/"
+                        moduel_map_headers = Set.new
+                        module_map_file_headers = user_module_hash[module_name][:module_map_file_headers]
+                        framework_headers = Dir.glob(hash[:module_map_file].split(".framework/Modules/")[0] + ".framework/Headers/**")
+                        invalid = false
+                        module_map_file_headers.each do | module_map_file_header |
+                            has_match_header = false
+                            framework_headers.each do | header |
+                                if header.end_with? "/" + module_map_file_header
+                                    moduel_map_headers.add header
+                                    has_match_header = true
+                                    break
+                                end
+                            end
+                            unless has_match_header
+                                invalid = true
+                                break
+                            end
+                        end
+                        if invalid
+                            user_module_hash.delete(module_name)
+                        else
+                            hash[:moduel_map_headers] = moduel_map_headers
+                        end
+                        next
+                    end
+                    binding.pry
+                end
+            end
         end
 
         return user_module_hash, target_module_name_hash
@@ -401,6 +451,10 @@ class DependencyAnalyzer
         total_header_copy_map_reverse = {}
         target_info_hash_for_xcode.each do | target_name, info_hash |
             info_hash[:target_header_copy_map].each do | k, v |
+                binding.pry if k.include? "./"
+                binding.pry if k.include? "//"
+                binding.pry if k.end_with? "/"
+                binding.pry unless k.start_with? "${BUILD_DIR}/"
                 binding.pry if total_header_copy_map[k] and total_header_copy_map[k] == v
                 total_header_copy_map[k] = v
                 total_header_copy_map_reverse[v] = Set.new unless total_header_copy_map_reverse[v]
@@ -408,6 +462,7 @@ class DependencyAnalyzer
             end
         end
         total_header_copy_map[:reverse] = total_header_copy_map_reverse
+        total_header_copy_map[:pattern] = {}
         return total_header_copy_map
     end
 
