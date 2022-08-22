@@ -1,0 +1,661 @@
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
+load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
+load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
+load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
+load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
+package(default_visibility = ["//visibility:public"])
+apple_bundle_version(
+    name = "MasonryTestsLoader_app_version",
+    build_version = "1.0",
+)
+apple_bundle_version(
+    name = "Masonry_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "Masonry_iOS_Examples_app_version",
+    build_version = "1.0",
+)
+cc_header(
+    name = "masonry_masonry_h_header",
+    hdrs = [
+        "Masonry/Masonry/MASCompositeConstraint.h",
+        "Masonry/Masonry/MASConstraint.h",
+        "Masonry/Masonry/MASConstraintMaker.h",
+        "Masonry/Masonry/MASLayoutConstraint.h",
+        "Masonry/Masonry/MASUtilities.h",
+        "Masonry/Masonry/MASViewAttribute.h",
+        "Masonry/Masonry/MASViewConstraint.h",
+        "Masonry/Masonry/NSArray+MASAdditions.h",
+        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
+        "Masonry/Masonry/View+MASAdditions.h",
+        "Masonry/Masonry/View+MASShorthandAdditions.h",
+        "Masonry/Masonry/ViewController+MASAdditions.h",
+    ],
+)
+header_map(
+    name = "Expecta_public_header_map",
+    hdrs = [
+        "Masonry/Pods/Expecta/Expecta/EXPBlockDefinedMatcher.h",
+        "Masonry/Pods/Expecta/Expecta/EXPDefines.h",
+        "Masonry/Pods/Expecta/Expecta/EXPDoubleTuple.h",
+        "Masonry/Pods/Expecta/Expecta/EXPExpect.h",
+        "Masonry/Pods/Expecta/Expecta/EXPFloatTuple.h",
+        "Masonry/Pods/Expecta/Expecta/EXPMatcher.h",
+        "Masonry/Pods/Expecta/Expecta/EXPUnsupportedObject.h",
+        "Masonry/Pods/Expecta/Expecta/Expecta.h",
+        "Masonry/Pods/Expecta/Expecta/ExpectaObject.h",
+        "Masonry/Pods/Expecta/Expecta/ExpectaSupport.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatcherHelpers.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beCloseTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beFalsy.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beGreaterThan.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beGreaterThanOrEqualTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beIdenticalTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beInTheRangeOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beInstanceOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beKindOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beLessThan.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beLessThanOrEqualTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beNil.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beSubclassOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beSupersetOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beTruthy.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beginWith.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+conformTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+contain.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+endWith.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+equal.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+haveCountOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+match.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+postNotification.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+raise.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+raiseWithReason.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+respondTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers.h",
+        "Masonry/Pods/Expecta/Expecta/NSObject+Expecta.h",
+        "Masonry/Pods/Expecta/Expecta/NSValue+Expecta.h",
+    ],
+    namespace = "Expecta",
+    namespace_only = True,
+)
+header_map(
+    name = "MasonryTestsLoader_app_project_header_map",
+    hdrs = [
+        "Masonry/Tests/MasonryTestsLoader/CASAppDelegate.h",
+    ],
+)
+header_map(
+    name = "Masonry_Pods_Headers_Public_Masonry_virtual_header_map",
+    hdrs = [
+        "Masonry/Masonry/Masonry.h",
+    ],
+)
+header_map(
+    name = "Masonry_framework_private_header_map",
+    hdrs = [
+        "Masonry/Masonry/MASCompositeConstraint.h",
+        "Masonry/Masonry/MASConstraint+Private.h",
+        "Masonry/Masonry/MASConstraint.h",
+        "Masonry/Masonry/MASConstraintMaker.h",
+        "Masonry/Masonry/MASLayoutConstraint.h",
+        "Masonry/Masonry/MASUtilities.h",
+        "Masonry/Masonry/MASViewAttribute.h",
+        "Masonry/Masonry/MASViewConstraint.h",
+        "Masonry/Masonry/Masonry.h",
+        "Masonry/Masonry/NSArray+MASAdditions.h",
+        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
+        "Masonry/Masonry/View+MASAdditions.h",
+        "Masonry/Masonry/View+MASShorthandAdditions.h",
+        "Masonry/Masonry/ViewController+MASAdditions.h",
+    ],
+    namespace = "Masonry",
+)
+header_map(
+    name = "Masonry_iOS_Examples_app_project_header_map",
+    hdrs = [
+        "Masonry/Examples/Masonry iOS Examples/MASAppDelegate.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAnimatedView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleArrayView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAspectFitView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAttributeChainingView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleBasicView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleConstantsView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleDebuggingView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleDistributeView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleLabelView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleLayoutGuideViewController.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleListViewController.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleMarginView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleRemakeView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleSafeAreaLayoutGuideViewController.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleScrollView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleSidesView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleUpdateView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleViewController.h",
+    ],
+)
+header_map(
+    name = "Masonry_public_header_map",
+    hdrs = [
+        "Masonry/Masonry/MASCompositeConstraint.h",
+        "Masonry/Masonry/MASConstraint+Private.h",
+        "Masonry/Masonry/MASConstraint.h",
+        "Masonry/Masonry/MASConstraintMaker.h",
+        "Masonry/Masonry/MASLayoutConstraint.h",
+        "Masonry/Masonry/MASUtilities.h",
+        "Masonry/Masonry/MASViewAttribute.h",
+        "Masonry/Masonry/MASViewConstraint.h",
+        "Masonry/Masonry/Masonry.h",
+        "Masonry/Masonry/NSArray+MASAdditions.h",
+        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
+        "Masonry/Masonry/View+MASAdditions.h",
+        "Masonry/Masonry/View+MASShorthandAdditions.h",
+        "Masonry/Masonry/ViewController+MASAdditions.h",
+    ],
+    namespace = "Masonry",
+    namespace_only = True,
+)
+header_map(
+    name = "libExpecta_a_private_header_map",
+    hdrs = [
+        "Masonry/Pods/Expecta/Expecta/EXPBlockDefinedMatcher.h",
+        "Masonry/Pods/Expecta/Expecta/EXPDefines.h",
+        "Masonry/Pods/Expecta/Expecta/EXPDoubleTuple.h",
+        "Masonry/Pods/Expecta/Expecta/EXPExpect.h",
+        "Masonry/Pods/Expecta/Expecta/EXPFloatTuple.h",
+        "Masonry/Pods/Expecta/Expecta/EXPMatcher.h",
+        "Masonry/Pods/Expecta/Expecta/EXPUnsupportedObject.h",
+        "Masonry/Pods/Expecta/Expecta/Expecta.h",
+        "Masonry/Pods/Expecta/Expecta/ExpectaObject.h",
+        "Masonry/Pods/Expecta/Expecta/ExpectaSupport.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatcherHelpers.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beCloseTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beFalsy.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beGreaterThan.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beGreaterThanOrEqualTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beIdenticalTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beInTheRangeOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beInstanceOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beKindOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beLessThan.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beLessThanOrEqualTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beNil.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beSubclassOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beSupersetOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beTruthy.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beginWith.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+conformTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+contain.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+endWith.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+equal.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+haveCountOf.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+match.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+postNotification.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+raise.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+raiseWithReason.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+respondTo.h",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers.h",
+        "Masonry/Pods/Expecta/Expecta/NSObject+Expecta.h",
+        "Masonry/Pods/Expecta/Expecta/NSValue+Expecta.h",
+    ],
+    namespace = "Expecta",
+)
+header_map(
+    name = "libMasonry_a_private_header_map",
+    hdrs = [
+        "Masonry/Masonry/MASCompositeConstraint.h",
+        "Masonry/Masonry/MASConstraint+Private.h",
+        "Masonry/Masonry/MASConstraint.h",
+        "Masonry/Masonry/MASConstraintMaker.h",
+        "Masonry/Masonry/MASLayoutConstraint.h",
+        "Masonry/Masonry/MASUtilities.h",
+        "Masonry/Masonry/MASViewAttribute.h",
+        "Masonry/Masonry/MASViewConstraint.h",
+        "Masonry/Masonry/Masonry.h",
+        "Masonry/Masonry/NSArray+MASAdditions.h",
+        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
+        "Masonry/Masonry/View+MASAdditions.h",
+        "Masonry/Masonry/View+MASShorthandAdditions.h",
+        "Masonry/Masonry/ViewController+MASAdditions.h",
+    ],
+    namespace = "Masonry",
+)
+ios_application(
+    name = "MasonryTestsLoader_app",
+    app_icons = glob([
+        "Masonry/Tests/MasonryTestsLoader/Images.xcassets/AppIcon.appiconset/**",
+    ]),
+    bundle_id = "com.cloudling.MasonryTestsLoader",
+    bundle_name = "MasonryTestsLoader",
+    deps = [
+        ":MasonryTestsLoader_app_m",
+        ":MasonryTestsLoader_app_system_library",
+        ":libMasonry_a",
+        ":libPods_MasonryTestsLoader_a",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Masonry/Tests/MasonryTestsLoader/MasonryTestsLoader-Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    resources = [
+        "Masonry/Tests/MasonryTestsLoader/en.lproj/InfoPlist.strings",
+    ] + glob([
+        "Masonry/Tests/MasonryTestsLoader/Images.xcassets/**",
+    ], exclude=[
+        "Masonry/Tests/MasonryTestsLoader/Images.xcassets/*.appiconset/**",
+    ]),
+    version = ":MasonryTestsLoader_app_version",
+)
+ios_application(
+    name = "Masonry_iOS_Examples_app",
+    bundle_id = "com.cloudling.Masonry-iOS-Examples",
+    bundle_name = "Masonry iOS Examples",
+    deps = [
+        ":Masonry_iOS_Examples_app_m",
+        ":Masonry_iOS_Examples_app_system_library",
+        ":libMasonry_a",
+        ":libPods_Masonry_iOS_Examples_a",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Masonry/Examples/Masonry iOS Examples/Masonry iOS Examples-Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    resources = [
+        "Masonry/Examples/Masonry iOS Examples/Launch Screen.storyboard",
+        "Masonry/Examples/Masonry iOS Examples/en.lproj/InfoPlist.strings",
+    ] + glob([
+        "Masonry/Examples/Masonry iOS Examples/Images.xcassets/**",
+    ], exclude=[
+        "Masonry/Examples/Masonry iOS Examples/Images.xcassets/*.appiconset/**",
+    ]),
+    version = ":Masonry_iOS_Examples_app_version",
+)
+ios_framework(
+    name = "Masonry_framework",
+    bundle_id = "com.cloudling.Masonry",
+    bundle_name = "Masonry",
+    deps = [
+        ":Masonry_framework_m",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Masonry/Masonry/Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    version = ":Masonry_framework_version",
+)
+module_map(
+    name = "Masonry_module_map",
+    hdrs = [
+        "Masonry/Masonry/Masonry.h",
+    ],
+    module_name = "Masonry",
+    umbrella_header = "Masonry/Masonry/Masonry.h",
+)
+objc_library(
+    name = "MasonryTestsLoader_app_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":MasonryTestsLoader_app_project_header_map",
+    ],
+    linkopts = [
+        "-ObjC",
+        "-dead_strip",
+    ],
+    pch = "Masonry/Tests/MasonryTestsLoader/MasonryTestsLoader-Prefix.pch",
+    srcs = [
+        "Masonry/Tests/MasonryTestsLoader/CASAppDelegate.m",
+        "Masonry/Tests/MasonryTestsLoader/main.m",
+    ],
+)
+objc_library(
+    name = "Masonry_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    deps = [
+        ":masonry_masonry_h_header",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":Masonry_framework_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":Masonry_module_map",
+    ],
+    srcs = [
+        "Masonry/Masonry/MASCompositeConstraint.m",
+        "Masonry/Masonry/MASConstraint.m",
+        "Masonry/Masonry/MASConstraintMaker.m",
+        "Masonry/Masonry/MASLayoutConstraint.m",
+        "Masonry/Masonry/MASViewAttribute.m",
+        "Masonry/Masonry/MASViewConstraint.m",
+        "Masonry/Masonry/NSArray+MASAdditions.m",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.m",
+        "Masonry/Masonry/View+MASAdditions.m",
+        "Masonry/Masonry/ViewController+MASAdditions.m",
+    ],
+)
+objc_library(
+    name = "Masonry_iOS_Examples_app_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+    ],
+    deps = [
+        ":masonry_masonry_h_header",
+    ],
+    enable_modules = False,
+    header_maps = [
+        ":Masonry_iOS_Examples_app_project_header_map",
+        ":Masonry_Pods_Headers_Public_Masonry_virtual_header_map",
+    ],
+    linkopts = [
+        "-ObjC",
+        "-dead_strip",
+    ],
+    pch = "Masonry/Examples/Masonry iOS Examples/Masonry iOS Examples-Prefix.pch",
+    srcs = [
+        "Masonry/Examples/Masonry iOS Examples/MASAppDelegate.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAnimatedView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleArrayView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAspectFitView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAttributeChainingView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleBasicView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleConstantsView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleDebuggingView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleDistributeView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleLabelView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleLayoutGuideViewController.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleListViewController.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleMarginView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleRemakeView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleSafeAreaLayoutGuideViewController.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleScrollView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleSidesView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleUpdateView.m",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleViewController.m",
+        "Masonry/Examples/Masonry iOS Examples/main.m",
+    ],
+)
+objc_library(
+    name = "libExpecta_a_m_0",
+    copts = [
+        "-std=gnu99",
+        "-fno-objc-arc",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":Expecta_public_header_map",
+        ":libExpecta_a_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    non_arc_srcs = [
+        "Masonry/Pods/Expecta/Expecta/EXPBlockDefinedMatcher.m",
+        "Masonry/Pods/Expecta/Expecta/EXPDoubleTuple.m",
+        "Masonry/Pods/Expecta/Expecta/EXPExpect.m",
+        "Masonry/Pods/Expecta/Expecta/EXPFloatTuple.m",
+        "Masonry/Pods/Expecta/Expecta/EXPUnsupportedObject.m",
+        "Masonry/Pods/Expecta/Expecta/ExpectaObject.m",
+        "Masonry/Pods/Expecta/Expecta/ExpectaSupport.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatcherHelpers.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beCloseTo.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beFalsy.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beGreaterThan.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beGreaterThanOrEqualTo.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beIdenticalTo.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beInTheRangeOf.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beInstanceOf.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beKindOf.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beLessThan.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beLessThanOrEqualTo.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beNil.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beSubclassOf.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beSupersetOf.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beTruthy.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+beginWith.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+conformTo.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+contain.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+endWith.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+equal.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+haveCountOf.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+match.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+postNotification.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+raise.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+raiseWithReason.m",
+        "Masonry/Pods/Expecta/Expecta/Matchers/EXPMatchers+respondTo.m",
+        "Masonry/Pods/Expecta/Expecta/NSValue+Expecta.m",
+    ],
+    pch = "Masonry/Pods/Target Support Files/Expecta/Expecta-prefix.pch",
+)
+objc_library(
+    name = "libExpecta_a_m_1",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Masonry/Pods/Target Support Files/Expecta/Expecta-prefix.pch",
+    srcs = [
+        "Masonry/Pods/Target Support Files/Expecta/Expecta-dummy.m",
+    ],
+)
+objc_library(
+    name = "libMasonry_a_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":libMasonry_a_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Masonry/Pods/Target Support Files/Masonry/Masonry-prefix.pch",
+    srcs = [
+        "Masonry/Masonry/MASCompositeConstraint.m",
+        "Masonry/Masonry/MASConstraint.m",
+        "Masonry/Masonry/MASConstraintMaker.m",
+        "Masonry/Masonry/MASLayoutConstraint.m",
+        "Masonry/Masonry/MASViewAttribute.m",
+        "Masonry/Masonry/MASViewConstraint.m",
+        "Masonry/Masonry/NSArray+MASAdditions.m",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.m",
+        "Masonry/Masonry/View+MASAdditions.m",
+        "Masonry/Masonry/ViewController+MASAdditions.m",
+        "Masonry/Pods/Target Support Files/Masonry/Masonry-dummy.m",
+    ],
+)
+objc_library(
+    name = "libPods_MasonryTestsLoader_a_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "Masonry/Pods/Target Support Files/Pods-MasonryTestsLoader/Pods-MasonryTestsLoader-dummy.m",
+    ],
+)
+objc_library(
+    name = "libPods_Masonry_iOS_Examples_a_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "Masonry/Pods/Target Support Files/Pods-Masonry iOS Examples/Pods-Masonry iOS Examples-dummy.m",
+    ],
+)
+objc_library(
+    name = "libPods_Masonry_iOS_Tests_a_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "Masonry/Pods/Target Support Files/Pods-Masonry iOS Tests/Pods-Masonry iOS Tests-dummy.m",
+    ],
+)
+static_library(
+    name = "libExpecta_a",
+    deps = [
+        ":libExpecta_a_m_0",
+        ":libExpecta_a_m_1",
+        ":libExpecta_a_system_library",
+    ],
+)
+static_library(
+    name = "libMasonry_a",
+    deps = [
+        ":libMasonry_a_m",
+        ":libMasonry_a_system_library",
+    ],
+)
+static_library(
+    name = "libPods_MasonryTestsLoader_a",
+    deps = [
+        ":libPods_MasonryTestsLoader_a_m",
+        ":libPods_MasonryTestsLoader_a_system_library",
+    ],
+)
+static_library(
+    name = "libPods_Masonry_iOS_Examples_a",
+    deps = [
+        ":libPods_Masonry_iOS_Examples_a_m",
+        ":libPods_Masonry_iOS_Examples_a_system_library",
+    ],
+)
+static_library(
+    name = "libPods_Masonry_iOS_Tests_a",
+    deps = [
+        ":libPods_Masonry_iOS_Tests_a_m",
+        ":libPods_Masonry_iOS_Tests_a_system_library",
+    ],
+)
+system_library(
+    name = "MasonryTestsLoader_app_system_library",
+    sdk_frameworks = [
+        "CoreGraphics",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "Masonry_iOS_Examples_app_system_library",
+    sdk_frameworks = [
+        "CoreGraphics",
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libExpecta_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "XCTest",
+    ],
+)
+system_library(
+    name = "libMasonry_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+)
+system_library(
+    name = "libPods_MasonryTestsLoader_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "libPods_Masonry_iOS_Examples_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "libPods_Masonry_iOS_Tests_a_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)

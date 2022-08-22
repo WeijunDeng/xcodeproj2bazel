@@ -80,6 +80,7 @@ bash test.sh
     - CLANG_ENABLE_OBJC_ARC
     - COMPILER_FLAGS
     - CONFIGURATION
+    - CONFIGURATION_BUILD_DIR
     - CURRENT_PROJECT_VERSION
     - DEAD_CODE_STRIPPING
     - DEFINES_MODULE
@@ -103,7 +104,9 @@ bash test.sh
     - PRODUCT_NAME
     - PROJECT_DIR
     - PROVISIONING_PROFILE_SPECIFIER
+    - SDKROOT
     - SRCROOT
+    - SUPPORTED_PLATFORMS
     - SWIFT_ACTIVE_COMPILATION_CONDITIONS
     - SWIFT_OBJC_BRIDGING_HEADER
     - TARGET_NAME
@@ -126,3 +129,4 @@ Doing or Planning:
 - read iOS default template build settings to parse
 - test for xcode 14 (xcode 13 now)
 - more examples
+- support XCSwiftPackageProductDependency

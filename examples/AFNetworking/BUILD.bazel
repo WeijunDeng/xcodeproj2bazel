@@ -1,0 +1,280 @@
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
+load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
+load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
+load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
+load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
+package(default_visibility = ["//visibility:public"])
+apple_bundle_version(
+    name = "AFNetworking_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "iOS_Example_app_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "iOS_Today_Extension_Example_appex_version",
+    build_version = "1",
+)
+cc_header(
+    name = "afnetworking_example_ios_example_h_header",
+    hdrs = [
+        "AFNetworking/Example/iOS Example/AppDelegate.h",
+    ],
+)
+header_map(
+    name = "AFNetworking_framework_private_header_map",
+    hdrs = [
+        "AFNetworking/AFNetworking/AFCompatibilityMacros.h",
+        "AFNetworking/AFNetworking/AFHTTPSessionManager.h",
+        "AFNetworking/AFNetworking/AFNetworkReachabilityManager.h",
+        "AFNetworking/AFNetworking/AFSecurityPolicy.h",
+        "AFNetworking/AFNetworking/AFURLRequestSerialization.h",
+        "AFNetworking/AFNetworking/AFURLResponseSerialization.h",
+        "AFNetworking/AFNetworking/AFURLSessionManager.h",
+        "AFNetworking/Framework/AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/AFAutoPurgingImageCache.h",
+        "AFNetworking/UIKit+AFNetworking/AFImageDownloader.h",
+        "AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h",
+        "AFNetworking/UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIButton+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIImageView+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIProgressView+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIRefreshControl+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/WKWebView+AFNetworking.h",
+    ],
+    namespace = "AFNetworking",
+)
+header_map(
+    name = "AFNetworking_public_header_map",
+    hdrs = [
+        "AFNetworking/AFNetworking/AFCompatibilityMacros.h",
+        "AFNetworking/AFNetworking/AFHTTPSessionManager.h",
+        "AFNetworking/AFNetworking/AFNetworkReachabilityManager.h",
+        "AFNetworking/AFNetworking/AFSecurityPolicy.h",
+        "AFNetworking/AFNetworking/AFURLRequestSerialization.h",
+        "AFNetworking/AFNetworking/AFURLResponseSerialization.h",
+        "AFNetworking/AFNetworking/AFURLSessionManager.h",
+        "AFNetworking/Framework/AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/AFAutoPurgingImageCache.h",
+        "AFNetworking/UIKit+AFNetworking/AFImageDownloader.h",
+        "AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h",
+        "AFNetworking/UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIButton+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIImageView+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIProgressView+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/UIRefreshControl+AFNetworking.h",
+        "AFNetworking/UIKit+AFNetworking/WKWebView+AFNetworking.h",
+    ],
+    namespace = "AFNetworking",
+    namespace_only = True,
+)
+header_map(
+    name = "iOS_Example_app_project_header_map",
+    hdrs = [
+        "AFNetworking/Example/Classes/Models/Post.h",
+        "AFNetworking/Example/Classes/Models/User.h",
+        "AFNetworking/Example/Classes/Networking Extensions/AFAppDotNetAPIClient.h",
+        "AFNetworking/Example/iOS Example/Controllers/GlobalTimelineViewController.h",
+        "AFNetworking/Example/iOS Example/Views/PostTableViewCell.h",
+    ],
+)
+header_map(
+    name = "iOS_Today_Extension_Example_appex_project_header_map",
+    hdrs = [
+        "AFNetworking/Example/Classes/Models/Post.h",
+        "AFNetworking/Example/Classes/Models/User.h",
+        "AFNetworking/Example/Classes/Networking Extensions/AFAppDotNetAPIClient.h",
+        "AFNetworking/Example/Today Extension Example/TodayViewController.h",
+    ],
+)
+ios_application(
+    name = "iOS_Example_app",
+    app_icons = glob([
+        "AFNetworking/Example/Assets.xcassets/AppIcon.appiconset/**",
+    ]),
+    bundle_id = "com.alamofire.iOS-Example",
+    bundle_name = "iOS Example",
+    deps = [
+        ":iOS_Example_app_m",
+    ],
+    extensions = [
+        ":iOS_Today_Extension_Example_appex",
+    ],
+    families = ["iphone"],
+    frameworks = [
+        ":AFNetworking_framework",
+    ],
+    infoplists = [
+        "AFNetworking/Example/iOS Example/Info.plist",
+    ],
+    minimum_os_version = "9.0",
+    resources = [
+        "AFNetworking/Example/iOS Example/Launchscreen.storyboard",
+    ] + glob([
+        "AFNetworking/Example/Assets.xcassets/**",
+    ], exclude=[
+        "AFNetworking/Example/Assets.xcassets/*.appiconset/**",
+    ]),
+    version = ":iOS_Example_app_version",
+)
+ios_extension(
+    name = "iOS_Today_Extension_Example_appex",
+    bundle_id = "com.alamofire.iOS-Example.Today-Extension-Example",
+    bundle_name = "iOS Today Extension Example",
+    deps = [
+        ":iOS_Today_Extension_Example_appex_m",
+        ":iOS_Today_Extension_Example_appex_system_library",
+    ],
+    families = ["iphone"],
+    frameworks = [
+        ":AFNetworking_framework",
+    ],
+    infoplists = [
+        "AFNetworking/Example/Today Extension Example/Info.plist",
+    ],
+    minimum_os_version = "9.1",
+    resources = [
+        "AFNetworking/Example/Today Extension Example/Base.lproj/MainInterface.storyboard",
+    ],
+    version = ":iOS_Today_Extension_Example_appex_version",
+)
+ios_framework(
+    name = "AFNetworking_framework",
+    bundle_id = "com.alamofire.AFNetworking",
+    bundle_name = "AFNetworking",
+    deps = [
+        ":AFNetworking_framework_m",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "AFNetworking/Framework/Info.plist",
+    ],
+    minimum_os_version = "9.0",
+    version = ":AFNetworking_framework_version",
+)
+module_map(
+    name = "AFNetworking_module_map",
+    hdrs = [
+        "AFNetworking/Framework/AFNetworking.h",
+    ],
+    module_map_file = "AFNetworking/Framework/module.modulemap",
+    module_name = "AFNetworking",
+)
+objc_library(
+    name = "AFNetworking_framework_m",
+    alwayslink = True,
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wno-unused-parameter",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":AFNetworking_public_header_map",
+        ":AFNetworking_framework_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":AFNetworking_module_map",
+    ],
+    srcs = [
+        "AFNetworking/AFNetworking/AFHTTPSessionManager.m",
+        "AFNetworking/AFNetworking/AFNetworkReachabilityManager.m",
+        "AFNetworking/AFNetworking/AFSecurityPolicy.m",
+        "AFNetworking/AFNetworking/AFURLRequestSerialization.m",
+        "AFNetworking/AFNetworking/AFURLResponseSerialization.m",
+        "AFNetworking/AFNetworking/AFURLSessionManager.m",
+        "AFNetworking/UIKit+AFNetworking/AFAutoPurgingImageCache.m",
+        "AFNetworking/UIKit+AFNetworking/AFImageDownloader.m",
+        "AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.m",
+        "AFNetworking/UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.m",
+        "AFNetworking/UIKit+AFNetworking/UIButton+AFNetworking.m",
+        "AFNetworking/UIKit+AFNetworking/UIImageView+AFNetworking.m",
+        "AFNetworking/UIKit+AFNetworking/UIProgressView+AFNetworking.m",
+        "AFNetworking/UIKit+AFNetworking/UIRefreshControl+AFNetworking.m",
+        "AFNetworking/UIKit+AFNetworking/WKWebView+AFNetworking.m",
+    ],
+)
+objc_library(
+    name = "iOS_Example_app_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    deps = [
+        ":afnetworking_example_ios_example_h_header",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":AFNetworking_public_header_map",
+        ":AFNetworking_framework_private_header_map",
+        ":iOS_Example_app_project_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":AFNetworking_module_map",
+    ],
+    srcs = [
+        "AFNetworking/Example/Classes/Models/Post.m",
+        "AFNetworking/Example/Classes/Models/User.m",
+        "AFNetworking/Example/Classes/Networking Extensions/AFAppDotNetAPIClient.m",
+        "AFNetworking/Example/iOS Example/AppDelegate.m",
+        "AFNetworking/Example/iOS Example/Controllers/GlobalTimelineViewController.m",
+        "AFNetworking/Example/iOS Example/Views/PostTableViewCell.m",
+        "AFNetworking/Example/main.m",
+    ],
+)
+objc_library(
+    name = "iOS_Today_Extension_Example_appex_m",
+    copts = [
+        "-std=gnu99",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":AFNetworking_public_header_map",
+        ":AFNetworking_framework_private_header_map",
+        ":iOS_Today_Extension_Example_appex_project_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":AFNetworking_module_map",
+    ],
+    srcs = [
+        "AFNetworking/Example/Classes/Models/Post.m",
+        "AFNetworking/Example/Classes/Models/User.m",
+        "AFNetworking/Example/Classes/Networking Extensions/AFAppDotNetAPIClient.m",
+        "AFNetworking/Example/Today Extension Example/TodayViewController.m",
+    ],
+)
+system_library(
+    name = "iOS_Today_Extension_Example_appex_system_library",
+    sdk_frameworks = [
+        "NotificationCenter",
+    ],
+)

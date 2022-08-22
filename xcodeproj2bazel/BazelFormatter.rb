@@ -103,6 +103,7 @@ class BazelFormatter
         bazel_build_content = (get_prefix_lines + lines).join("\n") + "\n"
         bazel_build_content = DynamicConfig.filter_content(bazel_build_content)
         output_build_file = FileFilter.get_full_path("BUILD.bazel")
+        puts "Output: #{output_build_file}"
         unless File.exist? output_build_file and File.read(output_build_file) == bazel_build_content
             File.write(output_build_file, bazel_build_content)
         end

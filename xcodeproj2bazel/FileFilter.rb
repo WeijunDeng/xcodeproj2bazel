@@ -8,6 +8,7 @@ class FileFilter
     @@xcode_developer_headers_set = Set.new
     @@xcode_developer_name_framework_hash = {}
     @@xcode_developer_name_library_hash = {}
+    @@xcode_default_iphoneos_deployment_target = nil
 
     def self.load_xcode_developer_path
         xcode_developer_path_result = Open3.capture3("xcode-select -p")
@@ -19,7 +20,7 @@ class FileFilter
         @@xcode_developer_headers_set.merge Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/*").map{|e|File.basename(e).downcase}
         @@xcode_developer_headers_set.merge Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/*/*").map{|e|e.split("/")[-2..-1].join("/").downcase}
         @@xcode_developer_headers_set.merge Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/*.framework/Headers/*").map{|e|e.split("/")[-3..-1].join("/").downcase.sub(".framework/headers", "")}
-        Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/*.framework").each do | path |
+        (Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/*.framework") + Dir.glob("#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/Library/Frameworks/*.framework")).each do | path |
             framework = File.basename(path)
             name = framework.split(File.extname(framework))[0].downcase
             @@xcode_developer_name_framework_hash[name] = framework
@@ -29,6 +30,18 @@ class FileFilter
             name = library.split(File.extname(library))[0].downcase[3..-1]
             @@xcode_developer_name_library_hash[name] = library
         end
+        @@xcode_developer_name_library_hash["stdc++"] = "libstdc++.tbd"
+
+
+        sdksettings_json_file = "#{xcode_developer_path}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.json"
+        if File.exist? sdksettings_json_file
+            json_object = JSON.parse(File.read(sdksettings_json_file))
+            @@xcode_default_iphoneos_deployment_target = json_object["DefaultProperties"]["IPHONEOS_DEPLOYMENT_TARGET"] if json_object["DefaultProperties"]
+        end
+    end
+
+    def self.get_default_iphoneos_deployment_target
+        return @@xcode_default_iphoneos_deployment_target
     end
 
     def self.is_system_header(import_file_path, is_angled_import)
@@ -101,17 +114,19 @@ class FileFilter
             return nil
         end
         path = origin_path
-        unless origin_path.downcase.start_with? $xcodeproj2bazel_pwd.downcase
-            path = $xcodeproj2bazel_pwd + "/" + origin_path
-        end
         unless File.exist? path
-            return nil
+            fix_path = $xcodeproj2bazel_pwd + "/" + path
+            if File.exist? fix_path
+                fix_path = File.expand_path(fix_path)
+                if fix_path.start_with? $xcodeproj2bazel_pwd + "/"
+                    path = fix_path
+                end
+            end
+            unless File.exist? path
+                return nil
+            end
         end
         path = File.expand_path(path)
-        unless path.downcase.start_with? $xcodeproj2bazel_pwd.downcase + "/" or path.downcase == $xcodeproj2bazel_pwd.downcase
-            binding.pry
-            return nil
-        end
         if @@expand_path_downcase_hash[path.downcase]
             path = @@expand_path_downcase_hash[path.downcase]
         else
@@ -225,7 +240,7 @@ class FileFilter
     end
 
     def self.get_source_file_extnames_c
-        return [".c", ".s"]
+        return [".c", ".s", ".S"]
     end
 
     def self.get_source_file_extnames_d

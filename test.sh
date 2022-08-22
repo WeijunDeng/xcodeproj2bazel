@@ -13,20 +13,31 @@ pushd examples/empty_app_storyboard_swift
 bazel build empty_app_storyboard_swift_app
 popd
 
-pushd examples/swift_app_with_pod_no_use_frameworks
-pod update
-popd
-bash xcodeproj2bazel.sh --pwd=examples/swift_app_with_pod_no_use_frameworks --workspace=examples/swift_app_with_pod_no_use_frameworks/swift_app_with_pod_no_use_frameworks.xcworkspace
-pushd examples/swift_app_with_pod_no_use_frameworks
-bazel build swift_app_with_pod_no_use_frameworks_app
+rm -rf examples/Masonry/Masonry
+mkdir -p examples/Masonry/Masonry
+git clone https://github.com/SnapKit/Masonry.git examples/Masonry/Masonry --depth=1
+bash xcodeproj2bazel.sh --pwd=examples/Masonry --workspace=examples/Masonry/Masonry/Masonry.xcworkspace
+pushd examples/Masonry
+bazel build Masonry_iOS_Examples_app
 popd
 
-pushd examples/swift_app_with_pod_use_frameworks
+rm -rf examples/AFNetworking/AFNetworking
+mkdir -p examples/AFNetworking/AFNetworking
+git clone https://github.com/AFNetworking/AFNetworking.git examples/AFNetworking/AFNetworking --depth=1
+bash xcodeproj2bazel.sh --pwd=examples/AFNetworking --workspace=examples/AFNetworking/AFNetworking/AFNetworking.xcworkspace
+pushd examples/AFNetworking
+bazel build iOS_Example_app
+popd
+
+rm -rf examples/SDWebImage/SDWebImage
+mkdir -p examples/SDWebImage/SDWebImage
+git clone https://github.com/SDWebImage/SDWebImage.git examples/SDWebImage/SDWebImage --depth=1
+pushd examples/SDWebImage/SDWebImage
 pod update
 popd
-bash xcodeproj2bazel.sh --pwd=examples/swift_app_with_pod_use_frameworks --workspace=examples/swift_app_with_pod_use_frameworks/swift_app_with_pod_use_frameworks.xcworkspace
-pushd examples/swift_app_with_pod_use_frameworks
-bazel build swift_app_with_pod_use_frameworks_app
+bash xcodeproj2bazel.sh --pwd=examples/SDWebImage --workspace=examples/SDWebImage/SDWebImage/SDWebImage.xcworkspace
+pushd examples/SDWebImage
+bazel build SDWebImage_iOS_Demo_app
 popd
 
 rm -rf examples/Kingfisher/Kingfisher
@@ -37,8 +48,18 @@ pushd examples/Kingfisher
 bazel build Kingfisher_Demo_app
 popd
 
-# TODO: support GENERATE_INFOPLIST_FILE
-# bash xcodeproj2bazel.sh --pwd=examples/empty_app_swiftui --project=examples/empty_app_swiftui/empty_app_swiftui.xcodeproj
-# pushd examples/empty_app_swiftui
-# bazel build empty_app_swiftui_app
-# popd
+pushd examples/swift_app_with_pod_use_frameworks
+pod update
+popd
+bash xcodeproj2bazel.sh --pwd=examples/swift_app_with_pod_use_frameworks --workspace=examples/swift_app_with_pod_use_frameworks/swift_app_with_pod_use_frameworks.xcworkspace
+pushd examples/swift_app_with_pod_use_frameworks
+bazel build swift_app_with_pod_use_frameworks_app
+popd
+
+pushd examples/swift_app_with_pod_no_use_frameworks
+pod update
+popd
+bash xcodeproj2bazel.sh --pwd=examples/swift_app_with_pod_no_use_frameworks --workspace=examples/swift_app_with_pod_no_use_frameworks/swift_app_with_pod_no_use_frameworks.xcworkspace
+pushd examples/swift_app_with_pod_no_use_frameworks
+bazel build swift_app_with_pod_no_use_frameworks_app
+popd

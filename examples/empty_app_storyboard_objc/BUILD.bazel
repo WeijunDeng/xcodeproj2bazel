@@ -20,7 +20,7 @@ apple_bundle_version(
     build_version = "1",
 )
 header_map(
-    name = "empty_app_storyboard_objc_project_header_map",
+    name = "empty_app_storyboard_objc_app_project_header_map",
     hdrs = [
         "empty_app_storyboard_objc/AppDelegate.h",
         "empty_app_storyboard_objc/SceneDelegate.h",
@@ -62,7 +62,7 @@ objc_library(
     ],
     enable_modules = True,
     header_maps = [
-        ":empty_app_storyboard_objc_project_header_map",
+        ":empty_app_storyboard_objc_app_project_header_map",
     ],
     linkopts = [
         "-dead_strip",

@@ -3,6 +3,9 @@
 set -e
 set -x
 
+bundle install --path vendor_bundle
+bundle exec "ruby xcodeproj2bazel/Xcodeproj2Bazel.rb $*"
+
 # 安装 bazel
 which bazelisk
 
@@ -13,6 +16,3 @@ fi
 which bazel
 
 bazel --version
-
-bundle install --path vendor_bundle
-bundle exec "ruby xcodeproj2bazel/Xcodeproj2Bazel.rb $*"

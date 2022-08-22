@@ -23,86 +23,15 @@ apple_bundle_version(
     name = "Kingfisher_framework_version",
     build_version = "2513",
 )
-apple_bundle_version(
-    name = "Kingfisher_macOS_Demo_app_version",
-    build_version = "1244",
-)
-apple_bundle_version(
-    name = "Kingfisher_tvOS_Demo_app_version",
-    build_version = "1244",
-)
-apple_bundle_version(
-    name = "Kingfisher_watchOS_Demo_Extension_appex_version",
-    build_version = "1244",
-)
-apple_bundle_version(
-    name = "Kingfisher_watchOS_Demo_app_version",
-    build_version = "1244",
-)
-header_map(
-    name = "KingfisherTests_project_header_map",
-    hdrs = [
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSData+Nocilla.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSString+Nocilla.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSHTTPRequestDSLRepresentation.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSStubRequestDSL.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSStubResponseDSL.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Diff/LSHTTPRequestDiff.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/ASIHTTPRequestStub.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestAdapter.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestHook.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/LSHTTPClientHook.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/LSHTTPStubURLProtocol.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/LSNSURLHook.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/NSURLRequest+DSL.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/NSURLRequest+LSHTTPRequest.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLSession/LSNSURLSessionHook.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/LSNocilla.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSDataMatcher.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSMatcheable.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSMatcher.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSRegexMatcher.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSStringMatcher.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSData+Matcheable.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSRegularExpression+Matcheable.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSString+Matcheable.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Model/LSHTTPBody.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Model/LSHTTPRequest.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Model/LSHTTPResponse.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Nocilla.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Stubs/LSStubRequest.h",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Stubs/LSStubResponse.h",
-    ],
-)
-header_map(
-    name = "KingfisherTests_swift_header_map",
-    direct_hdr_providers = [":KingfisherTests_swift"],
-    namespace = "KingfisherTests",
-)
 header_map(
     name = "Kingfisher_Demo_swift_header_map",
-    direct_hdr_providers = [":Kingfisher_Demo_swift"],
+    direct_hdr_providers = [":swift_module_Kingfisher_Demo"],
     namespace = "Kingfisher_Demo",
 )
 header_map(
-    name = "Kingfisher_macOS_Demo_swift_header_map",
-    direct_hdr_providers = [":Kingfisher_macOS_Demo_swift"],
-    namespace = "Kingfisher_macOS_Demo",
-)
-header_map(
     name = "Kingfisher_swift_header_map",
-    direct_hdr_providers = [":Kingfisher_swift"],
+    direct_hdr_providers = [":swift_module_Kingfisher"],
     namespace = "Kingfisher",
-)
-header_map(
-    name = "Kingfisher_tvOS_Demo_swift_header_map",
-    direct_hdr_providers = [":Kingfisher_tvOS_Demo_swift"],
-    namespace = "Kingfisher_tvOS_Demo",
-)
-header_map(
-    name = "Kingfisher_watchOS_Demo_Extension_swift_header_map",
-    direct_hdr_providers = [":Kingfisher_watchOS_Demo_Extension_swift"],
-    namespace = "Kingfisher_watchOS_Demo_Extension",
 )
 ios_application(
     name = "Kingfisher_Demo_app",
@@ -112,7 +41,7 @@ ios_application(
     bundle_id = "com.onevcat.Kingfisher-Demo",
     bundle_name = "Kingfisher-Demo",
     deps = [
-        ":Kingfisher_Demo_swift",
+        ":swift_module_Kingfisher_Demo",
     ],
     families = ["iphone", "ipad"],
     frameworks = [
@@ -133,110 +62,12 @@ ios_application(
     ]),
     version = ":Kingfisher_Demo_app_version",
 )
-ios_application(
-    name = "Kingfisher_macOS_Demo_app",
-    app_icons = glob([
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Assets.xcassets/AppIcon.appiconset/**",
-    ]),
-    bundle_id = "com.onevcat.Kingfisher-OSX-Demo",
-    bundle_name = "Kingfisher-macOS-Demo",
-    deps = [
-        ":Kingfisher_macOS_Demo_swift",
-    ],
-    families = ["iphone", "ipad"],
-    frameworks = [
-        ":Kingfisher_framework",
-    ],
-    infoplists = [
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Info.plist",
-    ],
-    minimum_os_version = "12.0",
-    resources = [
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/Resources/loader.gif",
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Base.lproj/Main.storyboard",
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Cell.xib",
-    ] + glob([
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Assets.xcassets/**",
-    ], exclude=[
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/Assets.xcassets/*.appiconset/**",
-    ]),
-    version = ":Kingfisher_macOS_Demo_app_version",
-)
-ios_application(
-    name = "Kingfisher_tvOS_Demo_app",
-    bundle_id = "com.onevcat.Kingfisher-tvOS-Demo",
-    bundle_name = "Kingfisher-tvOS-Demo",
-    deps = [
-        ":Kingfisher_tvOS_Demo_swift",
-    ],
-    families = ["tv"],
-    frameworks = [
-        ":Kingfisher_framework",
-    ],
-    infoplists = [
-        "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/Info.plist",
-    ],
-    minimum_os_version = "12.0",
-    resources = [
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/Resources/loader.gif",
-        "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/Base.lproj/Main.storyboard",
-    ] + glob([
-        "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/Assets.xcassets/**",
-    ], exclude=[
-        "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/Assets.xcassets/*.appiconset/**",
-    ]),
-    version = ":Kingfisher_tvOS_Demo_app_version",
-)
-ios_application(
-    name = "Kingfisher_watchOS_Demo_app",
-    app_icons = glob([
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Assets.xcassets/AppIcon.appiconset/**",
-    ]),
-    bundle_id = "com.onevcat.Kingfisher-Demo.watchkitapp",
-    bundle_name = "Kingfisher-watchOS-Demo",
-    extensions = [
-        ":Kingfisher_watchOS_Demo_Extension_appex",
-    ],
-    families = ["watch"],
-    infoplists = [
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Info.plist",
-    ],
-    minimum_os_version = "12.0",
-    resources = [
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Base.lproj/Interface.storyboard",
-    ] + glob([
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Assets.xcassets/**",
-    ], exclude=[
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo/Assets.xcassets/*.appiconset/**",
-    ]),
-    version = ":Kingfisher_watchOS_Demo_app_version",
-)
-ios_extension(
-    name = "Kingfisher_watchOS_Demo_Extension_appex",
-    bundle_id = "com.onevcat.Kingfisher-Demo.watchkitapp.watchkitextension",
-    bundle_name = "Kingfisher-watchOS-Demo Extension",
-    deps = [
-        ":Kingfisher_framework",
-        ":Kingfisher_watchOS_Demo_Extension_swift",
-    ],
-    families = ["watch"],
-    infoplists = [
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/Info.plist",
-    ],
-    minimum_os_version = "12.0",
-    resources = glob([
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/Assets.xcassets/**",
-    ], exclude=[
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/Assets.xcassets/*.appiconset/**",
-    ]),
-    version = ":Kingfisher_watchOS_Demo_Extension_appex_version",
-)
 ios_framework(
     name = "Kingfisher_framework",
     bundle_id = "com.onevcat.Kingfisher",
     bundle_name = "Kingfisher",
     deps = [
-        ":Kingfisher_swift",
+        ":swift_module_Kingfisher",
     ],
     families = ["iphone", "ipad", "tv", "watch"],
     infoplists = [
@@ -245,156 +76,22 @@ ios_framework(
     minimum_os_version = "12.0",
     version = ":Kingfisher_framework_version",
 )
-objc_library(
-    name = "KingfisherTests_xctest_m",
-    copts = [
-        "-std=gnu99",
-    ],
-    defines = [
-        "DEBUG=1",
-    ],
-    enable_modules = True,
-    header_maps = [
-        ":KingfisherTests_project_header_map",
-    ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    srcs = [
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSData+Nocilla.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Categories/NSString+Nocilla.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSHTTPRequestDSLRepresentation.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSStubRequestDSL.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/DSL/LSStubResponseDSL.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Diff/LSHTTPRequestDiff.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/ASIHTTPRequestStub.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestAdapter.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestHook.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/LSHTTPClientHook.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/LSHTTPStubURLProtocol.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/LSNSURLHook.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/NSURLRequest+DSL.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLRequest/NSURLRequest+LSHTTPRequest.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Hooks/NSURLSession/LSNSURLSessionHook.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/LSNocilla.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSDataMatcher.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSMatcher.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSRegexMatcher.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/LSStringMatcher.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSData+Matcheable.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSRegularExpression+Matcheable.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Matchers/NSString+Matcheable.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Stubs/LSStubRequest.m",
-        "Kingfisher/Tests/Dependency/Nocilla/Nocilla/Stubs/LSStubResponse.m",
-    ],
-)
-swift_library(
-    name = "KingfisherTests_swift",
-    alwayslink = True,
+module_map(
+    name = "Kingfisher_Demo_mixed_module_map",
     deps = [
-        ":Kingfisher_swift",
-    ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    module_name = "KingfisherTests",
-    objc_bridging_header = "Kingfisher/Tests/KingfisherTests/KingfisherTests-Bridging-Header.h",
-    objc_defines = [
-        "DEBUG=1",
-    ],
-    objc_header_maps = [
-        ":KingfisherTests_project_header_map",
-    ],
-    srcs = [
-        "Kingfisher/Tests/KingfisherTests/DataReceivingSideEffectTests.swift",
-        "Kingfisher/Tests/KingfisherTests/DiskStorageTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageCacheTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageDataProviderTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageDownloaderTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageDrawingTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageExtensionTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageModifierTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImagePrefetcherTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageProcessorTests.swift",
-        "Kingfisher/Tests/KingfisherTests/ImageViewExtensionTests.swift",
-        "Kingfisher/Tests/KingfisherTests/KingfisherManagerTests.swift",
-        "Kingfisher/Tests/KingfisherTests/KingfisherOptionsInfoTests.swift",
-        "Kingfisher/Tests/KingfisherTests/KingfisherTestHelper.swift",
-        "Kingfisher/Tests/KingfisherTests/MemoryStorageTests.swift",
-        "Kingfisher/Tests/KingfisherTests/NSButtonExtensionTests.swift",
-        "Kingfisher/Tests/KingfisherTests/RetryStrategyTests.swift",
-        "Kingfisher/Tests/KingfisherTests/StorageExpirationTests.swift",
-        "Kingfisher/Tests/KingfisherTests/StringExtensionTests.swift",
-        "Kingfisher/Tests/KingfisherTests/UIButtonExtensionTests.swift",
-        "Kingfisher/Tests/KingfisherTests/Utils/StubHelpers.swift",
-    ],
-)
-swift_library(
-    name = "Kingfisher_Demo_swift",
-    alwayslink = True,
-    deps = [
-        ":Kingfisher_swift",
-    ],
-    linkopts = [
-        "-dead_strip",
+        ":swift_module_Kingfisher_Demo",
     ],
     module_name = "Kingfisher_Demo",
-    objc_defines = [
-        "DEBUG=1",
-    ],
-    srcs = [
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/AppDelegate.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/Extensions/UIViewController+KingfisherOperation.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/Resources/ImageLoader.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/AnimatedImageDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/GeometryReaderDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/GridDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/LazyVStackDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/ListDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/MainView.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/SingleViewDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/SizingAnimationDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/TransitionViewDemo.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/AVAssetImageGeneratorViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/AutoSizingTableViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/DetailImageViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/GIFHeavyViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/GIFViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/HighResolutionCollectionViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ImageCollectionViewCell.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ImageDataProviderCollectionViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/IndicatorCollectionViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/InfinityCollectionViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/MainViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/NormalLoadingViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/OrientationImagesViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ProcessorCollectionViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ProgressiveJPEGViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/SwiftUIViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/TextAttachmentViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/TransitionViewController.swift",
-    ],
 )
-swift_library(
-    name = "Kingfisher_macOS_Demo_swift",
-    alwayslink = True,
+module_map(
+    name = "Kingfisher_mixed_module_map",
     deps = [
-        ":Kingfisher_swift",
+        ":swift_module_Kingfisher",
     ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    module_name = "Kingfisher_macOS_Demo",
-    objc_defines = [
-        "DEBUG=1",
-    ],
-    srcs = [
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/AppDelegate.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-macOS-Demo/ViewController.swift",
-    ],
+    module_name = "Kingfisher",
 )
 swift_library(
-    name = "Kingfisher_swift",
+    name = "swift_module_Kingfisher",
     alwayslink = True,
     copts = [
         "-Xfrontend",
@@ -475,42 +172,51 @@ swift_library(
     ],
 )
 swift_library(
-    name = "Kingfisher_tvOS_Demo_swift",
+    name = "swift_module_Kingfisher_Demo",
     alwayslink = True,
     deps = [
-        ":Kingfisher_swift",
+        ":swift_module_Kingfisher",
     ],
     linkopts = [
         "-dead_strip",
     ],
-    module_name = "Kingfisher_tvOS_Demo",
+    module_name = "Kingfisher_Demo",
     objc_defines = [
         "DEBUG=1",
     ],
+    objc_module_maps = [
+        ":Kingfisher_mixed_module_map",
+    ],
     srcs = [
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/AppDelegate.swift",
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Extensions/UIViewController+KingfisherOperation.swift",
         "Kingfisher/Demo/Demo/Kingfisher-Demo/Resources/ImageLoader.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/AnimatedImageDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/GeometryReaderDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/GridDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/LazyVStackDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/ListDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/MainView.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/SingleViewDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/SizingAnimationDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/SwiftUIViews/TransitionViewDemo.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/AVAssetImageGeneratorViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/AutoSizingTableViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/DetailImageViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/GIFHeavyViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/GIFViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/HighResolutionCollectionViewController.swift",
         "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ImageCollectionViewCell.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ImageDataProviderCollectionViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/IndicatorCollectionViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/InfinityCollectionViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/MainViewController.swift",
         "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/NormalLoadingViewController.swift",
         "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/OrientationImagesViewController.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-tvOS-Demo/AppDelegate.swift",
-    ],
-)
-swift_library(
-    name = "Kingfisher_watchOS_Demo_Extension_swift",
-    alwayslink = True,
-    deps = [
-        ":Kingfisher_swift",
-    ],
-    linkopts = [
-        "-dead_strip",
-    ],
-    module_name = "Kingfisher_watchOS_Demo_Extension",
-    objc_defines = [
-        "DEBUG=1",
-    ],
-    srcs = [
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/ExtensionDelegate.swift",
-        "Kingfisher/Demo/Demo/Kingfisher-watchOS-Demo Extension/InterfaceController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ProcessorCollectionViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/ProgressiveJPEGViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/SwiftUIViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/TextAttachmentViewController.swift",
+        "Kingfisher/Demo/Demo/Kingfisher-Demo/ViewControllers/TransitionViewController.swift",
     ],
 )

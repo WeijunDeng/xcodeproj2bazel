@@ -21,7 +21,7 @@ apple_bundle_version(
 )
 header_map(
     name = "empty_app_storyboard_swift_swift_header_map",
-    direct_hdr_providers = [":empty_app_storyboard_swift_swift"],
+    direct_hdr_providers = [":swift_module_empty_app_storyboard_swift"],
     namespace = "empty_app_storyboard_swift",
 )
 ios_application(
@@ -32,7 +32,7 @@ ios_application(
     bundle_id = "com.dengweijun.empty-app-storyboard-swift",
     bundle_name = "empty_app_storyboard_swift",
     deps = [
-        ":empty_app_storyboard_swift_swift",
+        ":swift_module_empty_app_storyboard_swift",
     ],
     families = ["iphone", "ipad"],
     infoplists = [
@@ -49,8 +49,15 @@ ios_application(
     ]),
     version = ":empty_app_storyboard_swift_app_version",
 )
+module_map(
+    name = "empty_app_storyboard_swift_mixed_module_map",
+    deps = [
+        ":swift_module_empty_app_storyboard_swift",
+    ],
+    module_name = "empty_app_storyboard_swift",
+)
 swift_library(
-    name = "empty_app_storyboard_swift_swift",
+    name = "swift_module_empty_app_storyboard_swift",
     alwayslink = True,
     defines = [
         "DEBUG",
