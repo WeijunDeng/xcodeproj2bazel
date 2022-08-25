@@ -73,6 +73,7 @@ bash test.sh
     - swift_library
     - system_library
 - Support major xcode build settings
+    - APPLICATION_EXTENSION_API_ONLY
     - ASSETCATALOG_COMPILER_APPICON_NAME
     - ATTRIBUTES
     - CLANG_CXX_LANGUAGE_STANDARD

@@ -108,7 +108,8 @@ class DependencyAnalyzer
             unless match_header
                 if total_public_header_map
                     match_header_set = total_public_header_map[import_file_path.downcase]
-                    if match_header_set and match_header_set.size == 1
+                    if match_header_set
+                        binding.pry unless match_header_set.size == 1
                         a = match_header_set.to_a[0]
                         header = a[0]
                         namespace = a[1]
@@ -124,9 +125,8 @@ class DependencyAnalyzer
             end
             unless match_header
                 if target_private_header_map
-                    match_header_set = target_private_header_map[import_file_path.downcase]
-                    if match_header_set and match_header_set.size == 1
-                        header = match_header_set.to_a[0]
+                    header = target_private_header_map[import_file_path.downcase]
+                    if header
                         header = FileFilter.get_exist_expand_path_file(header)
                         if header
                             match_header = header
@@ -139,9 +139,8 @@ class DependencyAnalyzer
             end
             unless match_header
                 if project_header_map
-                    match_header_set = project_header_map[import_file_path.downcase]
-                    if match_header_set and match_header_set.size == 1
-                        header = match_header_set.to_a[0]
+                    header = project_header_map[import_file_path.downcase]
+                    if header
                         header = FileFilter.get_exist_expand_path_file(header)
                         if header
                             match_header = header
@@ -434,11 +433,9 @@ class DependencyAnalyzer
         target_info_hash_for_xcode.each do | target_name, info_hash |
             target_public_header_map = info_hash[:target_public_header_map]
             namespace = info_hash[:namespace]
-            target_public_header_map.each do | key, headers |
+            target_public_header_map.each do | key, header |
                 total_public_header_map[key] = Set.new unless total_public_header_map[key]
-                headers.each do | header |
-                    total_public_header_map[key].add [header, namespace]
-                end
+                total_public_header_map[key].add [header, namespace]
                 binding.pry unless namespace and namespace.size > 0
                 binding.pry if total_public_header_map[key].size > 1
             end

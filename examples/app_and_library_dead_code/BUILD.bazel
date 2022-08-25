@@ -1,0 +1,254 @@
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
+load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
+load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
+load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
+load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
+load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("xcodeproj2bazel_rules/ios_framework.bzl", "ios_framework")
+load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
+load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
+load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
+load("xcodeproj2bazel_rules/static_library.bzl", "static_library")
+load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")
+load("xcodeproj2bazel_rules/system_library.bzl", "system_library")
+package(default_visibility = ["//visibility:public"])
+apple_bundle_version(
+    name = "app_and_library_dead_code_app_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "dynamic_framework_b_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "dynamic_framework_d_framework_version",
+    build_version = "1",
+)
+cc_library(
+    name = "dynamic_framework_b_framework_c",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    header_maps = [
+        ":dynamic_framework_b_framework_project_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "dynamic_framework_b/dynamic_framework_b.c",
+    ],
+)
+cc_library(
+    name = "dynamic_framework_d_framework_c",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    header_maps = [
+        ":dynamic_framework_d_framework_project_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "dynamic_framework_d/dynamic_framework_d.c",
+    ],
+)
+cc_library(
+    name = "static_framework_c_framework_c",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "static_framework_c/static_framework_c_bye.c",
+        "static_framework_c/static_framework_c_hello.c",
+    ],
+)
+header_map(
+    name = "app_and_library_dead_code_app_project_header_map",
+    hdrs = [
+        "app_and_library_dead_code/AppDelegate.h",
+        "app_and_library_dead_code/SceneDelegate.h",
+        "app_and_library_dead_code/ViewController.h",
+        "dynamic_framework_b/dynamic_framework_b.h",
+        "dynamic_framework_d/dynamic_framework_d.h",
+        "static_framework_c/static_framework_c_bye.h",
+        "static_framework_c/static_framework_c_hello.h",
+    ],
+)
+header_map(
+    name = "dynamic_framework_b_framework_private_header_map",
+    hdrs = [
+        "dynamic_framework_b/dynamic_framework_b.h",
+    ],
+    namespace = "dynamic_framework_b",
+)
+header_map(
+    name = "dynamic_framework_b_framework_project_header_map",
+    hdrs = [
+        "static_framework_c/static_framework_c_hello.h",
+    ],
+)
+header_map(
+    name = "dynamic_framework_b_public_header_map",
+    hdrs = [
+        "dynamic_framework_b/dynamic_framework_b.h",
+    ],
+    namespace = "dynamic_framework_b",
+    namespace_only = True,
+)
+header_map(
+    name = "dynamic_framework_d_framework_private_header_map",
+    hdrs = [
+        "dynamic_framework_d/dynamic_framework_d.h",
+    ],
+    namespace = "dynamic_framework_d",
+)
+header_map(
+    name = "dynamic_framework_d_framework_project_header_map",
+    hdrs = [
+        "dynamic_framework_b/dynamic_framework_b.h",
+        "static_framework_c/static_framework_c_bye.h",
+        "static_framework_c/static_framework_c_hello.h",
+    ],
+)
+header_map(
+    name = "dynamic_framework_d_public_header_map",
+    hdrs = [
+        "dynamic_framework_d/dynamic_framework_d.h",
+    ],
+    namespace = "dynamic_framework_d",
+    namespace_only = True,
+)
+header_map(
+    name = "static_framework_c_framework_private_header_map",
+    hdrs = [
+        "static_framework_c/static_framework_c_bye.h",
+        "static_framework_c/static_framework_c_hello.h",
+    ],
+    namespace = "static_framework_c",
+)
+ios_application(
+    name = "app_and_library_dead_code_app",
+    app_icons = glob([
+        "app_and_library_dead_code/Assets.xcassets/AppIcon.appiconset/**",
+    ]),
+    bundle_id = "com.dengweijun.app-and-library-dead-code",
+    bundle_name = "app_and_library_dead_code",
+    deps = [
+        ":app_and_library_dead_code_app_m",
+    ],
+    families = ["iphone", "ipad"],
+    frameworks = [
+        ":dynamic_framework_b_framework",
+        ":dynamic_framework_d_framework",
+    ],
+    infoplists = [
+        "app_and_library_dead_code/Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    resources = [
+        "app_and_library_dead_code/Base.lproj/LaunchScreen.storyboard",
+        "app_and_library_dead_code/Base.lproj/Main.storyboard",
+    ] + glob([
+        "app_and_library_dead_code/Assets.xcassets/**",
+    ], exclude=[
+        "app_and_library_dead_code/Assets.xcassets/*.appiconset/**",
+    ]),
+    version = ":app_and_library_dead_code_app_version",
+)
+ios_framework(
+    name = "dynamic_framework_b_framework",
+    bundle_id = "com.dengweijun.dynamic-framework-b",
+    bundle_name = "dynamic_framework_b",
+    deps = [
+        ":dynamic_framework_b_framework_c",
+        ":static_framework_c_framework",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "dynamic_framework_b/Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    version = ":dynamic_framework_b_framework_version",
+)
+ios_framework(
+    name = "dynamic_framework_d_framework",
+    bundle_id = "com.dengweijun.dynamic-framework-d",
+    bundle_name = "dynamic_framework_d",
+    deps = [
+        ":dynamic_framework_d_framework_c",
+        ":static_framework_c_framework",
+    ],
+    families = ["iphone", "ipad"],
+    frameworks = [
+        ":dynamic_framework_b_framework",
+    ],
+    infoplists = [
+        "dynamic_framework_d/Info.plist",
+    ],
+    minimum_os_version = "15.5",
+    not_avoid_deps = [":static_framework_c_framework_c"],
+    version = ":dynamic_framework_d_framework_version",
+)
+module_map(
+    name = "dynamic_framework_b_module_map",
+    hdrs = [
+        "dynamic_framework_b/dynamic_framework_b.h",
+    ],
+    module_name = "dynamic_framework_b",
+    umbrella_header = "dynamic_framework_b/dynamic_framework_b.h",
+)
+module_map(
+    name = "dynamic_framework_d_module_map",
+    hdrs = [
+        "dynamic_framework_d/dynamic_framework_d.h",
+    ],
+    module_name = "dynamic_framework_d",
+    umbrella_header = "dynamic_framework_d/dynamic_framework_d.h",
+)
+objc_library(
+    name = "app_and_library_dead_code_app_m",
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":app_and_library_dead_code_app_project_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    srcs = [
+        "app_and_library_dead_code/AppDelegate.m",
+        "app_and_library_dead_code/SceneDelegate.m",
+        "app_and_library_dead_code/ViewController.m",
+        "app_and_library_dead_code/main.m",
+    ],
+)
+static_library(
+    name = "static_framework_c_framework",
+    deps = [
+        ":static_framework_c_framework_c",
+    ],
+)

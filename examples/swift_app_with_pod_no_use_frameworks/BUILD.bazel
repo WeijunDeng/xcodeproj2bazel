@@ -2,12 +2,12 @@ load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
 load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
 load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("xcodeproj2bazel_rules/ios_framework.bzl", "ios_framework")
 load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
 load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
 load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
@@ -11286,7 +11286,7 @@ objc_library(
     defines = [
         "COCOAPODS=1",
         "DEBUG=1",
-        "Firebase_VERSION=9.4.0",
+        "Firebase_VERSION=9.5.0",
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
@@ -16665,7 +16665,6 @@ static_library(
 )
 swift_library(
     name = "swift_module_AMPopTip",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -16693,7 +16692,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_AMScrollingNavbar",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -16721,7 +16719,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Alamofire",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -16782,7 +16779,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_AnimatedCollectionViewLayout",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -16817,7 +16813,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_AnyImageKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17034,7 +17029,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_BLTNBoard",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17087,7 +17081,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_BarcodeScanner",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17125,7 +17118,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Cartography",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17177,7 +17169,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Charts",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17342,7 +17333,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_CocoaLumberjack",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17373,7 +17363,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_CryptoSwift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17499,7 +17488,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_DropDown",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17530,7 +17518,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Eureka",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17621,7 +17608,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_FSPagerView",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17656,7 +17642,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_FileKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17716,7 +17701,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_FirebaseCoreInternal",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17756,7 +17740,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_InAppPurchase",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17792,7 +17775,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_InputBarAccessoryView",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17851,7 +17833,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Instructions",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17925,7 +17906,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_JTAppleCalendar",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -17973,7 +17953,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_JXPagingView",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18003,7 +17982,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_JXSegmentedView",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18071,7 +18049,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_KeychainAccess",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18097,7 +18074,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Kingfisher",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18178,7 +18154,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_KingfisherWebP",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18213,7 +18188,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Koloda",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18249,7 +18223,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_LTMorphingLabel",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18290,7 +18263,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Lantern",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18329,7 +18301,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Loading",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18369,7 +18340,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Lottie",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18574,7 +18544,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Macaw",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18743,7 +18712,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Material",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18870,7 +18838,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_MonkeyKing",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18912,7 +18879,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Motion",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -18982,7 +18948,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Moya",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19035,7 +19000,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NIO",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19083,7 +19047,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NIOConcurrencyHelpers",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19115,7 +19078,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NIOCore",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19201,7 +19163,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NIOEmbedded",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19243,7 +19204,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NIOPosix",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19330,7 +19290,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NSAttributedStringBuilder13",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19361,7 +19320,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_NVActivityIndicatorView",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19423,7 +19381,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Nuke",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19506,7 +19463,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_ObjectMapper",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19555,7 +19511,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_PPBadgeViewSwift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19585,7 +19540,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_PanModal",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19626,7 +19580,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Permission",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19674,7 +19627,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_PhoneNumberKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19715,7 +19667,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_PromiseKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19769,7 +19720,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_ReSwift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19807,7 +19757,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Reachability",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19833,7 +19782,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_RealmSwift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19914,7 +19862,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Rswift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -19966,7 +19913,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_RxCocoa",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20100,7 +20046,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_RxRelay",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20134,7 +20079,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_RxSwift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20319,7 +20263,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SQLite",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20371,7 +20314,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SWXMLHash",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20422,7 +20364,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SideMenu",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20461,7 +20402,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Siren",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20506,7 +20446,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SkeletonView",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20592,7 +20531,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SnapKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20654,7 +20592,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Starscream",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20699,7 +20636,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_Surge",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20741,7 +20677,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftDate",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20802,7 +20737,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftEntryKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20895,7 +20829,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftMessages",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -20951,7 +20884,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftRichString",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21003,7 +20935,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwifterSwift",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21129,7 +21060,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftyBeaver",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21165,7 +21095,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftyJSON",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21191,7 +21120,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwiftyStoreKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21231,7 +21159,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_SwipeCellKit",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21278,7 +21205,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_TextFieldEffects",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21313,7 +21239,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_ViewAnimator",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21345,7 +21270,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_WKWebViewJavascriptBridge",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21376,7 +21300,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module__NIODataStructures",
-    alwayslink = True,
     copts = [
         "-import-underlying-module",
     ],
@@ -21403,7 +21326,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_swift_app_with_pod_no_use_frameworks",
-    alwayslink = True,
     defines = [
         "COCOAPODS",
         "DEBUG",

@@ -13,6 +13,11 @@ pushd examples/empty_app_storyboard_swift
 bazel build empty_app_storyboard_swift_app
 popd
 
+bash xcodeproj2bazel.sh --pwd=examples/app_and_library_dead_code --project=examples/app_and_library_dead_code/app_and_library_dead_code.xcodeproj
+pushd examples/app_and_library_dead_code
+bazel build app_and_library_dead_code_app
+popd
+
 rm -rf examples/Masonry/Masonry
 mkdir -p examples/Masonry/Masonry
 git clone https://github.com/SnapKit/Masonry.git examples/Masonry/Masonry --depth=1

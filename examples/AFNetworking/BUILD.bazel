@@ -2,12 +2,12 @@ load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
 load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
 load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("xcodeproj2bazel_rules/ios_framework.bzl", "ios_framework")
 load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
 load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
 load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
@@ -26,12 +26,6 @@ apple_bundle_version(
 apple_bundle_version(
     name = "iOS_Today_Extension_Example_appex_version",
     build_version = "1",
-)
-cc_header(
-    name = "afnetworking_example_ios_example_h_header",
-    hdrs = [
-        "AFNetworking/Example/iOS Example/AppDelegate.h",
-    ],
 )
 header_map(
     name = "AFNetworking_framework_private_header_map",
@@ -86,6 +80,7 @@ header_map(
         "AFNetworking/Example/Classes/Models/Post.h",
         "AFNetworking/Example/Classes/Models/User.h",
         "AFNetworking/Example/Classes/Networking Extensions/AFAppDotNetAPIClient.h",
+        "AFNetworking/Example/iOS Example/AppDelegate.h",
         "AFNetworking/Example/iOS Example/Controllers/GlobalTimelineViewController.h",
         "AFNetworking/Example/iOS Example/Views/PostTableViewCell.h",
     ],
@@ -157,6 +152,7 @@ ios_framework(
     deps = [
         ":AFNetworking_framework_m",
     ],
+    extension_safe = True,
     families = ["iphone", "ipad"],
     infoplists = [
         "AFNetworking/Framework/Info.plist",
@@ -219,9 +215,6 @@ objc_library(
     ],
     defines = [
         "DEBUG=1",
-    ],
-    deps = [
-        ":afnetworking_example_ios_example_h_header",
     ],
     enable_modules = True,
     header_maps = [

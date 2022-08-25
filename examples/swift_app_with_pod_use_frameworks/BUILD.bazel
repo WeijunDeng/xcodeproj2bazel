@@ -2,12 +2,12 @@ load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")
 load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")
 load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")
 load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")
 load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")
 load("xcodeproj2bazel_rules/hmap.bzl", "header_map")
+load("xcodeproj2bazel_rules/ios_framework.bzl", "ios_framework")
 load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")
 load("xcodeproj2bazel_rules/module_map.bzl", "module_map")
 load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")
@@ -11912,6 +11912,7 @@ ios_framework(
         ":RealmSwift_framework_system_library",
         ":swift_module_RealmSwift",
     ],
+    extension_safe = True,
     families = ["iphone", "ipad"],
     frameworks = [
         ":Realm_framework",
@@ -11933,6 +11934,7 @@ ios_framework(
         ":Realm_framework_system_library",
         ":import_realm_monorepo_xcframework",
     ],
+    extension_safe = True,
     families = ["iphone", "ipad"],
     infoplists = [
         "Pods/Target Support Files/Realm/Realm-Info.plist",
@@ -11949,6 +11951,7 @@ ios_framework(
         ":Rswift_framework_system_library",
         ":swift_module_Rswift",
     ],
+    extension_safe = True,
     families = ["iphone", "ipad"],
     infoplists = [
         "Pods/Target Support Files/R.swift.Library/R.swift.Library-Info.plist",
@@ -12069,6 +12072,7 @@ ios_framework(
         ":SWXMLHash_framework_system_library",
         ":swift_module_SWXMLHash",
     ],
+    extension_safe = True,
     families = ["iphone", "ipad"],
     infoplists = [
         "Pods/Target Support Files/SWXMLHash/SWXMLHash-Info.plist",
@@ -16778,7 +16782,7 @@ objc_library(
     defines = [
         "COCOAPODS=1",
         "DEBUG=1",
-        "Firebase_VERSION=9.4.0",
+        "Firebase_VERSION=9.5.0",
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
@@ -25780,7 +25784,6 @@ swift_library(
 )
 swift_library(
     name = "swift_module_swift_app_with_pod_use_frameworks",
-    alwayslink = True,
     defines = [
         "COCOAPODS",
         "DEBUG",

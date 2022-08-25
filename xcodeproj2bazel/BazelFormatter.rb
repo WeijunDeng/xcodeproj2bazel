@@ -4,21 +4,21 @@ class BazelFormatter
         
         lines.push 'load("xcodeproj2bazel_rules/cc_header.bzl", "cc_header")'
         lines.push 'load("xcodeproj2bazel_rules/cc_library.bzl", "cc_library")'
-        lines.push 'load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")'
-        lines.push 'load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")'
-        lines.push 'load("xcodeproj2bazel_rules/static_library.bzl", "static_library")'
-        lines.push 'load("xcodeproj2bazel_rules/system_library.bzl", "system_library")'
-        lines.push 'load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")'
-        lines.push 'load("xcodeproj2bazel_rules/module_map.bzl", "module_map")'
         lines.push 'load("xcodeproj2bazel_rules/hmap.bzl", "header_map")'
-        
-        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")'
-        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_framework")'
+        lines.push 'load("xcodeproj2bazel_rules/ios_framework.bzl", "ios_framework")'
+        lines.push 'load("xcodeproj2bazel_rules/metal_library.bzl", "metal_library")'
+        lines.push 'load("xcodeproj2bazel_rules/module_map.bzl", "module_map")'
+        lines.push 'load("xcodeproj2bazel_rules/objc_library.bzl", "objc_library")'
+        lines.push 'load("xcodeproj2bazel_rules/static_library.bzl", "static_library")'
+        lines.push 'load("xcodeproj2bazel_rules/swift_library.bzl", "swift_library")'
+        lines.push 'load("xcodeproj2bazel_rules/system_library.bzl", "system_library")'
+
         lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_framework_import", "apple_dynamic_framework_import")'
         lines.push 'load("@build_bazel_rules_apple//apple:apple.bzl", "apple_static_xcframework_import", "apple_dynamic_xcframework_import")'
         lines.push 'load("@build_bazel_rules_apple//apple:dtrace.bzl", "dtrace_compile")'
-        lines.push 'load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")'
+        lines.push 'load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application", "ios_extension")'
         lines.push 'load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group", "apple_bundle_import")'
+        lines.push 'load("@build_bazel_rules_apple//apple:versioning.bzl", "apple_bundle_version")'
         
         lines = lines.sort
 

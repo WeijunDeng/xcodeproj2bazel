@@ -54,9 +54,7 @@ class BazelTranslator
             target_public_header_map = info_hash[:target_public_header_map]
             target_private_header_map = info_hash[:target_private_header_map]
             
-            next if (target_public_header_map.size + target_private_header_map.size) == 0
-
-            public_headers = target_public_header_map.values.map{|x|x.to_a}.flatten.to_set
+            public_headers = target_public_header_map.values.to_set
             if public_headers.size > 0
                 header_target_name = get_bazel_target_name_for_header_map(namespace, true)
                 header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -66,7 +64,7 @@ class BazelTranslator
                 header_target_info["hdrs"] = public_headers
             end
 
-            private_headers = target_private_header_map.values.map{|x|x.to_a}.flatten.to_set
+            private_headers = target_private_header_map.values.to_set
             if private_headers.size > 0
                 header_target_name = get_bazel_target_name_for_header_map(target_name, false)
                 header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -88,7 +86,7 @@ class BazelTranslator
         translate_module_map(analyze_result, user_module_hash, target_module_name_hash, target_info_hash_for_bazel)
         translate_header_map(target_info_hash_for_xcode, target_module_name_hash, target_info_hash_for_bazel)
 
-        total_alwayslink_product_file_names = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:alwayslink_product_file_names].to_a}.flatten.map{|x|x.downcase}.to_set
+        total_alwayslink_product_file_names = target_info_hash_for_xcode.values.map{|e|e[:target_links_hash][:alwayslink_product_file_names].to_a}.flatten.to_set
 
         product_file_name_hash = {}
         target_info_hash_for_xcode.each do | target_name, info_hash |
@@ -121,6 +119,7 @@ class BazelTranslator
             target_swift_compile_flags = info_hash[:target_swift_compile_flags]
             clang_enable_objc_arc = info_hash[:clang_enable_objc_arc]
             target_link_flags = info_hash[:target_link_flags]
+            extension_safe = info_hash[:extension_safe]
             target_defines = info_hash[:target_defines]
             c_target_defines = info_hash[:c_target_defines]
             cxx_target_defines = info_hash[:cxx_target_defines]
@@ -128,7 +127,7 @@ class BazelTranslator
             swift_objc_bridging_header = info_hash[:swift_objc_bridging_header]
             target_header_dirs = info_hash[:target_header_dirs].select{|x|x.class==String}
             
-            alwayslink = total_alwayslink_product_file_names.include? product_file_name.downcase
+            alwayslink = total_alwayslink_product_file_names.include? product_file_name
             if File.extname(product_file_name) == ".framework" and mach_o_type == "mh_dylib"
                 alwayslink = true
             end
@@ -188,7 +187,7 @@ class BazelTranslator
                     swift_bazel_target_name = bazel_target_name
                     target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bazel_target_name)
                     target_info["rule"] = "swift_library"
-                    target_info["alwayslink"] = "True"
+                    target_info["alwayslink"] = "True" if alwayslink
                     target_info["module_name"] = module_name
                     add_file_deps([:user_module, module_name], target_info, target_info_hash_for_bazel, target_info_hash_for_xcode, user_module_hash, info_hash, Set.new)
 
@@ -346,7 +345,7 @@ class BazelTranslator
             bazel_target_name = get_bazel_target_name_for_xcode_target_name(target_name)
             target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bazel_target_name)
 
-            if File.extname(product_file_name) == ".a"
+            if File.extname(product_file_name) == ".a" and mach_o_type == "staticlib"
                 target_info["rule"] = "static_library"
             elsif File.extname(product_file_name) == ".framework"
                 if mach_o_type == "mh_dylib"
@@ -360,11 +359,12 @@ class BazelTranslator
                 target_info["rule"] = "ios_extension"
             elsif File.extname(product_file_name) == ".bundle"
                 target_info["rule"] = "apple_resource_bundle"
-            elsif File.extname(product_file_name) == ".xctest"
-                # target_info["rule"] = "ios_unit_test"
-                next
             else
                 raise "unsupported product_file_name #{product_file_name}"
+            end
+
+            if target_info["rule"] == "ios_framework"
+                target_info["extension_safe"] = "True" if extension_safe
             end
 
             if target_info["rule"] == "ios_application" or 
@@ -497,6 +497,26 @@ class BazelTranslator
             end
         end
 
+        ios_framework_static_library_set_hash = {}
+        target_info_hash_for_bazel.each do | target_name, hash |
+            if hash["rule"] == "ios_framework"
+                static_library_set = Set.new
+                find_static_library_in_target_name(target_name, target_info_hash_for_bazel, static_library_set)
+                ios_framework_static_library_set_hash[target_name] = static_library_set
+            end
+        end
+        ios_framework_static_library_set_hash.keys.each do | ios_framework_a |
+            next unless target_info_hash_for_bazel[ios_framework_a]["frameworks"]
+            target_info_hash_for_bazel[ios_framework_a]["frameworks"].each do | ios_framework_b |
+                same_library_set = ios_framework_static_library_set_hash[ios_framework_a] & ios_framework_static_library_set_hash[ios_framework_b]
+                if same_library_set.size > 0
+                    # fix because ios_framework rule avoid deps in https://github.com/bazelbuild/rules_apple/blob/8f6485fe22977adefff996391daa212f0b3bbc7f/apple/internal/ios_rules.bzl#L180
+                    target_info_hash_for_bazel[ios_framework_a]["not_avoid_deps"] = Set.new unless target_info_hash_for_bazel[ios_framework_a]["not_avoid_deps"]
+                    target_info_hash_for_bazel[ios_framework_a]["not_avoid_deps"].merge same_library_set
+                end
+            end
+        end
+
         target_info_hash_for_bazel.sort.each do | target_name, hash |
             hash.keys.each do | key |
                 if hash[key].class == Set
@@ -522,6 +542,25 @@ class BazelTranslator
         return target_info_hash_for_bazel
     end
     
+    def find_static_library_in_target_name(target_name, target_info_hash_for_bazel, static_library_set)
+        target_info = target_info_hash_for_bazel[target_name]
+        if target_info["rule"] == "objc_library" or target_info["rule"] == "cc_library"
+            static_library_set.add ":" + target_name
+        elsif target_info["rule"] == "apple_static_framework_import"
+            framework_path = target_info["framework_imports"]
+            framework_name = File.basename(framework_path).split(".")[0]
+            static_library_set.add framework_path + "/" + framework_name
+        elsif target_info["rule"] == "objc_import"
+            static_library_set.add target_info["archives"]
+        else
+            if target_info["deps"]
+                target_info["deps"].each do | dep |
+                    find_static_library_in_target_name(dep, target_info_hash_for_bazel, static_library_set)
+                end
+            end
+        end
+    end
+
     def generate_bazel_target_name_for_bundle_version(target_name, version, target_info_hash_for_bazel)
         bundle_version_target_name = get_legal_bazel_target_name(target_name + "_version")
         target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, bundle_version_target_name)
@@ -565,9 +604,6 @@ class BazelTranslator
                     framework_target_info["rule"] = "apple_dynamic_framework_import"
                 elsif is_dynamic == false
                     framework_target_info["rule"] = "apple_static_framework_import"
-                    if Dir.glob(framework_path + "/Modules/*.swiftmodule").size > 0
-                        framework_target_info["alwayslink"] = "True"
-                    end
                 else
                     raise "unexpected #{framework_library_path} is_dynamic"
                 end
