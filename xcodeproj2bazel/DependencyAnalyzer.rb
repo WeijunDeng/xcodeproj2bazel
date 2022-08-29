@@ -117,7 +117,6 @@ class DependencyAnalyzer
                         if header
                             match_header = header
                             # public header_map
-                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by public header_map"
                             file_deps_hash[file].add [:public_header_map, match_header, namespace]
                         end
                     end
@@ -131,7 +130,6 @@ class DependencyAnalyzer
                         if header
                             match_header = header
                             # private header_map
-                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by private header_map"
                             file_deps_hash[file].add [:private_header_map, match_header, target_name]
                         end
                     end
@@ -145,7 +143,6 @@ class DependencyAnalyzer
                         if header
                             match_header = header
                             # project header_map
-                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by project header_map"
                             file_deps_hash[file].add [:project_header_map, match_header, target_name]
                         end
                     end
@@ -157,7 +154,6 @@ class DependencyAnalyzer
                 if header
                     match_header = header
                     # full path
-                    FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by workspace path"
                     file_deps_hash[file].add [:headers, match_header]
                 end
             end
@@ -167,7 +163,6 @@ class DependencyAnalyzer
                 if header
                     match_header = header
                     # current file dir
-                    FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by current file dir #{File.dirname(file)}"
                     if is_angled_import
                         file_deps_hash[file].add [:headers, match_header, File.dirname(file)]
                     else
@@ -187,7 +182,6 @@ class DependencyAnalyzer
                             if header
                                 # find by framework search path
                                 match_header = header
-                                FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search framework dir #{dir}"
                                 file_deps_hash[file].add [:headers, match_header]
                                 break
                             end
@@ -232,16 +226,6 @@ class DependencyAnalyzer
                         if header
                             # find by header search path
                             match_header = header
-                            real_match_header = FileFilter.get_real_exist_expand_path_file(match_header)
-                            if real_match_header != match_header
-                                match_header = real_match_header
-                                namespace = ""
-                                namespace = File.dirname(import_file_path) if import_file_path.include? "/"
-                                # find by symlink headers
-                                file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.dirname(header)]
-                                break
-                            end
-                            FileLogger.add_verbose_log "#{file} add header: #{match_header} (#{import_file_path}) by search header dir #{dir}"
                             file_deps_hash[file].add [:headers, match_header, dir]
                             break
                         end
@@ -286,15 +270,10 @@ class DependencyAnalyzer
             unless match_header
                 if import_file_path.end_with? "-Swift.h"
                     file_deps_hash[file].add [:swift_header, import_file_path]
-                else
-                    log = "unexpected #{file} (#{import_file_path}) not found"
-                    FileLogger.add_verbose_log log
                 end
             end
     
             if match_header
-                binding.pry if match_header != FileFilter.get_real_exist_expand_path_file(match_header)
-
                 parse_dependency_for_file(match_header, nil, target_name, file_deps_hash, total_public_header_map, target_private_header_map, project_header_map, target_header_dirs, target_framework_dirs, user_module_hash, total_target_copy_map, target_dtrace_files)
             end
         end

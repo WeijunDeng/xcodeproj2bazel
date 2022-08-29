@@ -26,7 +26,7 @@ PODS:
   - AgoraAudio_iOS/SpatialAudio (3.7.1)
   - Alamofire (5.6.2)
   - AliyunOSSiOS (2.10.15)
-  - AMPopTip (4.9.0)
+  - AMPopTip (4.10.0)
   - AMScrollingNavbar (5.7.3)
   - AnimatedCollectionViewLayout (1.1.0)
   - AnyImageKit (0.13.3):
@@ -1262,7 +1262,7 @@ SPEC CHECKSUMS:
   AgoraAudio_iOS: 44733ff59c533292ba5bceb8ccf140aeb31290a0
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   AliyunOSSiOS: 5d7c50ce7b39b2b0b10f603a5971cccb0f25eee2
-  AMPopTip: a715485b0338575a01fb7d255a100642e10bb48d
+  AMPopTip: 4630471652faf06872f72a39bfcb6f5b68a7e208
   AMScrollingNavbar: c3d120e0dbcc5bcff988a7058bd9d99e1ff908b5
   AnimatedCollectionViewLayout: 0c1a38c4be115c525c887be183fc91ef65737c5d
   AnyImageKit: 5b6723d75e43fd93b0ffb17903dc0e5c78f3f637

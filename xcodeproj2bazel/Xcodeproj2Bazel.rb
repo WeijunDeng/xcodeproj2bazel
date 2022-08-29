@@ -7,7 +7,6 @@ require 'yaml'
 require 'digest'
 require 'find'
 require 'pry'
-require "./xcodeproj2bazel/FileLogger.rb"
 require "./xcodeproj2bazel/XcodeprojParser.rb"
 require "./xcodeproj2bazel/DependencyAnalyzer.rb"
 require "./xcodeproj2bazel/BazelTranslator.rb"
@@ -83,8 +82,6 @@ class Xcodeproj2Bazel
         puts "duration after hook_target_info_hash_for_bazel : #{(Time.now - start_time).to_f} s"
         BazelFormatter.new.format(target_info_hash_for_bazel)
         puts "duration after BazelFormatter : #{(Time.now - start_time).to_f} s"
-        FileLogger.write
-        puts "duration after FileLogger.write : #{(Time.now - start_time).to_f} s"
         
     end
 end

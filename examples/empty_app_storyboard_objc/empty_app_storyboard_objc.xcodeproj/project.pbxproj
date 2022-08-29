@@ -292,6 +292,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"\"X2B1\"",
+					"X2B2=@\\\"X2\\\\\\\"B\\\"",
+					"'X2B3'",
+					"X2B4=@\\\"X2B\\\"",
+					"X2B5=@\"'X2B'\"",
+					"X2B6=@\"X2B\"",
+					"\"X2B7",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = empty_app_storyboard_objc/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

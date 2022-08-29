@@ -220,7 +220,7 @@ class FileFilter
     end
 
     def self.get_source_file_extnames_ignore
-        return [".docc", ".metal"]
+        return [".docc", ".metal", ".intentdefinition", ".strings", ".js", ".l", ".y"]
     end
 
     def self.get_source_file_extnames_swift

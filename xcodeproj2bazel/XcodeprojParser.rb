@@ -333,47 +333,63 @@ class XcodeprojParser
 
     def split_multi_values(values)
         split_values = []
+        normal_chars = /^[\w\-\+\$\{\}\(\)\/\.\*=@]+/
         values.flatten.each do | value |
-            while (value.size > 0)
-                normal_chars = /\w\-\+\$\{\}\(\)\/\.\*=@/
-                match_result = value.match(/^[#{normal_chars}]+(?: |$)/)
-                if match_result
-                    match_value = match_result[0].strip
-                    split_values.push match_value
-                    value = value[match_result[0].size..-1].strip
-                    next
-                end
-                match_result = value.match(/^(?:[#{normal_chars}]*\"[#{normal_chars} ]*\"[#{normal_chars}]*)+(?: |$)/)
-                if match_result
-                    match_value = match_result[0].strip
-                    if match_value.include? " "
-                        match_value = match_value.gsub("\"", "\\\"")
+            match_values = []
+            quote_stack = []
+            while true
+                if value.start_with? "\\\"" or value.start_with? "\\'" or value.start_with? "\\\\"
+                    if match_values.size > 0
+                        match_values[-1] = match_values[-1] + value[0..1]
                     else
-                        match_value = match_value.gsub("\"", "")
+                        match_values.push value[0..1]
                     end
-                    split_values.push match_value
-                    value = value[match_result[0].size..-1].strip
-                    next
-                end
-                match_result = value.match(/^(?:[#{normal_chars}]*\'[#{normal_chars}\"]*\'[#{normal_chars}]*)+(?: |$)/)
-                if match_result
-                    match_value = match_result[0].strip
-                    match_value = match_value.gsub("\"", "\\\"")
-                    if match_value.match(/^\'[#{normal_chars}]*\'$/)
-                        match_value = match_value.gsub("'", "")
+                    value = value[2..-1]
+                elsif value[0] == "\"" or value[0] == "'"
+                    if quote_stack[-1] == value[0]
+                        quote_stack.pop
+                        match_values[-1] = match_values[-1] + value[0]
+                        if match_values[-1][0] == match_values[-1][-1]
+                            match_result = match_values[-1][1..-2].match(normal_chars)
+                            if match_result and match_result[0] == match_values[-1][1..-2]
+                                if quote_stack.size == 0
+                                    match_values[-1] = match_values[-1][1..-2]
+                                end
+                            end
+                        end
+                    else
+                        quote_stack.push value[0]
+                        match_values.push value[0]
                     end
-                    split_values.push match_value
-                    value = value[match_result[0].size..-1].strip
-                    next
+                    value = value[1..-1]
+                elsif (value[0] == " " and quote_stack.size == 0) or (value == "") 
+                    if value == ""
+                        if quote_stack.size > 0
+                            value = value + quote_stack[-1]
+                            next
+                        end
+                    end
+                    match_value = match_values.join("").gsub("\\", "\\\\\\\\").gsub("\"", "\\\\\"").strip
+                    split_values.push match_value if match_value.size > 0
+                    match_values = []
+                    value = value.strip
+                    break if value.size == 0
+                elsif quote_stack.size > 0
+                    match_values[-1] = match_values[-1] + value[0]
+                    value = value[1..-1]
+                else
+                    match_result = value.match(normal_chars)
+                    if match_result
+                        if match_values.size > 0
+                            match_values[-1] = match_values[-1] + match_result[0]
+                        else
+                            match_values.push match_result[0]
+                        end
+                        value = value[match_result[0].size..-1]
+                    else
+                        binding.pry
+                    end
                 end
-                match_result = value.match(/^\"[#{normal_chars}]+$/)
-                if match_result
-                    match_value = match_result[0].gsub("\"", "").strip
-                    split_values.push match_value
-                    value = value[match_result[0].size..-1].strip
-                    next
-                end
-                binding.pry
             end
         end
         return split_values
@@ -548,7 +564,8 @@ class XcodeprojParser
                     end
                 end
                 file_compiler_flags = file_compiler_flags.gsub("$(inherited)", "").strip
-                file_compiler_flags = split_multi_values([file_compiler_flags])
+                file_compiler_flags = [file_compiler_flags].flatten.map{|x|x.strip}.select{|x|x.size>0}
+                file_compiler_flags = split_multi_values(file_compiler_flags)
                 file_compiler_flags = merge_flags(file_compiler_flags).uniq
                 fileflags = [extname, file_compiler_flags]
                 flags_sources_hash[fileflags] = Set.new unless flags_sources_hash[fileflags]

@@ -43,7 +43,7 @@ class BazelTranslator
                 swift_header_target_name = get_bazel_target_name_for_swift_header_map(module_name)
                 header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, swift_header_target_name)
                 header_target_info["rule"] = "header_map"
-                header_target_info["namespace"] = module_name # FIXME
+                header_target_info["namespace"] = module_name
                 header_target_info["direct_hdr_providers"] = [":" + swift_bazel_target_name]
             end
 
@@ -690,7 +690,7 @@ class BazelTranslator
 
         if dep_info[0] == :project_header_map
             header = dep_info[1]
-            header_target_name = get_legal_bazel_target_name "#{dep_info[2]}_project_header_map"
+            header_target_name = get_downcase_legal_bazel_target_name "#{dep_info[2]}_project_header_map"
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
             header_target_info["rule"] = "header_map"
             header_target_info["hdrs"] = Set.new unless header_target_info["hdrs"]
@@ -707,7 +707,13 @@ class BazelTranslator
             header = dep_info[1]
             namespace = dep_info[2]
             name = dep_info[3]
-            header_target_name = get_legal_bazel_target_name "#{name}_virtual_header_map"
+            header_target_name = nil
+            if namespace and namespace.size > 0
+                header_target_name = get_downcase_legal_bazel_target_name "#{namespace}_#{name}_virtual_header_map"
+            else
+                header_target_name = get_downcase_legal_bazel_target_name "#{name}_virtual_header_map"
+            end
+            
             header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
             header_target_info["rule"] = "header_map"
             header_target_info["namespace"] = namespace if namespace and namespace.size > 0
@@ -843,11 +849,11 @@ class BazelTranslator
     end
 
     def get_bazel_target_name_for_library_import(library_path)
-        return "import_" + get_legal_bazel_target_name(File.basename(library_path))
+        return "import_" + get_downcase_legal_bazel_target_name(File.basename(library_path))
     end
 
     def get_bazel_target_name_for_framework_import(framework_path)
-        return "import_" + get_legal_bazel_target_name(File.basename(framework_path))
+        return "import_" + get_downcase_legal_bazel_target_name(File.basename(framework_path))
     end
 
     def get_bazel_target_name_for_swift_module_name(swift_module_name)
@@ -872,7 +878,7 @@ class BazelTranslator
 
     def get_bazel_target_name_for_header_map(target_name, is_public)
         if is_public
-            return get_legal_bazel_target_name(target_name) + "_public_header_map"
+            return get_downcase_legal_bazel_target_name(target_name) + "_public_header_map"
         else
             return get_legal_bazel_target_name(target_name) + "_private_header_map"
         end
@@ -889,12 +895,16 @@ class BazelTranslator
 
     def get_bazel_target_name_for_general_header(path)
         path = File.dirname(path) + File.extname(path)
-        return get_legal_bazel_target_name(path).downcase + "_header"
+        return get_downcase_legal_bazel_target_name(path + "_header")
     end
 
     def get_legal_bazel_target_name(name)
         name = DynamicConfig.filter_content(name)
         return name.gsub(/\W/, "_")
+    end
+
+    def get_downcase_legal_bazel_target_name(name)
+        return get_legal_bazel_target_name(name).downcase
     end
 
 end

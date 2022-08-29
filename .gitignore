@@ -8,3 +8,7 @@ examples/*/.bazelrc
 examples/*/.bazelversion
 *.xcuserdatad
 Pods
+examples/AFNetworking/AFNetworking
+examples/Kingfisher/Kingfisher
+examples/Masonry/Masonry
+examples/SDWebImage/SDWebImage

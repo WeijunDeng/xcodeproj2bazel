@@ -28,15 +28,36 @@ apple_bundle_version(
     build_version = "1.0",
 )
 cc_header(
-    name = "masonry_masonry_h_header",
+    name = "masonry_pods_headers_public_masonry_h_header",
+    hdrs = [
+        "Masonry/Pods/Headers/Public/Masonry/MASCompositeConstraint.h",
+        "Masonry/Pods/Headers/Public/Masonry/MASConstraint.h",
+        "Masonry/Pods/Headers/Public/Masonry/MASConstraintMaker.h",
+        "Masonry/Pods/Headers/Public/Masonry/MASLayoutConstraint.h",
+        "Masonry/Pods/Headers/Public/Masonry/MASUtilities.h",
+        "Masonry/Pods/Headers/Public/Masonry/MASViewAttribute.h",
+        "Masonry/Pods/Headers/Public/Masonry/MASViewConstraint.h",
+        "Masonry/Pods/Headers/Public/Masonry/Masonry.h",
+        "Masonry/Pods/Headers/Public/Masonry/NSArray+MASAdditions.h",
+        "Masonry/Pods/Headers/Public/Masonry/NSArray+MASShorthandAdditions.h",
+        "Masonry/Pods/Headers/Public/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
+        "Masonry/Pods/Headers/Public/Masonry/View+MASAdditions.h",
+        "Masonry/Pods/Headers/Public/Masonry/View+MASShorthandAdditions.h",
+        "Masonry/Pods/Headers/Public/Masonry/ViewController+MASAdditions.h",
+    ],
+)
+header_map(
+    name = "Masonry_framework_private_header_map",
     hdrs = [
         "Masonry/Masonry/MASCompositeConstraint.h",
+        "Masonry/Masonry/MASConstraint+Private.h",
         "Masonry/Masonry/MASConstraint.h",
         "Masonry/Masonry/MASConstraintMaker.h",
         "Masonry/Masonry/MASLayoutConstraint.h",
         "Masonry/Masonry/MASUtilities.h",
         "Masonry/Masonry/MASViewAttribute.h",
         "Masonry/Masonry/MASViewConstraint.h",
+        "Masonry/Masonry/Masonry.h",
         "Masonry/Masonry/NSArray+MASAdditions.h",
         "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
         "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
@@ -44,9 +65,10 @@ cc_header(
         "Masonry/Masonry/View+MASShorthandAdditions.h",
         "Masonry/Masonry/ViewController+MASAdditions.h",
     ],
+    namespace = "Masonry",
 )
 header_map(
-    name = "Expecta_public_header_map",
+    name = "expecta_public_header_map",
     hdrs = [
         "Masonry/Pods/Expecta/Expecta/EXPBlockDefinedMatcher.h",
         "Masonry/Pods/Expecta/Expecta/EXPDefines.h",
@@ -89,85 +111,6 @@ header_map(
         "Masonry/Pods/Expecta/Expecta/NSValue+Expecta.h",
     ],
     namespace = "Expecta",
-    namespace_only = True,
-)
-header_map(
-    name = "MasonryTestsLoader_app_project_header_map",
-    hdrs = [
-        "Masonry/Tests/MasonryTestsLoader/CASAppDelegate.h",
-    ],
-)
-header_map(
-    name = "Masonry_Pods_Headers_Public_Masonry_virtual_header_map",
-    hdrs = [
-        "Masonry/Masonry/Masonry.h",
-    ],
-)
-header_map(
-    name = "Masonry_framework_private_header_map",
-    hdrs = [
-        "Masonry/Masonry/MASCompositeConstraint.h",
-        "Masonry/Masonry/MASConstraint+Private.h",
-        "Masonry/Masonry/MASConstraint.h",
-        "Masonry/Masonry/MASConstraintMaker.h",
-        "Masonry/Masonry/MASLayoutConstraint.h",
-        "Masonry/Masonry/MASUtilities.h",
-        "Masonry/Masonry/MASViewAttribute.h",
-        "Masonry/Masonry/MASViewConstraint.h",
-        "Masonry/Masonry/Masonry.h",
-        "Masonry/Masonry/NSArray+MASAdditions.h",
-        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
-        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
-        "Masonry/Masonry/View+MASAdditions.h",
-        "Masonry/Masonry/View+MASShorthandAdditions.h",
-        "Masonry/Masonry/ViewController+MASAdditions.h",
-    ],
-    namespace = "Masonry",
-)
-header_map(
-    name = "Masonry_iOS_Examples_app_project_header_map",
-    hdrs = [
-        "Masonry/Examples/Masonry iOS Examples/MASAppDelegate.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleAnimatedView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleArrayView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleAspectFitView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleAttributeChainingView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleBasicView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleConstantsView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleDebuggingView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleDistributeView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleLabelView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleLayoutGuideViewController.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleListViewController.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleMarginView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleRemakeView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleSafeAreaLayoutGuideViewController.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleScrollView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleSidesView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleUpdateView.h",
-        "Masonry/Examples/Masonry iOS Examples/MASExampleViewController.h",
-    ],
-)
-header_map(
-    name = "Masonry_public_header_map",
-    hdrs = [
-        "Masonry/Masonry/MASCompositeConstraint.h",
-        "Masonry/Masonry/MASConstraint+Private.h",
-        "Masonry/Masonry/MASConstraint.h",
-        "Masonry/Masonry/MASConstraintMaker.h",
-        "Masonry/Masonry/MASLayoutConstraint.h",
-        "Masonry/Masonry/MASUtilities.h",
-        "Masonry/Masonry/MASViewAttribute.h",
-        "Masonry/Masonry/MASViewConstraint.h",
-        "Masonry/Masonry/Masonry.h",
-        "Masonry/Masonry/NSArray+MASAdditions.h",
-        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
-        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
-        "Masonry/Masonry/View+MASAdditions.h",
-        "Masonry/Masonry/View+MASShorthandAdditions.h",
-        "Masonry/Masonry/ViewController+MASAdditions.h",
-    ],
-    namespace = "Masonry",
     namespace_only = True,
 )
 header_map(
@@ -235,6 +178,58 @@ header_map(
         "Masonry/Masonry/ViewController+MASAdditions.h",
     ],
     namespace = "Masonry",
+)
+header_map(
+    name = "masonry_ios_examples_app_project_header_map",
+    hdrs = [
+        "Masonry/Examples/Masonry iOS Examples/MASAppDelegate.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAnimatedView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleArrayView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAspectFitView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleAttributeChainingView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleBasicView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleConstantsView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleDebuggingView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleDistributeView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleLabelView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleLayoutGuideViewController.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleListViewController.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleMarginView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleRemakeView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleSafeAreaLayoutGuideViewController.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleScrollView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleSidesView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleUpdateView.h",
+        "Masonry/Examples/Masonry iOS Examples/MASExampleViewController.h",
+    ],
+)
+header_map(
+    name = "masonry_public_header_map",
+    hdrs = [
+        "Masonry/Masonry/MASCompositeConstraint.h",
+        "Masonry/Masonry/MASConstraint+Private.h",
+        "Masonry/Masonry/MASConstraint.h",
+        "Masonry/Masonry/MASConstraintMaker.h",
+        "Masonry/Masonry/MASLayoutConstraint.h",
+        "Masonry/Masonry/MASUtilities.h",
+        "Masonry/Masonry/MASViewAttribute.h",
+        "Masonry/Masonry/MASViewConstraint.h",
+        "Masonry/Masonry/Masonry.h",
+        "Masonry/Masonry/NSArray+MASAdditions.h",
+        "Masonry/Masonry/NSArray+MASShorthandAdditions.h",
+        "Masonry/Masonry/NSLayoutConstraint+MASDebugAdditions.h",
+        "Masonry/Masonry/View+MASAdditions.h",
+        "Masonry/Masonry/View+MASShorthandAdditions.h",
+        "Masonry/Masonry/ViewController+MASAdditions.h",
+    ],
+    namespace = "Masonry",
+    namespace_only = True,
+)
+header_map(
+    name = "masonrytestsloader_app_project_header_map",
+    hdrs = [
+        "Masonry/Tests/MasonryTestsLoader/CASAppDelegate.h",
+    ],
 )
 ios_application(
     name = "MasonryTestsLoader_app",
@@ -322,7 +317,7 @@ objc_library(
     ],
     enable_modules = True,
     header_maps = [
-        ":MasonryTestsLoader_app_project_header_map",
+        ":masonrytestsloader_app_project_header_map",
     ],
     linkopts = [
         "-ObjC",
@@ -342,9 +337,6 @@ objc_library(
     ],
     defines = [
         "DEBUG=1",
-    ],
-    deps = [
-        ":masonry_masonry_h_header",
     ],
     enable_modules = True,
     header_maps = [
@@ -379,12 +371,14 @@ objc_library(
         "DEBUG=1",
     ],
     deps = [
-        ":masonry_masonry_h_header",
+        ":masonry_pods_headers_public_masonry_h_header",
     ],
     enable_modules = False,
     header_maps = [
-        ":Masonry_iOS_Examples_app_project_header_map",
-        ":Masonry_Pods_Headers_Public_Masonry_virtual_header_map",
+        ":masonry_ios_examples_app_project_header_map",
+    ],
+    includes = [
+        "Masonry/Pods/Headers/Public/Masonry",
     ],
     linkopts = [
         "-ObjC",
@@ -427,7 +421,7 @@ objc_library(
     ],
     enable_modules = True,
     header_maps = [
-        ":Expecta_public_header_map",
+        ":expecta_public_header_map",
         ":libExpecta_a_private_header_map",
     ],
     linkopts = [

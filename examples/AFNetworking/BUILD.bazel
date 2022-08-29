@@ -51,7 +51,7 @@ header_map(
     namespace = "AFNetworking",
 )
 header_map(
-    name = "AFNetworking_public_header_map",
+    name = "afnetworking_public_header_map",
     hdrs = [
         "AFNetworking/AFNetworking/AFCompatibilityMacros.h",
         "AFNetworking/AFNetworking/AFHTTPSessionManager.h",
@@ -75,7 +75,7 @@ header_map(
     namespace_only = True,
 )
 header_map(
-    name = "iOS_Example_app_project_header_map",
+    name = "ios_example_app_project_header_map",
     hdrs = [
         "AFNetworking/Example/Classes/Models/Post.h",
         "AFNetworking/Example/Classes/Models/User.h",
@@ -86,7 +86,7 @@ header_map(
     ],
 )
 header_map(
-    name = "iOS_Today_Extension_Example_appex_project_header_map",
+    name = "ios_today_extension_example_appex_project_header_map",
     hdrs = [
         "AFNetworking/Example/Classes/Models/Post.h",
         "AFNetworking/Example/Classes/Models/User.h",
@@ -181,7 +181,7 @@ objc_library(
     ],
     enable_modules = True,
     header_maps = [
-        ":AFNetworking_public_header_map",
+        ":afnetworking_public_header_map",
         ":AFNetworking_framework_private_header_map",
     ],
     linkopts = [
@@ -218,9 +218,9 @@ objc_library(
     ],
     enable_modules = True,
     header_maps = [
-        ":AFNetworking_public_header_map",
+        ":afnetworking_public_header_map",
         ":AFNetworking_framework_private_header_map",
-        ":iOS_Example_app_project_header_map",
+        ":ios_example_app_project_header_map",
     ],
     linkopts = [
         "-dead_strip",
@@ -248,9 +248,9 @@ objc_library(
     ],
     enable_modules = True,
     header_maps = [
-        ":AFNetworking_public_header_map",
+        ":afnetworking_public_header_map",
         ":AFNetworking_framework_private_header_map",
-        ":iOS_Today_Extension_Example_appex_project_header_map",
+        ":ios_today_extension_example_appex_project_header_map",
     ],
     linkopts = [
         "-dead_strip",

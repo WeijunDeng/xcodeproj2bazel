@@ -59,6 +59,13 @@ objc_library(
     ],
     defines = [
         "DEBUG=1",
+        "X2B1",
+        "X2B2=@\\\"X2\\\\\\\"B\\\"",
+        "X2B3",
+        "X2B4=@\\\"X2B\\\"",
+        "X2B5=@\"'X2B'\"",
+        "X2B6=@X2B",
+        "X2B7",
     ],
     enable_modules = True,
     header_maps = [
