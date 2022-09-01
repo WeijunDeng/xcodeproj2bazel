@@ -40,85 +40,17 @@ apple_bundle_version(
     build_version = "1",
 )
 cc_header(
-    name = "sdwebimage_pods_libwebp_sharpyuv_h_header",
-    hdrs = [
-        "SDWebImage/Pods/libwebp/sharpyuv/sharpyuv.h",
-        "SDWebImage/Pods/libwebp/sharpyuv/sharpyuv_csp.h",
-        "SDWebImage/Pods/libwebp/sharpyuv/sharpyuv_dsp.h",
-        "SDWebImage/Pods/libwebp/sharpyuv/sharpyuv_gamma.h",
-    ],
+    name = "sdwebimage_pods_libwebp_recursive_headers",
+    hdrs = glob(["SDWebImage/Pods/libwebp/**"]),
 )
 cc_header(
-    name = "sdwebimage_pods_libwebp_src_dec_h_header",
-    hdrs = [
-        "SDWebImage/Pods/libwebp/src/dec/alphai_dec.h",
-        "SDWebImage/Pods/libwebp/src/dec/common_dec.h",
-        "SDWebImage/Pods/libwebp/src/dec/vp8_dec.h",
-        "SDWebImage/Pods/libwebp/src/dec/vp8i_dec.h",
-        "SDWebImage/Pods/libwebp/src/dec/vp8li_dec.h",
-        "SDWebImage/Pods/libwebp/src/dec/webpi_dec.h",
-    ],
-)
-cc_header(
-    name = "sdwebimage_pods_libwebp_src_dsp_h_header",
-    hdrs = [
-        "SDWebImage/Pods/libwebp/src/dsp/common_sse2.h",
-        "SDWebImage/Pods/libwebp/src/dsp/common_sse41.h",
-        "SDWebImage/Pods/libwebp/src/dsp/cpu.h",
-        "SDWebImage/Pods/libwebp/src/dsp/dsp.h",
-        "SDWebImage/Pods/libwebp/src/dsp/lossless.h",
-        "SDWebImage/Pods/libwebp/src/dsp/lossless_common.h",
-        "SDWebImage/Pods/libwebp/src/dsp/mips_macro.h",
-        "SDWebImage/Pods/libwebp/src/dsp/msa_macro.h",
-        "SDWebImage/Pods/libwebp/src/dsp/neon.h",
-        "SDWebImage/Pods/libwebp/src/dsp/quant.h",
-        "SDWebImage/Pods/libwebp/src/dsp/yuv.h",
-    ],
-)
-cc_header(
-    name = "sdwebimage_pods_libwebp_src_enc_h_header",
-    hdrs = [
-        "SDWebImage/Pods/libwebp/src/enc/backward_references_enc.h",
-        "SDWebImage/Pods/libwebp/src/enc/cost_enc.h",
-        "SDWebImage/Pods/libwebp/src/enc/histogram_enc.h",
-        "SDWebImage/Pods/libwebp/src/enc/vp8i_enc.h",
-        "SDWebImage/Pods/libwebp/src/enc/vp8li_enc.h",
-    ],
-)
-cc_header(
-    name = "sdwebimage_pods_libwebp_src_mux_h_header",
-    hdrs = [
-        "SDWebImage/Pods/libwebp/src/mux/animi.h",
-        "SDWebImage/Pods/libwebp/src/mux/muxi.h",
-    ],
-)
-cc_header(
-    name = "sdwebimage_pods_libwebp_src_utils_h_header",
-    hdrs = [
-        "SDWebImage/Pods/libwebp/src/utils/bit_reader_inl_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/bit_reader_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/bit_writer_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/color_cache_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/endian_inl_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/filters_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/huffman_encode_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/huffman_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/quant_levels_dec_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/quant_levels_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/random_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/rescaler_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/thread_utils.h",
-        "SDWebImage/Pods/libwebp/src/utils/utils.h",
-    ],
+    name = "sdwebimage_pods_libwebp_src_recursive_headers",
+    hdrs = glob(["SDWebImage/Pods/libwebp/src/**"]),
 )
 cc_header(
     name = "sdwebimage_pods_libwebp_src_webp_h_header",
     hdrs = [
         "SDWebImage/Pods/libwebp/src/webp/decode.h",
-        "SDWebImage/Pods/libwebp/src/webp/demux.h",
-        "SDWebImage/Pods/libwebp/src/webp/encode.h",
-        "SDWebImage/Pods/libwebp/src/webp/format_constants.h",
-        "SDWebImage/Pods/libwebp/src/webp/mux.h",
         "SDWebImage/Pods/libwebp/src/webp/mux_types.h",
         "SDWebImage/Pods/libwebp/src/webp/types.h",
     ],
@@ -171,12 +103,7 @@ cc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":sdwebimage_pods_libwebp_sharpyuv_h_header",
-        ":sdwebimage_pods_libwebp_src_dec_h_header",
-        ":sdwebimage_pods_libwebp_src_dsp_h_header",
-        ":sdwebimage_pods_libwebp_src_enc_h_header",
-        ":sdwebimage_pods_libwebp_src_mux_h_header",
-        ":sdwebimage_pods_libwebp_src_utils_h_header",
+        ":sdwebimage_pods_libwebp_recursive_headers",
         ":sdwebimage_pods_libwebp_src_webp_h_header",
     ],
     header_maps = [
@@ -1090,6 +1017,7 @@ objc_library(
         "SD_WEBP=1",
     ],
     deps = [
+        ":sdwebimage_pods_libwebp_src_recursive_headers",
         ":sdwebimage_pods_libwebp_src_webp_h_header",
         ":sdwebimage_sdwebimage_core_h_header",
     ],

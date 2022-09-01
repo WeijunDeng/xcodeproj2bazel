@@ -520,15 +520,9 @@ class BazelTranslator
         target_info_hash_for_bazel.sort.each do | target_name, hash |
             hash.keys.each do | key |
                 if hash[key].class == Set
-                    hash[key].each do | v |
-                        binding.pry if v == nil
-                    end
-                    hash[key] = hash[key].sort.uniq {|x|x.downcase}
+                    hash[key] = hash[key].select{|x|x and x.size > 0}.sort.uniq {|x|x.downcase}
                 elsif hash[key].class == Array
-                    hash[key].each do | v |
-                        binding.pry if v == nil
-                    end
-                    hash[key] = hash[key].uniq {|x|x.downcase}
+                    hash[key] = hash[key].select{|x|x and x.size > 0}.uniq {|x|x.downcase}
                 end
             end
         end
@@ -597,7 +591,10 @@ class BazelTranslator
                 unless File.exist? framework_library_path
                     raise "unexpected #{framework_library_path} not exist"
                 end
-        
+                unless Open3.capture3("lipo -archs #{framework_library_path}")[0].strip.split(" ").include? DynamicConfig.get_build_arch
+                    return nil
+                end
+
                 framework_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
                 is_dynamic = Open3.capture3("file #{framework_library_path}")[0].include? "dynamically linked shared library"
                 if is_dynamic == true
@@ -626,7 +623,9 @@ class BazelTranslator
                 library_path = library_path + "/" + framework_name
             end
             binding.pry unless File.exist? library_path
-
+            unless Open3.capture3("lipo -archs #{library_path}")[0].strip.split(" ").include? DynamicConfig.get_build_arch
+                return nil
+            end
             framework_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, target_name)
             framework_target_info["xcframework_imports"] = xcframework_path
             if Open3.capture3("file #{library_path}")[0].include? "dynamically linked shared library"
@@ -707,9 +706,12 @@ class BazelTranslator
             header = dep_info[1]
             namespace = dep_info[2]
             name = dep_info[3]
+            real_header = dep_info[4]
+            header = real_header if real_header
+
             header_target_name = nil
             if namespace and namespace.size > 0
-                header_target_name = get_downcase_legal_bazel_target_name "#{namespace}_#{name}_virtual_header_map"
+                header_target_name = get_downcase_legal_bazel_target_name "#{name}_#{namespace}_virtual_header_map"
             else
                 header_target_name = get_downcase_legal_bazel_target_name "#{name}_virtual_header_map"
             end
@@ -730,7 +732,8 @@ class BazelTranslator
 
         if dep_info[0] == :headers
             header = dep_info[1]
-            
+            search_path = dep_info[2]
+
             header_target_name = nil
             if header.include? ".framework/"
                 framework_path = header.split(".framework/")[0] + ".framework"
@@ -748,6 +751,12 @@ class BazelTranslator
                     target_info["framework_search_paths"] = Set.new unless target_info["framework_search_paths"]
                     target_info["framework_search_paths"].add File.dirname(framework_path)
                 end
+            elsif search_path and search_path.downcase.include? "/pods/"
+                # support include a defined string header
+                header_target_name = get_downcase_legal_bazel_target_name(search_path + "_recursive_headers")
+                header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
+                header_target_info["rule"] = "cc_header"
+                header_target_info["hdrs_dir"] = search_path
             else
                 header_target_name = get_bazel_target_name_for_general_header(header)
                 header_target_info = KeyValueStore.get_key_value_store_in_container(target_info_hash_for_bazel, header_target_name)
@@ -760,7 +769,6 @@ class BazelTranslator
             target_info[key] = Set.new unless target_info[key]
             target_info[key].add header_target_name
             
-            search_path = dep_info[2]
             if search_path
                 key = "includes"
                 key = "objc_" + key if target_info["rule"] == "swift_library"

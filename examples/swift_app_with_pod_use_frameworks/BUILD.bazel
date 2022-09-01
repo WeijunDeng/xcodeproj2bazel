@@ -112,6 +112,10 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "DoubleConversion_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "DropDown_framework_version",
     build_version = "1",
 )
@@ -568,6 +572,14 @@ apple_bundle_version(
     build_version = "1",
 )
 apple_bundle_version(
+    name = "folly_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
+    name = "glog_framework_version",
+    build_version = "1",
+)
+apple_bundle_version(
     name = "libwebp_framework_version",
     build_version = "1",
 )
@@ -984,6 +996,16 @@ apple_static_xcframework_import(
     xcframework_imports = glob(["Pods/Realm/core/realm-monorepo.xcframework/**"]),
 )
 cc_header(
+    name = "pods_boost_for_react_native_boost_hpp_header",
+    hdrs = [
+        "Pods/boost-for-react-native/boost/operators_v1.hpp",
+    ],
+)
+cc_header(
+    name = "pods_boost_for_react_native_recursive_headers",
+    hdrs = glob(["Pods/boost-for-react-native/**"]),
+)
+cc_header(
     name = "pods_cnioatomics_sources_cnioatomics_include_h_header",
     hdrs = [
         "Pods/CNIOAtomics/Sources/CNIOAtomics/include/CNIOAtomics.h",
@@ -996,870 +1018,88 @@ cc_header(
     ],
 )
 cc_header(
-    name = "pods_firebaseauth_firebaseauth_interop_h_header",
+    name = "pods_doubleconversion_double_conversion_h_header",
     hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Interop/FIRAuthInterop.h",
+        "Pods/DoubleConversion/double-conversion/utils.h",
     ],
 )
 cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_auth_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuthDataResult_Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuthDispatcher.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuthGlobalWorkQueue.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuthOperationType.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuthSerialTaskQueue.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuthTokenResult_Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Auth/FIRAuth_Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_email_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/Email/FIREmailPasswordAuthCredential.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_facebook_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/Facebook/FIRFacebookAuthCredential.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_gamecenter_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/GameCenter/FIRGameCenterAuthCredential.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_github_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/GitHub/FIRGitHubAuthCredential.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_google_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/Google/FIRGoogleAuthCredential.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/FIRAuthCredential_Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_oauth_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/OAuth/FIROAuthCredential_Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_phone_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/Phone/FIRPhoneAuthCredential_Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_authprovider_twitter_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/AuthProvider/Twitter/FIRTwitterAuthCredential.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/FIRAuthBackend+MultiFactor.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/FIRAuthBackend.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/FIRAuthRPCRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/FIRAuthRPCResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/FIRAuthRequestConfiguration.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/FIRIdentityToolkitRequest.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_rpc_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRCreateAuthURIRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRCreateAuthURIResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRDeleteAccountRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRDeleteAccountResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIREmailLinkSignInRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIREmailLinkSignInResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRGetAccountInfoRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRGetAccountInfoResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRGetOOBConfirmationCodeRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRGetOOBConfirmationCodeResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRGetProjectConfigRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRGetProjectConfigResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRResetPasswordRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRResetPasswordResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSecureTokenRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSecureTokenResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSendVerificationCodeRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSendVerificationCodeResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSetAccountInfoRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSetAccountInfoResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSignInWithGameCenterRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSignInWithGameCenterResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSignUpNewUserRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRSignUpNewUserResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyAssertionResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyClientRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyClientResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyCustomTokenRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyCustomTokenResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyPasswordRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyPasswordResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyPhoneNumberRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/FIRVerifyPhoneNumberResponse.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_rpc_multifactor_enroll_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/Enroll/FIRFinalizeMFAEnrollmentRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/Enroll/FIRFinalizeMFAEnrollmentResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/Enroll/FIRStartMFAEnrollmentRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/Enroll/FIRStartMFAEnrollmentResponse.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_rpc_multifactor_signin_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/SignIn/FIRFinalizeMFASignInRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/SignIn/FIRFinalizeMFASignInResponse.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/SignIn/FIRStartMFASignInRequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/SignIn/FIRStartMFASignInResponse.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_rpc_multifactor_unenroll_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/Unenroll/FIRWithdrawMFARequest.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/MultiFactor/Unenroll/FIRWithdrawMFAResponse.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_rpc_proto_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/Proto/FIRAuthProto.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/Proto/FIRAuthProtoMFAEnrollment.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_backend_rpc_proto_phone_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/Proto/Phone/FIRAuthProtoFinalizeMFAPhoneRequestInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/Proto/Phone/FIRAuthProtoFinalizeMFAPhoneResponseInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/Proto/Phone/FIRAuthProtoStartMFAPhoneRequestInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Backend/RPC/Proto/Phone/FIRAuthProtoStartMFAPhoneResponseInfo.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_multifactor_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/FIRMultiFactor+Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/FIRMultiFactorAssertion+Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/FIRMultiFactorInfo+Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/FIRMultiFactorResolver+Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/FIRMultiFactorSession+Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_multifactor_phone_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/Phone/FIRPhoneMultiFactorAssertion+Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/MultiFactor/Phone/FIRPhoneMultiFactorInfo+Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_public_firebaseauth_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRActionCodeSettings.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAdditionalUserInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuth.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthAPNSTokenType.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthCredential.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthDataResult.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthErrors.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthSettings.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthTokenResult.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRAuthUIDelegate.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIREmailAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRFacebookAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRFederatedAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRGameCenterAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRGitHubAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRGoogleAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactor.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorAssertion.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorResolver.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRMultiFactorSession.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIROAuthCredential.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIROAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneAuthCredential.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorAssertion.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorGenerator.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRPhoneMultiFactorInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRTwitterAuthProvider.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRUser.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRUserInfo.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FIRUserMetadata.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Public/FirebaseAuth/FirebaseAuth.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_storage_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Storage/FIRAuthKeychainServices.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Storage/FIRAuthUserDefaults.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_systemservice_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRAuthAPNSToken.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRAuthAPNSTokenManager.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRAuthAppCredential.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRAuthAppCredentialManager.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRAuthNotificationManager.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRAuthStoredUserManager.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/SystemService/FIRSecureTokenService.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_user_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/User/FIRAdditionalUserInfo_Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/User/FIRUserInfoImpl.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/User/FIRUserMetadata_Internal.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/User/FIRUser_Internal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebaseauth_sources_utilities_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthDefaultUIDelegate.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthErrorUtils.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthExceptionUtils.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthInternalErrors.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthURLPresenter.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthWebUtils.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthWebView.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/FIRAuthWebViewController.h",
-        "Pods/FirebaseAuth/FirebaseAuth/Sources/Utilities/NSData+FIRBase64.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseauth_firebasecore_extension_h_header",
-    hdrs = [
-        "Pods/FirebaseAuth/FirebaseCore/Extension/FIRLogger.h",
-        "Pods/FirebaseAuth/FirebaseCore/Extension/FirebaseCoreInternal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecore_firebasecore_extension_h_header",
-    hdrs = [
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRAppInternal.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRComponent.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRComponentContainer.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRComponentType.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRCoreDiagnosticsConnector.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRDependency.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRHeartbeatInfo.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRHeartbeatLogger.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRLibrary.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIRLogger.h",
-        "Pods/FirebaseCore/FirebaseCore/Extension/FIROptionsInternal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecore_firebasecore_sources_h_header",
-    hdrs = [
-        "Pods/FirebaseCore/FirebaseCore/Sources/FIRAnalyticsConfiguration.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/FIRBundleUtil.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/FIRComponentContainerInternal.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/FIRConfigurationInternal.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/FIRDiagnosticsData.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/FIRFirebaseUserAgent.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecore_firebasecore_sources_public_firebasecore_h_header",
-    hdrs = [
-        "Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRApp.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRConfiguration.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRLoggerLevel.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIROptions.h",
-        "Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRVersion.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecore_interop_corediagnostics_public_h_header",
-    hdrs = [
-        "Pods/FirebaseCore/Interop/CoreDiagnostics/Public/FIRCoreDiagnosticsData.h",
-        "Pods/FirebaseCore/Interop/CoreDiagnostics/Public/FIRCoreDiagnosticsInterop.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecorediagnostics_firebase_corediagnostics_fircdlibrary_protogen_nanopb_h_header",
-    hdrs = [
-        "Pods/FirebaseCoreDiagnostics/Firebase/CoreDiagnostics/FIRCDLibrary/Protogen/nanopb/firebasecore.nanopb.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecorediagnostics_interop_corediagnostics_public_h_header",
-    hdrs = [
-        "Pods/FirebaseCoreDiagnostics/Interop/CoreDiagnostics/Public/FIRCoreDiagnosticsData.h",
-        "Pods/FirebaseCoreDiagnostics/Interop/CoreDiagnostics/Public/FIRCoreDiagnosticsInterop.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_components_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSApplication.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSBinaryImage.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSContext.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSCrashedMarkerFile.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSGlobals.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSHost.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSProcess.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Components/FIRCLSUserLogging.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_controllers_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSAnalyticsManager.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSExistingReportManager.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSManagerData.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSMetricKitManager.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSNotificationManager.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSReportManager.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSReportManager_Private.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader_Private.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_datacollection_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionArbiter.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_firclsuserdefaults_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/FIRCLSUserDefaults/FIRCLSUserDefaults.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_handlers_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Handlers/FIRCLSException.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Handlers/FIRCLSHandler.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Handlers/FIRCLSMachException.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Handlers/FIRCLSSignal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_helpers_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSAllocate.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSCallStackTree.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSDefines.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSFeatures.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSFile.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSInternalLogging.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSProfiling.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSThreadState.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Helpers/FIRCLSUtility.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_models_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSExecutionIdentifierModel.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSFileManager.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSInstallIdentifierModel.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSLaunchMarkerModel.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSOnDemandModel.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSSettings.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/FIRCLSSymbolResolver.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_models_record_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/Record/FIRCLSRecordApplication.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/Record/FIRCLSRecordBase.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/Record/FIRCLSRecordHost.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/Record/FIRCLSRecordIdentity.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/Record/FIRCLSReportAdapter.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Models/Record/FIRCLSReportAdapter_Private.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_operations_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Operations/FIRCLSAsyncOperation.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_operations_reports_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Operations/Reports/FIRCLSProcessReportOperation.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_operations_symbolication_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Operations/Symbolication/FIRCLSDemangleOperation.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Operations/Symbolication/FIRCLSSerializeSymbolicatedFramesOperation.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Operations/Symbolication/FIRCLSSymbolicationOperation.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Operations/Symbolication/FIRCLSThreadArrayOperation.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_private_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Private/FIRCLSExistingReportManager_Private.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Private/FIRCLSOnDemandModel_Private.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Private/FIRCrashlyticsReport_Private.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Private/FIRExceptionModel_Private.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Private/FIRStackFrame_Private.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_public_firebasecrashlytics_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Public/FirebaseCrashlytics/FIRCrashlytics.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Public/FirebaseCrashlytics/FIRCrashlyticsReport.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Public/FirebaseCrashlytics/FIRExceptionModel.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Public/FirebaseCrashlytics/FIRStackFrame.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_settings_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Settings/FIRCLSSettingsManager.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_settings_models_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Settings/Models/FIRCLSApplicationIdentifierModel.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_settings_operations_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Settings/Operations/FIRCLSDownloadAndSaveSettingsOperation.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Settings/Operations/FIRCLSNetworkOperation.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_unwind_compact_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/Compact/FIRCLSCompactUnwind.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/Compact/FIRCLSCompactUnwind_Private.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_unwind_dwarf_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/Dwarf/FIRCLSDataParsing.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/Dwarf/FIRCLSDwarfExpressionMachine.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/Dwarf/FIRCLSDwarfUnwind.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/Dwarf/FIRCLSDwarfUnwindRegisters.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_crashlytics_unwind_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/FIRCLSUnwind.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/FIRCLSUnwind_arch.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Crashlytics/Unwind/FIRCLSUnwind_x86.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_protogen_nanopb_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Protogen/nanopb/crashlytics.nanopb.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_shared_firclsmacho_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSMachO/FIRCLSCodeMapping.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSMachO/FIRCLSMachO.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSMachO/FIRCLSMachOBinary.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSMachO/FIRCLSMachOSlice.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSMachO/FIRCLSdSYM.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_shared_firclsnetworking_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSNetworking/FIRCLSFABNetworkClient.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSNetworking/FIRCLSMultipartMimeStreamEncoder.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSNetworking/FIRCLSNetworkResponseHandler.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSNetworking/FIRCLSURLBuilder.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_shared_firclsoperation_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSOperation/FIRCLSCompoundOperation.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSOperation/FIRCLSFABAsyncOperation.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSOperation/FIRCLSFABAsyncOperation_Private.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSOperation/FIRCLSOperation.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_shared_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSByteUtility.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSConstants.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSFABHost.h",
-        "Pods/FirebaseCrashlytics/Crashlytics/Shared/FIRCLSUUID.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_crashlytics_third_party_libunwind_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Crashlytics/third_party/libunwind/dwarf.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_firebasecore_extension_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/FirebaseCore/Extension/FirebaseCoreInternal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_firebaseinstallations_source_library_private_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/FirebaseInstallations/Source/Library/Private/FirebaseInstallationsInternal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebasecrashlytics_interop_analytics_public_h_header",
-    hdrs = [
-        "Pods/FirebaseCrashlytics/Interop/Analytics/Public/FIRAnalyticsInterop.h",
-        "Pods/FirebaseCrashlytics/Interop/Analytics/Public/FIRAnalyticsInteropListener.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebasecore_extension_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseCore/Extension/FirebaseCoreInternal.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_errors_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/Errors/FIRInstallationsErrorUtil.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/Errors/FIRInstallationsHTTPError.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/FIRInstallationsAuthTokenResultInternal.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/FIRInstallationsItem.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/FIRInstallationsLogger.h",
-    ],
+    name = "pods_doubleconversion_recursive_headers",
+    hdrs = glob(["Pods/DoubleConversion/**"]),
 )
 cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_iidmigration_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/IIDMigration/FIRInstallationsIIDStore.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/IIDMigration/FIRInstallationsIIDTokenStore.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_installationsapi_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsAPI/FIRInstallationsAPIService.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsAPI/FIRInstallationsItem+RegisterInstallationAPI.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_installationsidcontroller_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsIDController/FIRCurrentDateProvider.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsBackoffController.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsIDController.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsSingleOperationPromiseCache.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsIDController/FIRInstallationsStatus.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_installationsstore_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStore.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredAuthToken.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredItem.h",
-    ],
-)
-cc_header(
-    name = "pods_firebaseinstallations_firebaseinstallations_source_library_public_firebaseinstallations_h_header",
-    hdrs = [
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/Public/FirebaseInstallations/FIRInstallations.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/Public/FirebaseInstallations/FIRInstallationsAuthTokenResult.h",
-        "Pods/FirebaseInstallations/FirebaseInstallations/Source/Library/Public/FirebaseInstallations/FIRInstallationsErrors.h",
-    ],
-)
-cc_header(
-    name = "pods_googledatatransport_googledatatransport_gdtcctlibrary_private_h_header",
-    hdrs = [
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Private/GDTCCTCompressionHelper.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Private/GDTCCTNanopbHelpers.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Private/GDTCCTUploadOperation.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Private/GDTCCTUploader.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Private/GDTCOREvent+GDTMetricsSupport.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Private/GDTCORMetrics+GDTCCTSupport.h",
-    ],
-)
-cc_header(
-    name = "pods_googledatatransport_googledatatransport_gdtcctlibrary_protogen_nanopb_h_header",
-    hdrs = [
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Protogen/nanopb/cct.nanopb.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Protogen/nanopb/client_metrics.nanopb.h",
-    ],
-)
-cc_header(
-    name = "pods_googledatatransport_googledatatransport_gdtcctlibrary_public_h_header",
-    hdrs = [
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCCTLibrary/Public/GDTCOREvent+GDTCCTSupport.h",
-    ],
-)
-cc_header(
-    name = "pods_googledatatransport_googledatatransport_gdtcorlibrary_internal_h_header",
-    hdrs = [
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORAssert.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORDirectorySizeTracker.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCOREventDropReason.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORLifecycle.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORMetricsControllerProtocol.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORPlatform.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORReachability.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORRegistrar.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORStorageEventSelector.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORStorageProtocol.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORStorageSizeBytes.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Internal/GDTCORUploader.h",
-    ],
-)
-cc_header(
-    name = "pods_googledatatransport_googledatatransport_gdtcorlibrary_private_h_header",
-    hdrs = [
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCOREvent_Private.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORFlatFileStorage+Promises.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORFlatFileStorage.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORLogSourceMetrics.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORMetrics.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORMetricsController.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORMetricsMetadata.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORReachability_Private.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORRegistrar_Private.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORStorageMetadata.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORTransformer.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORTransformer_Private.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORTransport_Private.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORUploadBatch.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORUploadCoordinator.h",
-    ],
-)
-cc_header(
-    name = "pods_googledatatransport_googledatatransport_gdtcorlibrary_public_googledatatransport_h_header",
-    hdrs = [
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORClock.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORConsoleLogger.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCOREndpoints.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCOREvent.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCOREventDataObject.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCOREventTransformer.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORTargets.h",
-        "Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GoogleDataTransport/GDTCORTransport.h",
-    ],
-)
-cc_header(
-    name = "pods_googleutilities_googleutilities_appdelegateswizzler_internal_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Internal/GULAppDelegateSwizzler_Private.h",
-        "Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Internal/GULSceneDelegateSwizzler_Private.h",
-    ],
-)
-cc_header(
-    name = "pods_googleutilities_googleutilities_appdelegateswizzler_public_googleutilities_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Public/GoogleUtilities/GULAppDelegateSwizzler.h",
-        "Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Public/GoogleUtilities/GULSceneDelegateSwizzler.h",
-    ],
-)
-cc_header(
-    name = "pods_googleutilities_googleutilities_common_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Common/GULLoggerCodes.h",
-    ],
-)
-cc_header(
-    name = "pods_googleutilities_googleutilities_environment_public_googleutilities_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULAppEnvironmentUtil.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULHeartbeatDateStorage.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULHeartbeatDateStorageUserDefaults.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULKeychainStorage.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULKeychainUtils.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULSecureCoding.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULURLSessionDataResponse.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/NSURLSession+GULPromises.h",
-    ],
-)
-cc_header(
-    name = "pods_googleutilities_googleutilities_logger_public_googleutilities_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Logger/Public/GoogleUtilities/GULLogger.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Logger/Public/GoogleUtilities/GULLoggerLevel.h",
-    ],
+    name = "pods_firebaseauth_recursive_headers",
+    hdrs = glob(["Pods/FirebaseAuth/**"]),
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_methodswizzler_public_googleutilities_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/MethodSwizzler/Public/GoogleUtilities/GULSwizzler.h",
-    ],
+    name = "pods_firebasecore_recursive_headers",
+    hdrs = glob(["Pods/FirebaseCore/**"]),
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_network_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkInternal.h",
-    ],
+    name = "pods_firebasecorediagnostics_recursive_headers",
+    hdrs = glob(["Pods/FirebaseCoreDiagnostics/**"]),
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_network_public_googleutilities_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULMutableDictionary.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetwork.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkConstants.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkMessageCode.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkURLSession.h",
-    ],
+    name = "pods_firebasecrashlytics_recursive_headers",
+    hdrs = glob(["Pods/FirebaseCrashlytics/**"]),
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_nsdata_zlib_public_googleutilities_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/NSData+zlib/Public/GoogleUtilities/GULNSData+zlib.h",
-    ],
+    name = "pods_firebaseinstallations_recursive_headers",
+    hdrs = glob(["Pods/FirebaseInstallations/**"]),
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_reachability_h_header",
-    hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Reachability/GULReachabilityChecker+Internal.h",
-        "Pods/GoogleUtilities/GoogleUtilities/Reachability/GULReachabilityMessageCode.h",
-    ],
+    name = "pods_folly_recursive_headers",
+    hdrs = glob(["Pods/Folly/**"]),
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_reachability_public_googleutilities_h_header",
+    name = "pods_glog_src_base_h_header",
     hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/Reachability/Public/GoogleUtilities/GULReachabilityChecker.h",
+        "Pods/glog/src/base/commandlineflags.h",
+        "Pods/glog/src/base/googleinit.h",
+        "Pods/glog/src/base/mutex.h",
     ],
 )
 cc_header(
-    name = "pods_googleutilities_googleutilities_userdefaults_public_googleutilities_h_header",
+    name = "pods_glog_src_glog_h_header",
     hdrs = [
-        "Pods/GoogleUtilities/GoogleUtilities/UserDefaults/Public/GoogleUtilities/GULUserDefaults.h",
+        "Pods/glog/src/glog/logging.h",
+        "Pods/glog/src/glog/raw_logging.h",
     ],
 )
 cc_header(
-    name = "pods_libwebp_sharpyuv_h_header",
+    name = "pods_glog_src_h_header",
     hdrs = [
-        "Pods/libwebp/sharpyuv/sharpyuv.h",
-        "Pods/libwebp/sharpyuv/sharpyuv_csp.h",
-        "Pods/libwebp/sharpyuv/sharpyuv_dsp.h",
-        "Pods/libwebp/sharpyuv/sharpyuv_gamma.h",
+        "Pods/glog/src/config.h",
+        "Pods/glog/src/demangle.h",
+        "Pods/glog/src/stacktrace.h",
+        "Pods/glog/src/symbolize.h",
+        "Pods/glog/src/utilities.h",
     ],
 )
 cc_header(
-    name = "pods_libwebp_src_dec_h_header",
-    hdrs = [
-        "Pods/libwebp/src/dec/alphai_dec.h",
-        "Pods/libwebp/src/dec/common_dec.h",
-        "Pods/libwebp/src/dec/vp8_dec.h",
-        "Pods/libwebp/src/dec/vp8i_dec.h",
-        "Pods/libwebp/src/dec/vp8li_dec.h",
-        "Pods/libwebp/src/dec/webpi_dec.h",
-    ],
+    name = "pods_glog_src_recursive_headers",
+    hdrs = glob(["Pods/glog/src/**"]),
 )
 cc_header(
-    name = "pods_libwebp_src_dsp_h_header",
-    hdrs = [
-        "Pods/libwebp/src/dsp/common_sse2.h",
-        "Pods/libwebp/src/dsp/common_sse41.h",
-        "Pods/libwebp/src/dsp/cpu.h",
-        "Pods/libwebp/src/dsp/dsp.h",
-        "Pods/libwebp/src/dsp/lossless.h",
-        "Pods/libwebp/src/dsp/lossless_common.h",
-        "Pods/libwebp/src/dsp/mips_macro.h",
-        "Pods/libwebp/src/dsp/msa_macro.h",
-        "Pods/libwebp/src/dsp/neon.h",
-        "Pods/libwebp/src/dsp/quant.h",
-        "Pods/libwebp/src/dsp/yuv.h",
-    ],
+    name = "pods_googledatatransport_recursive_headers",
+    hdrs = glob(["Pods/GoogleDataTransport/**"]),
 )
 cc_header(
-    name = "pods_libwebp_src_enc_h_header",
-    hdrs = [
-        "Pods/libwebp/src/enc/backward_references_enc.h",
-        "Pods/libwebp/src/enc/cost_enc.h",
-        "Pods/libwebp/src/enc/histogram_enc.h",
-        "Pods/libwebp/src/enc/vp8i_enc.h",
-        "Pods/libwebp/src/enc/vp8li_enc.h",
-    ],
+    name = "pods_googleutilities_recursive_headers",
+    hdrs = glob(["Pods/GoogleUtilities/**"]),
 )
 cc_header(
-    name = "pods_libwebp_src_mux_h_header",
-    hdrs = [
-        "Pods/libwebp/src/mux/animi.h",
-        "Pods/libwebp/src/mux/muxi.h",
-    ],
+    name = "pods_libwebp_recursive_headers",
+    hdrs = glob(["Pods/libwebp/**"]),
 )
 cc_header(
-    name = "pods_libwebp_src_utils_h_header",
-    hdrs = [
-        "Pods/libwebp/src/utils/bit_reader_inl_utils.h",
-        "Pods/libwebp/src/utils/bit_reader_utils.h",
-        "Pods/libwebp/src/utils/bit_writer_utils.h",
-        "Pods/libwebp/src/utils/color_cache_utils.h",
-        "Pods/libwebp/src/utils/endian_inl_utils.h",
-        "Pods/libwebp/src/utils/filters_utils.h",
-        "Pods/libwebp/src/utils/huffman_encode_utils.h",
-        "Pods/libwebp/src/utils/huffman_utils.h",
-        "Pods/libwebp/src/utils/quant_levels_dec_utils.h",
-        "Pods/libwebp/src/utils/quant_levels_utils.h",
-        "Pods/libwebp/src/utils/random_utils.h",
-        "Pods/libwebp/src/utils/rescaler_utils.h",
-        "Pods/libwebp/src/utils/thread_utils.h",
-        "Pods/libwebp/src/utils/utils.h",
-    ],
+    name = "pods_libwebp_src_recursive_headers",
+    hdrs = glob(["Pods/libwebp/src/**"]),
 )
 cc_header(
     name = "pods_libwebp_src_webp_h_header",
     hdrs = [
         "Pods/libwebp/src/webp/decode.h",
-        "Pods/libwebp/src/webp/demux.h",
-        "Pods/libwebp/src/webp/encode.h",
-        "Pods/libwebp/src/webp/format_constants.h",
-        "Pods/libwebp/src/webp/mux.h",
         "Pods/libwebp/src/webp/mux_types.h",
         "Pods/libwebp/src/webp/types.h",
     ],
@@ -1905,307 +1145,31 @@ cc_header(
     ],
 )
 cc_header(
-    name = "pods_realm_include_core_external_json_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/external/json/json.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_h_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/realm_nmmintrin.h",
-    ],
-)
-cc_header(
     name = "pods_realm_include_core_realm_hpp_header",
     hdrs = [
-        "Pods/Realm/include/core/realm/aggregate_ops.hpp",
-        "Pods/Realm/include/core/realm/alloc.hpp",
-        "Pods/Realm/include/core/realm/alloc_slab.hpp",
-        "Pods/Realm/include/core/realm/array.hpp",
-        "Pods/Realm/include/core/realm/array_backlink.hpp",
-        "Pods/Realm/include/core/realm/array_basic.hpp",
-        "Pods/Realm/include/core/realm/array_basic_tpl.hpp",
-        "Pods/Realm/include/core/realm/array_binary.hpp",
-        "Pods/Realm/include/core/realm/array_blob.hpp",
-        "Pods/Realm/include/core/realm/array_blobs_big.hpp",
-        "Pods/Realm/include/core/realm/array_blobs_small.hpp",
-        "Pods/Realm/include/core/realm/array_bool.hpp",
-        "Pods/Realm/include/core/realm/array_decimal128.hpp",
-        "Pods/Realm/include/core/realm/array_direct.hpp",
-        "Pods/Realm/include/core/realm/array_fixed_bytes.hpp",
-        "Pods/Realm/include/core/realm/array_integer.hpp",
-        "Pods/Realm/include/core/realm/array_integer_tpl.hpp",
-        "Pods/Realm/include/core/realm/array_key.hpp",
-        "Pods/Realm/include/core/realm/array_list.hpp",
-        "Pods/Realm/include/core/realm/array_mixed.hpp",
-        "Pods/Realm/include/core/realm/array_ref.hpp",
-        "Pods/Realm/include/core/realm/array_string.hpp",
-        "Pods/Realm/include/core/realm/array_string_short.hpp",
-        "Pods/Realm/include/core/realm/array_timestamp.hpp",
-        "Pods/Realm/include/core/realm/array_typed_link.hpp",
-        "Pods/Realm/include/core/realm/array_unsigned.hpp",
-        "Pods/Realm/include/core/realm/array_with_find.hpp",
-        "Pods/Realm/include/core/realm/backup_restore.hpp",
-        "Pods/Realm/include/core/realm/binary_data.hpp",
-        "Pods/Realm/include/core/realm/bplustree.hpp",
-        "Pods/Realm/include/core/realm/cluster.hpp",
-        "Pods/Realm/include/core/realm/cluster_tree.hpp",
-        "Pods/Realm/include/core/realm/collection.hpp",
-        "Pods/Realm/include/core/realm/column_binary.hpp",
-        "Pods/Realm/include/core/realm/column_fwd.hpp",
-        "Pods/Realm/include/core/realm/column_integer.hpp",
-        "Pods/Realm/include/core/realm/column_type.hpp",
-        "Pods/Realm/include/core/realm/column_type_traits.hpp",
-        "Pods/Realm/include/core/realm/data_type.hpp",
-        "Pods/Realm/include/core/realm/db.hpp",
-        "Pods/Realm/include/core/realm/db_options.hpp",
-        "Pods/Realm/include/core/realm/decimal128.hpp",
-        "Pods/Realm/include/core/realm/dictionary.hpp",
-        "Pods/Realm/include/core/realm/dictionary_cluster_tree.hpp",
-        "Pods/Realm/include/core/realm/disable_sync_to_disk.hpp",
-        "Pods/Realm/include/core/realm/error_codes.hpp",
-        "Pods/Realm/include/core/realm/exceptions.hpp",
-        "Pods/Realm/include/core/realm/global_key.hpp",
-        "Pods/Realm/include/core/realm/group.hpp",
-        "Pods/Realm/include/core/realm/handover_defs.hpp",
-        "Pods/Realm/include/core/realm/index_string.hpp",
-        "Pods/Realm/include/core/realm/keys.hpp",
-        "Pods/Realm/include/core/realm/list.hpp",
-        "Pods/Realm/include/core/realm/mixed.hpp",
-        "Pods/Realm/include/core/realm/node.hpp",
-        "Pods/Realm/include/core/realm/node_header.hpp",
         "Pods/Realm/include/core/realm/null.hpp",
-        "Pods/Realm/include/core/realm/obj.hpp",
-        "Pods/Realm/include/core/realm/obj_list.hpp",
-        "Pods/Realm/include/core/realm/object_id.hpp",
-        "Pods/Realm/include/core/realm/owned_data.hpp",
-        "Pods/Realm/include/core/realm/query.hpp",
-        "Pods/Realm/include/core/realm/query_conditions.hpp",
-        "Pods/Realm/include/core/realm/query_engine.hpp",
-        "Pods/Realm/include/core/realm/query_expression.hpp",
-        "Pods/Realm/include/core/realm/query_state.hpp",
-        "Pods/Realm/include/core/realm/query_value.hpp",
-        "Pods/Realm/include/core/realm/replication.hpp",
-        "Pods/Realm/include/core/realm/set.hpp",
-        "Pods/Realm/include/core/realm/sort_descriptor.hpp",
-        "Pods/Realm/include/core/realm/spec.hpp",
-        "Pods/Realm/include/core/realm/status.hpp",
-        "Pods/Realm/include/core/realm/status_with.hpp",
-        "Pods/Realm/include/core/realm/string_data.hpp",
-        "Pods/Realm/include/core/realm/table.hpp",
-        "Pods/Realm/include/core/realm/table_cluster_tree.hpp",
-        "Pods/Realm/include/core/realm/table_ref.hpp",
-        "Pods/Realm/include/core/realm/table_view.hpp",
-        "Pods/Realm/include/core/realm/timestamp.hpp",
-        "Pods/Realm/include/core/realm/transaction.hpp",
-        "Pods/Realm/include/core/realm/unicode.hpp",
-        "Pods/Realm/include/core/realm/utilities.hpp",
-        "Pods/Realm/include/core/realm/uuid.hpp",
-        "Pods/Realm/include/core/realm/version.hpp",
-        "Pods/Realm/include/core/realm/version_id.hpp",
-        "Pods/Realm/include/core/realm/version_numbers.hpp",
     ],
 )
 cc_header(
-    name = "pods_realm_include_core_realm_impl_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/impl/array_writer.hpp",
-        "Pods/Realm/include/core/realm/impl/changeset_input_stream.hpp",
-        "Pods/Realm/include/core/realm/impl/cont_transact_hist.hpp",
-        "Pods/Realm/include/core/realm/impl/destroy_guard.hpp",
-        "Pods/Realm/include/core/realm/impl/output_stream.hpp",
-        "Pods/Realm/include/core/realm/impl/transact_log.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_metrics_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/metrics/metric_timer.hpp",
-        "Pods/Realm/include/core/realm/metrics/metrics.hpp",
-        "Pods/Realm/include/core/realm/metrics/query_info.hpp",
-        "Pods/Realm/include/core/realm/metrics/transaction_info.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_object_store_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/object-store/audit.hpp",
-        "Pods/Realm/include/core/realm/object-store/audit_serializer.hpp",
-        "Pods/Realm/include/core/realm/object-store/binding_context.hpp",
-        "Pods/Realm/include/core/realm/object-store/collection.hpp",
-        "Pods/Realm/include/core/realm/object-store/collection_notifications.hpp",
-        "Pods/Realm/include/core/realm/object-store/dictionary.hpp",
-        "Pods/Realm/include/core/realm/object-store/feature_checks.hpp",
-        "Pods/Realm/include/core/realm/object-store/index_set.hpp",
-        "Pods/Realm/include/core/realm/object-store/list.hpp",
-        "Pods/Realm/include/core/realm/object-store/object.hpp",
-        "Pods/Realm/include/core/realm/object-store/object_accessor.hpp",
-        "Pods/Realm/include/core/realm/object-store/object_changeset.hpp",
-        "Pods/Realm/include/core/realm/object-store/object_schema.hpp",
-        "Pods/Realm/include/core/realm/object-store/object_store.hpp",
-        "Pods/Realm/include/core/realm/object-store/property.hpp",
-        "Pods/Realm/include/core/realm/object-store/results.hpp",
-        "Pods/Realm/include/core/realm/object-store/schema.hpp",
-        "Pods/Realm/include/core/realm/object-store/set.hpp",
-        "Pods/Realm/include/core/realm/object-store/shared_realm.hpp",
-        "Pods/Realm/include/core/realm/object-store/thread_safe_reference.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_object_store_impl_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/object-store/impl/collection_change_builder.hpp",
-        "Pods/Realm/include/core/realm/object-store/impl/collection_notifier.hpp",
-        "Pods/Realm/include/core/realm/object-store/impl/deep_change_checker.hpp",
-        "Pods/Realm/include/core/realm/object-store/impl/realm_coordinator.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_object_store_sync_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/object-store/sync/app.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/app_credentials.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/app_service_client.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/async_open_task.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/auth_request_client.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/generic_network_transport.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/mongo_client.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/mongo_collection.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/mongo_database.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/push_client.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/subscribable.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/sync_manager.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/sync_session.hpp",
-        "Pods/Realm/include/core/realm/object-store/sync/sync_user.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_object_store_util_bson_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/object-store/util/bson/bson.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/bson/indexed_map.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/bson/max_key.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/bson/min_key.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/bson/mongo_timestamp.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/bson/regular_expression.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_object_store_util_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/object-store/util/atomic_shared_ptr.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/copyable_atomic.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/scheduler.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/tagged_bool.hpp",
-        "Pods/Realm/include/core/realm/object-store/util/tagged_string.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_sync_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/sync/client.hpp",
-        "Pods/Realm/include/core/realm/sync/client_base.hpp",
-        "Pods/Realm/include/core/realm/sync/config.hpp",
-        "Pods/Realm/include/core/realm/sync/protocol.hpp",
-        "Pods/Realm/include/core/realm/sync/subscriptions.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_util_h_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/util/config.h",
-        "Pods/Realm/include/core/realm/util/features.h",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_core_realm_util_hpp_header",
-    hdrs = [
-        "Pods/Realm/include/core/realm/util/assert.hpp",
-        "Pods/Realm/include/core/realm/util/backtrace.hpp",
-        "Pods/Realm/include/core/realm/util/bind_ptr.hpp",
-        "Pods/Realm/include/core/realm/util/buffer.hpp",
-        "Pods/Realm/include/core/realm/util/cf_ptr.hpp",
-        "Pods/Realm/include/core/realm/util/checked_mutex.hpp",
-        "Pods/Realm/include/core/realm/util/encrypted_file_mapping.hpp",
-        "Pods/Realm/include/core/realm/util/file.hpp",
-        "Pods/Realm/include/core/realm/util/file_mapper.hpp",
-        "Pods/Realm/include/core/realm/util/fixed_size_buffer.hpp",
-        "Pods/Realm/include/core/realm/util/function_ref.hpp",
-        "Pods/Realm/include/core/realm/util/functional.hpp",
-        "Pods/Realm/include/core/realm/util/future.hpp",
-        "Pods/Realm/include/core/realm/util/input_stream.hpp",
-        "Pods/Realm/include/core/realm/util/interprocess_condvar.hpp",
-        "Pods/Realm/include/core/realm/util/interprocess_mutex.hpp",
-        "Pods/Realm/include/core/realm/util/logger.hpp",
-        "Pods/Realm/include/core/realm/util/miscellaneous.hpp",
-        "Pods/Realm/include/core/realm/util/optional.hpp",
-        "Pods/Realm/include/core/realm/util/overload.hpp",
-        "Pods/Realm/include/core/realm/util/safe_int_ops.hpp",
-        "Pods/Realm/include/core/realm/util/scope_exit.hpp",
-        "Pods/Realm/include/core/realm/util/serializer.hpp",
-        "Pods/Realm/include/core/realm/util/span.hpp",
-        "Pods/Realm/include/core/realm/util/terminate.hpp",
-        "Pods/Realm/include/core/realm/util/thread.hpp",
-        "Pods/Realm/include/core/realm/util/to_string.hpp",
-        "Pods/Realm/include/core/realm/util/type_list.hpp",
-        "Pods/Realm/include/core/realm/util/type_traits.hpp",
-    ],
-)
-cc_header(
-    name = "pods_realm_include_h_header",
-    hdrs = [
-        "Pods/Realm/include/RLMMigration_Private.h",
-        "Pods/Realm/include/RLMSwiftSupport.h",
-    ],
+    name = "pods_realm_include_core_recursive_headers",
+    hdrs = glob(["Pods/Realm/include/core/**"]),
 )
 cc_header(
     name = "pods_realm_include_hpp_header",
     hdrs = [
-        "Pods/Realm/include/RLMAccessor.hpp",
-        "Pods/Realm/include/RLMAnalytics.hpp",
-        "Pods/Realm/include/RLMApp_Private.hpp",
-        "Pods/Realm/include/RLMArray_Private.hpp",
-        "Pods/Realm/include/RLMBSON_Private.hpp",
         "Pods/Realm/include/RLMClassInfo.hpp",
         "Pods/Realm/include/RLMCollection_Private.hpp",
-        "Pods/Realm/include/RLMCredentials_Private.hpp",
         "Pods/Realm/include/RLMDecimal128_Private.hpp",
-        "Pods/Realm/include/RLMDictionary_Private.hpp",
-        "Pods/Realm/include/RLMFindOneAndModifyOptions_Private.hpp",
-        "Pods/Realm/include/RLMFindOptions_Private.hpp",
-        "Pods/Realm/include/RLMMongoClient_Private.hpp",
-        "Pods/Realm/include/RLMMongoCollection_Private.hpp",
-        "Pods/Realm/include/RLMMongoDatabase_Private.hpp",
-        "Pods/Realm/include/RLMNetworkTransport_Private.hpp",
         "Pods/Realm/include/RLMObjectId_Private.hpp",
-        "Pods/Realm/include/RLMObjectSchema_Private.hpp",
-        "Pods/Realm/include/RLMObject_Private.hpp",
-        "Pods/Realm/include/RLMObservation.hpp",
-        "Pods/Realm/include/RLMPredicateUtil.hpp",
-        "Pods/Realm/include/RLMProperty_Private.hpp",
-        "Pods/Realm/include/RLMProviderClient_Private.hpp",
-        "Pods/Realm/include/RLMPushClient_Private.hpp",
-        "Pods/Realm/include/RLMQueryUtil.hpp",
-        "Pods/Realm/include/RLMRealmConfiguration_Private.hpp",
-        "Pods/Realm/include/RLMRealmUtil.hpp",
         "Pods/Realm/include/RLMRealm_Private.hpp",
         "Pods/Realm/include/RLMResults_Private.hpp",
-        "Pods/Realm/include/RLMSchema_Private.hpp",
-        "Pods/Realm/include/RLMSet_Private.hpp",
-        "Pods/Realm/include/RLMSyncConfiguration_Private.hpp",
-        "Pods/Realm/include/RLMSyncManager_Private.hpp",
-        "Pods/Realm/include/RLMSyncSession_Private.hpp",
-        "Pods/Realm/include/RLMSyncSubscription_Private.hpp",
-        "Pods/Realm/include/RLMSyncUtil_Private.hpp",
-        "Pods/Realm/include/RLMThreadSafeReference_Private.hpp",
         "Pods/Realm/include/RLMUUID_Private.hpp",
-        "Pods/Realm/include/RLMUpdateChecker.hpp",
-        "Pods/Realm/include/RLMUpdateResult_Private.hpp",
-        "Pods/Realm/include/RLMUserAPIKey_Private.hpp",
-        "Pods/Realm/include/RLMUser_Private.hpp",
         "Pods/Realm/include/RLMUtil.hpp",
     ],
+)
+cc_header(
+    name = "pods_realm_include_recursive_headers",
+    hdrs = glob(["Pods/Realm/include/**"]),
 )
 cc_header(
     name = "pods_rxcocoa_rxcocoa_runtime_include_h_header",
@@ -2341,6 +1305,36 @@ cc_library(
     ],
 )
 cc_library(
+    name = "DoubleConversion_framework_cc",
+    alwayslink = True,
+    copts = [
+        "-std=gnu++14",
+        "-stdlib=libc++",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    header_maps = [
+        ":DoubleConversion_framework_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/DoubleConversion/DoubleConversion-prefix.pch",
+    srcs = [
+        "Pods/DoubleConversion/double-conversion/bignum-dtoa.cc",
+        "Pods/DoubleConversion/double-conversion/bignum.cc",
+        "Pods/DoubleConversion/double-conversion/cached-powers.cc",
+        "Pods/DoubleConversion/double-conversion/diy-fp.cc",
+        "Pods/DoubleConversion/double-conversion/double-conversion.cc",
+        "Pods/DoubleConversion/double-conversion/fast-dtoa.cc",
+        "Pods/DoubleConversion/double-conversion/fixed-dtoa.cc",
+        "Pods/DoubleConversion/double-conversion/strtod.cc",
+    ],
+)
+cc_library(
     name = "FBRetainCycleDetector_framework_c",
     alwayslink = True,
     copts = [
@@ -2428,15 +1422,7 @@ cc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_components_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_handlers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_helpers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_unwind_compact_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_unwind_dwarf_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_unwind_h_header",
-        ":pods_firebasecrashlytics_crashlytics_protogen_nanopb_h_header",
-        ":pods_firebasecrashlytics_crashlytics_shared_firclsmacho_h_header",
-        ":pods_firebasecrashlytics_crashlytics_third_party_libunwind_h_header",
+        ":pods_firebasecrashlytics_recursive_headers",
     ],
     header_maps = [
         ":nanopb_public_header_map",
@@ -2482,7 +1468,7 @@ cc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_googledatatransport_googledatatransport_gdtcctlibrary_protogen_nanopb_h_header",
+        ":pods_googledatatransport_recursive_headers",
     ],
     header_maps = [
         ":nanopb_public_header_map",
@@ -2875,6 +1861,90 @@ cc_library(
     ],
 )
 cc_library(
+    name = "folly_framework_cpp",
+    alwayslink = True,
+    copts = [
+        "-std=c++14",
+        "-stdlib=libc++",
+        "-DFOLLY_NO_CONFIG",
+        "-DFOLLY_MOBILE=1",
+        "-DFOLLY_USE_LIBCPP=1",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    deps = [
+        ":pods_boost_for_react_native_boost_hpp_header",
+        ":pods_boost_for_react_native_recursive_headers",
+        ":pods_doubleconversion_double_conversion_h_header",
+        ":pods_doubleconversion_recursive_headers",
+        ":pods_folly_recursive_headers",
+    ],
+    header_maps = [
+        ":__build_dir__debug_iphonesimulator_glog_glog_framework_headers_glog_virtual_header_map",
+    ],
+    includes = [
+        "Pods/Folly",
+        "Pods/boost-for-react-native",
+        "Pods/DoubleConversion",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/Folly/Folly-prefix.pch",
+    srcs = [
+        "Pods/Folly/folly/Bits.cpp",
+        "Pods/Folly/folly/Conv.cpp",
+        "Pods/Folly/folly/Demangle.cpp",
+        "Pods/Folly/folly/StringBase.cpp",
+        "Pods/Folly/folly/Unicode.cpp",
+        "Pods/Folly/folly/detail/MallocImpl.cpp",
+        "Pods/Folly/folly/dynamic.cpp",
+        "Pods/Folly/folly/json.cpp",
+        "Pods/Folly/folly/portability/BitsFunctexcept.cpp",
+    ],
+)
+cc_library(
+    name = "glog_framework_cc",
+    alwayslink = True,
+    copts = [
+        "-std=gnu++14",
+        "-stdlib=libc++",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    deps = [
+        ":pods_glog_src_base_h_header",
+        ":pods_glog_src_glog_h_header",
+        ":pods_glog_src_h_header",
+        ":pods_glog_src_recursive_headers",
+    ],
+    header_maps = [
+        ":__build_dir__debug_iphonesimulator_glog_glog_framework_headers_virtual_header_map",
+    ],
+    includes = [
+        "Pods/glog/src",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    pch = "Pods/Target Support Files/glog/glog-prefix.pch",
+    srcs = [
+        "Pods/glog/src/demangle.cc",
+        "Pods/glog/src/logging.cc",
+        "Pods/glog/src/raw_logging.cc",
+        "Pods/glog/src/signalhandler.cc",
+        "Pods/glog/src/symbolize.cc",
+        "Pods/glog/src/utilities.cc",
+        "Pods/glog/src/vlog_is_on.cc",
+    ],
+)
+cc_library(
     name = "libwebp_framework_c",
     alwayslink = True,
     copts = [
@@ -2888,12 +1958,7 @@ cc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_libwebp_sharpyuv_h_header",
-        ":pods_libwebp_src_dec_h_header",
-        ":pods_libwebp_src_dsp_h_header",
-        ":pods_libwebp_src_enc_h_header",
-        ":pods_libwebp_src_mux_h_header",
-        ":pods_libwebp_src_utils_h_header",
+        ":pods_libwebp_recursive_headers",
         ":pods_libwebp_src_webp_h_header",
     ],
     header_maps = [
@@ -3844,6 +2909,23 @@ header_map(
     name = "CryptoSwift_swift_header_map",
     direct_hdr_providers = [":swift_module_CryptoSwift"],
     namespace = "CryptoSwift",
+)
+header_map(
+    name = "DoubleConversion_framework_private_header_map",
+    hdrs = [
+        "Pods/DoubleConversion/double-conversion/bignum-dtoa.h",
+        "Pods/DoubleConversion/double-conversion/bignum.h",
+        "Pods/DoubleConversion/double-conversion/cached-powers.h",
+        "Pods/DoubleConversion/double-conversion/diy-fp.h",
+        "Pods/DoubleConversion/double-conversion/double-conversion.h",
+        "Pods/DoubleConversion/double-conversion/fast-dtoa.h",
+        "Pods/DoubleConversion/double-conversion/fixed-dtoa.h",
+        "Pods/DoubleConversion/double-conversion/ieee.h",
+        "Pods/DoubleConversion/double-conversion/strtod.h",
+        "Pods/DoubleConversion/double-conversion/utils.h",
+        "Pods/Target Support Files/DoubleConversion/DoubleConversion-umbrella.h",
+    ],
+    namespace = "DoubleConversion",
 )
 header_map(
     name = "DropDown_framework_private_header_map",
@@ -6874,6 +5956,26 @@ header_map(
     namespace = "_NIODataStructures",
 )
 header_map(
+    name = "__build_dir__debug_iphonesimulator_glog_glog_framework_headers_glog_virtual_header_map",
+    hdrs = [
+        "Pods/glog/src/glog/log_severity.h",
+        "Pods/glog/src/glog/logging.h",
+        "Pods/glog/src/glog/vlog_is_on.h",
+    ],
+    namespace = "glog",
+    namespace_only = True,
+)
+header_map(
+    name = "__build_dir__debug_iphonesimulator_glog_glog_framework_headers_virtual_header_map",
+    hdrs = [
+        "Pods/glog/src/glog/log_severity.h",
+        "Pods/glog/src/glog/logging.h",
+        "Pods/glog/src/glog/raw_logging.h",
+        "Pods/glog/src/glog/stl_logging.h",
+        "Pods/glog/src/glog/vlog_is_on.h",
+    ],
+)
+header_map(
     name = "_niodatastructures_public_header_map",
     hdrs = [
         "Pods/Target Support Files/_NIODataStructures/_NIODataStructures-umbrella.h",
@@ -7515,6 +6617,24 @@ header_map(
         "Pods/Target Support Files/CryptoSwift/CryptoSwift-umbrella.h",
     ],
     namespace = "CryptoSwift",
+    namespace_only = True,
+)
+header_map(
+    name = "doubleconversion_public_header_map",
+    hdrs = [
+        "Pods/DoubleConversion/double-conversion/bignum-dtoa.h",
+        "Pods/DoubleConversion/double-conversion/bignum.h",
+        "Pods/DoubleConversion/double-conversion/cached-powers.h",
+        "Pods/DoubleConversion/double-conversion/diy-fp.h",
+        "Pods/DoubleConversion/double-conversion/double-conversion.h",
+        "Pods/DoubleConversion/double-conversion/fast-dtoa.h",
+        "Pods/DoubleConversion/double-conversion/fixed-dtoa.h",
+        "Pods/DoubleConversion/double-conversion/ieee.h",
+        "Pods/DoubleConversion/double-conversion/strtod.h",
+        "Pods/DoubleConversion/double-conversion/utils.h",
+        "Pods/Target Support Files/DoubleConversion/DoubleConversion-umbrella.h",
+    ],
+    namespace = "DoubleConversion",
     namespace_only = True,
 )
 header_map(
@@ -10006,6 +9126,7 @@ ios_application(
         ":CocoaLumberjack_framework",
         ":CoconutKit_framework",
         ":CryptoSwift_framework",
+        ":DoubleConversion_framework",
         ":DropDown_framework",
         ":Eureka_framework",
         ":FBAllocationTracker_framework",
@@ -10120,6 +9241,8 @@ ios_application(
         ":ZipArchive_framework",
         ":_NIODataStructures_framework",
         ":fishhook_framework",
+        ":folly_framework",
+        ":glog_framework",
         ":libwebp_framework",
         ":nanopb_framework",
         ":pop_framework",
@@ -10539,6 +9662,22 @@ ios_framework(
     ],
     minimum_os_version = "9.0",
     version = ":CryptoSwift_framework_version",
+)
+ios_framework(
+    name = "DoubleConversion_framework",
+    bundle_id = "org.cocoapods.DoubleConversion",
+    bundle_name = "DoubleConversion",
+    deps = [
+        ":DoubleConversion_framework_cc",
+        ":DoubleConversion_framework_m",
+        ":DoubleConversion_framework_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/DoubleConversion/DoubleConversion-Info.plist",
+    ],
+    minimum_os_version = "8.0",
+    version = ":DoubleConversion_framework_version",
 )
 ios_framework(
     name = "DropDown_framework",
@@ -12524,6 +11663,42 @@ ios_framework(
     version = ":fishhook_framework_version",
 )
 ios_framework(
+    name = "folly_framework",
+    bundle_id = "org.cocoapods.folly",
+    bundle_name = "folly",
+    deps = [
+        ":folly_framework_cpp",
+        ":folly_framework_m",
+        ":folly_framework_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    frameworks = [
+        ":DoubleConversion_framework",
+        ":glog_framework",
+    ],
+    infoplists = [
+        "Pods/Target Support Files/Folly/Folly-Info.plist",
+    ],
+    minimum_os_version = "8.0",
+    version = ":folly_framework_version",
+)
+ios_framework(
+    name = "glog_framework",
+    bundle_id = "org.cocoapods.glog",
+    bundle_name = "glog",
+    deps = [
+        ":glog_framework_cc",
+        ":glog_framework_m",
+        ":glog_framework_system_library",
+    ],
+    families = ["iphone", "ipad"],
+    infoplists = [
+        "Pods/Target Support Files/glog/glog-Info.plist",
+    ],
+    minimum_os_version = "8.0",
+    version = ":glog_framework_version",
+)
+ios_framework(
     name = "libwebp_framework",
     bundle_id = "org.cocoapods.libwebp",
     bundle_name = "libwebp",
@@ -12884,6 +12059,14 @@ module_map(
     ],
     module_map_file = "Pods/Target Support Files/CryptoSwift/CryptoSwift.modulemap",
     module_name = "CryptoSwift",
+)
+module_map(
+    name = "DoubleConversion_module_map",
+    hdrs = [
+        "Pods/Target Support Files/DoubleConversion/DoubleConversion-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/DoubleConversion/DoubleConversion.modulemap",
+    module_name = "DoubleConversion",
 )
 module_map(
     name = "DropDown_mixed_module_map",
@@ -14557,6 +13740,22 @@ module_map(
     module_name = "fishhook",
 )
 module_map(
+    name = "folly_module_map",
+    hdrs = [
+        "Pods/Target Support Files/Folly/Folly-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/Folly/Folly.modulemap",
+    module_name = "folly",
+)
+module_map(
+    name = "glog_module_map",
+    hdrs = [
+        "Pods/Target Support Files/glog/glog-umbrella.h",
+    ],
+    module_map_file = "Pods/Target Support Files/glog/glog.modulemap",
+    module_name = "glog",
+)
+module_map(
     name = "libwebp_module_map",
     hdrs = [
         "Pods/Target Support Files/libwebp/libwebp-umbrella.h",
@@ -15715,6 +14914,32 @@ objc_library(
     ],
 )
 objc_library(
+    name = "DoubleConversion_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":DoubleConversion_framework_private_header_map",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":DoubleConversion_module_map",
+    ],
+    pch = "Pods/Target Support Files/DoubleConversion/DoubleConversion-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/DoubleConversion/DoubleConversion-dummy.m",
+    ],
+)
+objc_library(
     name = "DropDown_framework_m",
     alwayslink = True,
     copts = [
@@ -16546,32 +15771,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebaseauth_firebaseauth_interop_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_auth_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_email_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_facebook_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_gamecenter_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_github_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_google_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_oauth_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_phone_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_authprovider_twitter_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_rpc_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_rpc_multifactor_enroll_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_rpc_multifactor_signin_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_rpc_multifactor_unenroll_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_rpc_proto_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_backend_rpc_proto_phone_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_multifactor_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_multifactor_phone_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_public_firebaseauth_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_storage_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_systemservice_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_user_h_header",
-        ":pods_firebaseauth_firebaseauth_sources_utilities_h_header",
-        ":pods_firebaseauth_firebasecore_extension_h_header",
+        ":pods_firebaseauth_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -16720,8 +15920,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebasecorediagnostics_firebase_corediagnostics_fircdlibrary_protogen_nanopb_h_header",
-        ":pods_firebasecorediagnostics_interop_corediagnostics_public_h_header",
+        ":pods_firebasecorediagnostics_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -16786,10 +15985,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebasecore_firebasecore_extension_h_header",
-        ":pods_firebasecore_firebasecore_sources_h_header",
-        ":pods_firebasecore_firebasecore_sources_public_firebasecore_h_header",
-        ":pods_firebasecore_interop_corediagnostics_public_h_header",
+        ":pods_firebasecore_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -16846,30 +16042,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_components_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_controllers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_datacollection_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_firclsuserdefaults_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_handlers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_helpers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_models_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_models_record_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_operations_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_operations_reports_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_operations_symbolication_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_private_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_public_firebasecrashlytics_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_settings_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_settings_models_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_settings_operations_h_header",
-        ":pods_firebasecrashlytics_crashlytics_protogen_nanopb_h_header",
-        ":pods_firebasecrashlytics_crashlytics_shared_firclsmacho_h_header",
-        ":pods_firebasecrashlytics_crashlytics_shared_firclsnetworking_h_header",
-        ":pods_firebasecrashlytics_crashlytics_shared_firclsoperation_h_header",
-        ":pods_firebasecrashlytics_crashlytics_shared_h_header",
-        ":pods_firebasecrashlytics_firebasecore_extension_h_header",
-        ":pods_firebasecrashlytics_firebaseinstallations_source_library_private_h_header",
-        ":pods_firebasecrashlytics_interop_analytics_public_h_header",
+        ":pods_firebasecrashlytics_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -16975,15 +16148,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_components_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_controllers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_handlers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_helpers_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_models_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_operations_symbolication_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_private_h_header",
-        ":pods_firebasecrashlytics_crashlytics_crashlytics_public_firebasecrashlytics_h_header",
-        ":pods_firebasecrashlytics_crashlytics_shared_firclsmacho_h_header",
+        ":pods_firebasecrashlytics_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -17015,14 +16180,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_firebaseinstallations_firebasecore_extension_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_errors_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_iidmigration_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_installationsapi_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_installationsidcontroller_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_installationsstore_h_header",
-        ":pods_firebaseinstallations_firebaseinstallations_source_library_public_firebaseinstallations_h_header",
+        ":pods_firebaseinstallations_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -17109,12 +16267,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_googledatatransport_googledatatransport_gdtcctlibrary_private_h_header",
-        ":pods_googledatatransport_googledatatransport_gdtcctlibrary_protogen_nanopb_h_header",
-        ":pods_googledatatransport_googledatatransport_gdtcctlibrary_public_h_header",
-        ":pods_googledatatransport_googledatatransport_gdtcorlibrary_internal_h_header",
-        ":pods_googledatatransport_googledatatransport_gdtcorlibrary_private_h_header",
-        ":pods_googledatatransport_googledatatransport_gdtcorlibrary_public_googledatatransport_h_header",
+        ":pods_googledatatransport_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -17178,18 +16331,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_googleutilities_googleutilities_appdelegateswizzler_internal_h_header",
-        ":pods_googleutilities_googleutilities_appdelegateswizzler_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_common_h_header",
-        ":pods_googleutilities_googleutilities_environment_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_logger_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_methodswizzler_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_network_h_header",
-        ":pods_googleutilities_googleutilities_network_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_nsdata_zlib_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_reachability_h_header",
-        ":pods_googleutilities_googleutilities_reachability_public_googleutilities_h_header",
-        ":pods_googleutilities_googleutilities_userdefaults_public_googleutilities_h_header",
+        ":pods_googleutilities_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -17568,6 +16710,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
+        ":pods_libwebp_src_recursive_headers",
         ":pods_libwebp_src_webp_h_header",
     ],
     enable_modules = True,
@@ -19554,7 +18697,7 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_realm_include_h_header",
+        ":pods_realm_include_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -19620,21 +18763,10 @@ objc_library(
         "POD_CONFIGURATION_DEBUG=1",
     ],
     deps = [
-        ":pods_realm_include_core_external_json_hpp_header",
-        ":pods_realm_include_core_realm_h_header",
         ":pods_realm_include_core_realm_hpp_header",
-        ":pods_realm_include_core_realm_impl_hpp_header",
-        ":pods_realm_include_core_realm_metrics_hpp_header",
-        ":pods_realm_include_core_realm_object_store_hpp_header",
-        ":pods_realm_include_core_realm_object_store_impl_hpp_header",
-        ":pods_realm_include_core_realm_object_store_sync_hpp_header",
-        ":pods_realm_include_core_realm_object_store_util_bson_hpp_header",
-        ":pods_realm_include_core_realm_object_store_util_hpp_header",
-        ":pods_realm_include_core_realm_sync_hpp_header",
-        ":pods_realm_include_core_realm_util_h_header",
-        ":pods_realm_include_core_realm_util_hpp_header",
-        ":pods_realm_include_h_header",
+        ":pods_realm_include_core_recursive_headers",
         ":pods_realm_include_hpp_header",
+        ":pods_realm_include_recursive_headers",
     ],
     enable_modules = True,
     header_maps = [
@@ -20902,6 +20034,61 @@ objc_library(
     pch = "Pods/Target Support Files/fishhook/fishhook-prefix.pch",
     srcs = [
         "Pods/Target Support Files/fishhook/fishhook-dummy.m",
+    ],
+)
+objc_library(
+    name = "folly_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    enable_modules = True,
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":folly_module_map",
+    ],
+    pch = "Pods/Target Support Files/Folly/Folly-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/Folly/Folly-dummy.m",
+    ],
+)
+objc_library(
+    name = "glog_framework_m",
+    alwayslink = True,
+    copts = [
+        "-std=gnu11",
+    ],
+    defines = [
+        "COCOAPODS=1",
+        "DEBUG=1",
+        "POD_CONFIGURATION_DEBUG=1",
+    ],
+    deps = [
+        ":pods_glog_src_recursive_headers",
+    ],
+    enable_modules = True,
+    header_maps = [
+        ":__build_dir__debug_iphonesimulator_glog_glog_framework_headers_virtual_header_map",
+    ],
+    includes = [
+        "Pods/glog/src",
+    ],
+    linkopts = [
+        "-dead_strip",
+    ],
+    module_maps = [
+        ":glog_module_map",
+    ],
+    pch = "Pods/Target Support Files/glog/glog-prefix.pch",
+    srcs = [
+        "Pods/Target Support Files/glog/glog-dummy.m",
     ],
 )
 objc_library(
@@ -26313,6 +25500,12 @@ system_library(
     ],
 )
 system_library(
+    name = "DoubleConversion_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
     name = "DropDown_framework_system_library",
     sdk_frameworks = [
         "Foundation",
@@ -27205,6 +26398,24 @@ system_library(
 )
 system_library(
     name = "fishhook_framework_system_library",
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "folly_framework_system_library",
+    sdk_dylibs = [
+        "libstdc++",
+    ],
+    sdk_frameworks = [
+        "Foundation",
+    ],
+)
+system_library(
+    name = "glog_framework_system_library",
+    sdk_dylibs = [
+        "libstdc++",
+    ],
     sdk_frameworks = [
         "Foundation",
     ],

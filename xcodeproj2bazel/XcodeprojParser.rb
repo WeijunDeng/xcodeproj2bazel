@@ -287,30 +287,22 @@ class XcodeprojParser
         target_build_settings = []
         if variable_hash[key]
             while true
-                value = [variable_hash[key]].flatten
-                value.map{|x|x.scan(/\$[\(\{](\w+)/)}.flatten.uniq.each do | key2 |
-                    binding.pry if key == key2
-                    value2 = variable_hash[key2]
-                    next unless value2
-                    if value == ["$(#{key2})"] or value == ["${#{key2}}"]
-                        value = [value2].flatten
-                        next
+                values = [variable_hash[key]].flatten
+                new_values = []
+                values.each do | value |
+                    value.scan(/\$[\(\{](\w+)/).flatten.uniq.each do | key2 |
+                        binding.pry if key == key2
+                        value2 = get_target_build_settings(target, variable_hash, key2, false)
+                        next unless value2
+                        binding.pry unless value2.class == String
+                        value = value.gsub("$(#{key2})", value2).gsub("${#{key2}}", value2)
+                        value = value.gsub("$(#{key2}:c99extidentifier)", c99ext_identifier(value2)).gsub("${#{key2}:c99extidentifier}", c99ext_identifier(value2))
+                        value = value.gsub("$(#{key2}:rfc1034identifier)", rfc1034_identifier(value2)).gsub("${#{key2}:rfc1034identifier}", rfc1034_identifier(value2))
                     end
-                    if value2.class == Array and value2.size == 1
-                        value2 = value2[0]
-                    end
-                    if value2.class == String
-                        value = value.map { | x | x.gsub("$(#{key2})", value2).gsub("${#{key2}}", value2) }
-                        unless value2.include? "$"
-                            value = value.map { | x | x.gsub("$(#{key2}:c99extidentifier)", c99ext_identifier(value2)).gsub("${#{key2}:c99extidentifier}", c99ext_identifier(value2)) }
-                            value = value.map { | x | x.gsub("$(#{key2}:rfc1034identifier)", rfc1034_identifier(value2)).gsub("${#{key2}:rfc1034identifier}", rfc1034_identifier(value2)) }
-                        end
-                    else
-                        binding.pry
-                    end
+                    new_values.push value
                 end
-                if variable_hash[key] != value
-                    variable_hash[key] = value
+                if values != new_values
+                    variable_hash[key] = new_values.flatten
                 else
                     break
                 end
@@ -326,8 +318,11 @@ class XcodeprojParser
             target_build_settings = split_multi_values(target_build_settings)
             return target_build_settings
         else
-            binding.pry if target_build_settings.size > 1
-            return target_build_settings[0]
+            if target_build_settings.size > 1
+                return target_build_settings.join(" ")
+            else
+                return target_build_settings[0]
+            end
         end
     end
 
@@ -411,6 +406,7 @@ class XcodeprojParser
 
     def get_exist_build_settings_path(target, variable_hash, path)
         return nil unless path
+        return nil unless path.size > 0
         binding.pry if path.include? "'"
         binding.pry if path.include? "\""
         origin_path = path
@@ -547,8 +543,7 @@ class XcodeprojParser
                 if FileFilter.get_source_file_extnames_swift.include? extname
                     has_swift = true
                 end
-                next if FileFilter.get_source_file_extnames_ignore.include? extname
-                binding.pry unless FileFilter.get_source_file_extnames_all.include? extname
+                next unless FileFilter.get_source_file_extnames_all.include? extname
                 file_path = FileFilter.get_real_exist_expand_path_file(file_path)
                 binding.pry unless file_path
 
@@ -715,7 +710,7 @@ class XcodeprojParser
     
     def get_target_compile_flags(target, variable_hash)
         target_c_compile_flags = get_target_build_settings(target, variable_hash, "OTHER_CFLAGS", true)
-        target_cxx_compile_flags = get_target_build_settings(target, variable_hash, "OTHER_CPLUSPLUSFLAGS", true)
+        target_cxx_compile_flags = target_c_compile_flags + get_target_build_settings(target, variable_hash, "OTHER_CPLUSPLUSFLAGS", true)
         target_c_warning_flags = get_target_build_settings(target, variable_hash, "WARNING_CFLAGS", true)
         target_swift_compile_flags = get_target_build_settings(target, variable_hash, "OTHER_SWIFT_FLAGS", true)
 
@@ -1232,7 +1227,7 @@ class XcodeprojParser
         return swift_objc_bridging_header
     end
 
-    def get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
+    def get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags)
         enable_modules = false
         setting = get_target_build_settings(target, variable_hash, "CLANG_ENABLE_MODULES", false)
         if setting and setting.upcase == "YES"
@@ -1250,7 +1245,7 @@ class XcodeprojParser
         module_map_file =  FileFilter.get_real_exist_expand_path_file(module_map_file)
 
         dep_module_map_files = Set.new
-        [target_c_compile_flags, target_swift_compile_flags].each do | flags |
+        [target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags].each do | flags |
             (0..(flags.size-1)).each do | flag_i |
                 flag = flags[flag_i]
                 if flag.start_with? "-fmodule-map-file="
@@ -1421,7 +1416,7 @@ class XcodeprojParser
                 targeted_device_family = get_target_targeted_device_family(target, variable_hash)
 
                 swift_objc_bridging_header = get_targe_swift_setting(target, variable_hash)
-                enable_modules, product_module_name, module_map_file, dep_module_map_files = get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_swift_compile_flags)
+                enable_modules, product_module_name, module_map_file, dep_module_map_files = get_targe_modules_setting(target, variable_hash, product_name, flags_sources_hash, target_c_compile_flags, target_cxx_compile_flags, target_swift_compile_flags)
 
                 configuration_build_dir, target_copy_map = get_target_copy_map(target, variable_hash, product_name, product_file_name, target_links_hash[:dependency_target_product_file_names])
                 use_header_map = get_target_use_header_map(target, variable_hash)

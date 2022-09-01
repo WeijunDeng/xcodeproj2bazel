@@ -77,6 +77,8 @@ class BazelFormatter
                         src_pattern = "[\n#{src_files.sort.map{|file| "        \"#{file}\",\n"}.join("")}    ],"
                         lines.push "    #{key} = #{src_pattern}" if src_pattern
                     end
+                elsif key == "hdrs_dir"
+                    lines.push "    hdrs = glob([\"#{hash[key]}/**\"]),"
                 elsif key == "deps" or key == "frameworks" or key == "extensions" or key.end_with? "header_maps" or key.end_with? "module_maps" or key == "swiftc_inputs"
                     lines.push "    #{key} = [\n#{hash[key].uniq.map{|e| "        \":#{e}\",\n"}.join("")}    ]," if hash[key].size > 0
                 elsif key == "framework_imports"

@@ -100,9 +100,12 @@ class DependencyAnalyzer
     
             next unless import_file_path.include? "."
             next if FileFilter.is_system_header(import_file_path, is_angled_import)
+            
+            import_file_path_namespace = ""
+            if import_file_path.include? "/"
+                import_file_path_namespace = import_file_path.match(/.*\//)[0][0..-2]
+            end
 
-            import_file_path = import_file_path.gsub(/\/+/, "/")
-    
             match_header = nil
             
             unless match_header
@@ -152,21 +155,28 @@ class DependencyAnalyzer
                 header = import_file_path
                 header = FileFilter.get_exist_expand_path_file(header)
                 if header
+                    real_header = FileFilter.get_real_exist_expand_path_file(header)
+                    if header != real_header
+                        binding.pry
+                    end
                     match_header = header
                     # full path
                     file_deps_hash[file].add [:headers, match_header]
                 end
             end
             unless match_header
-                header = File.dirname(file) + "/" + import_file_path
-                header = FileFilter.get_exist_expand_path_file(header)
-                if header
-                    match_header = header
-                    # current file dir
-                    if is_angled_import
-                        file_deps_hash[file].add [:headers, match_header, File.dirname(file)]
-                    else
-                        file_deps_hash[file].add [:headers, match_header]
+                unless is_angled_import
+                    header = File.dirname(file) + "/" + import_file_path
+                    header = FileFilter.get_exist_expand_path_file(header)
+                    if header
+                        match_header = header
+                        real_header = FileFilter.get_real_exist_expand_path_file(header)
+                        if header != real_header
+                            file_deps_hash[file].add [:virtual_header_map, match_header, import_file_path_namespace, File.dirname(header), real_header]
+                        else
+                            # current file dir
+                            file_deps_hash[file].add [:headers, match_header]
+                        end
                     end
                 end
             end
@@ -180,6 +190,10 @@ class DependencyAnalyzer
                             header = dir + "/" + framework_name + ".framework/Headers/" + file_name
                             header = FileFilter.get_exist_expand_path_file(header)
                             if header
+                                real_header = FileFilter.get_real_exist_expand_path_file(header)
+                                if header != real_header and header.split(".framework/")[0] != real_header.split(".framework/")[0]
+                                    binding.pry
+                                end
                                 # find by framework search path
                                 match_header = header
                                 file_deps_hash[file].add [:headers, match_header]
@@ -190,9 +204,8 @@ class DependencyAnalyzer
                             copy_dst_file = dir[1] + "/" + import_file_path.split("/")[0] + ".framework/Headers/" + import_file_path.split("/")[1..-1].join("/")
                             if import_file_path.include? "/" and total_target_copy_map[copy_dst_file]
                                 match_header = total_target_copy_map[copy_dst_file]
-                                namespace = File.dirname(import_file_path)
                                 # find by framework search path in build dir
-                                file_deps_hash[file].add [:virtual_header_map, match_header, namespace, dir[1] + "/" + import_file_path.split("/")[0] + ".framework"]
+                                file_deps_hash[file].add [:virtual_header_map, match_header, import_file_path_namespace, File.dirname(copy_dst_file)]
                                 break
                             end
                         end
@@ -208,10 +221,8 @@ class DependencyAnalyzer
                             copy_dst_file = current_header_copy_dst.split(".framework/Headers/")[0] + ".framework/Headers/" + import_file_path
                             if total_target_copy_map[copy_dst_file]
                                 match_header = total_target_copy_map[copy_dst_file]
-                                namespace = ""
-                                namespace = File.dirname(import_file_path) if import_file_path.include? "/"
                                 # find by same framework path in build dir
-                                file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.dirname(copy_dst_file)]
+                                file_deps_hash[file].add [:virtual_header_map, match_header, import_file_path_namespace, File.dirname(copy_dst_file)]
                                 break
                             end
                         end
@@ -224,8 +235,13 @@ class DependencyAnalyzer
                         header = dir + "/" + import_file_path
                         header = FileFilter.get_exist_expand_path_file(header)
                         if header
-                            # find by header search path
+                            real_header = FileFilter.get_real_exist_expand_path_file(header)
                             match_header = header
+                            if header != real_header
+                                file_deps_hash[file].add [:virtual_header_map, match_header, import_file_path_namespace, File.dirname(header), real_header]
+                                break
+                            end
+                            # find by header search path
                             file_deps_hash[file].add [:headers, match_header, dir]
                             break
                         end
@@ -245,10 +261,8 @@ class DependencyAnalyzer
                             copy_dst_file = build_dir + "/" + import_file_path
                             if total_target_copy_map[copy_dst_file]
                                 match_header = total_target_copy_map[copy_dst_file]
-                                namespace = ""
-                                namespace = File.dirname(import_file_path) if import_file_path.include? "/"
                                 # find by header search path in build dir
-                                file_deps_hash[file].add [:virtual_header_map, match_header, namespace, File.dirname(copy_dst_file)]
+                                file_deps_hash[file].add [:virtual_header_map, match_header, import_file_path_namespace, File.dirname(copy_dst_file)]
                                 break
                             end
                         end

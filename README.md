@@ -33,23 +33,9 @@ bash test.sh
 
 # Feature
 
-- Support Cocoapods generated project (100+ in [example](https://github.com/WeijunDeng/xcodeproj2bazel/blob/main/examples/swift_app_with_pod_no_use_frameworks/Podfile))
-- Support compile file extname
-    - .c
-    - .cc
-    - .cpp
-    - .d
-    - .h
-    - .hh
-    - .hpp
-    - .hxx
-    - .inc
-    - .m
-    - .mm
-    - .pch
-    - .pch
-    - .s
-    - .swift
+- Support Xcode generated projects
+- Support CMake generated projects
+- Support Cocoapods generated projects (100+ in [example](https://github.com/WeijunDeng/xcodeproj2bazel/blob/main/examples/swift_app_with_pod_no_use_frameworks/Podfile))
 - Support rules
     - apple_bundle_import
     - apple_bundle_version
@@ -122,7 +108,7 @@ Too much ...
 
 Doing or Planning:
 
-- incremental run script
+- incremental and concurrently run script
 - use for dependency detect and isolate
 - parse file with defined macro
 - use tulsi to generate a xcode project, building with bazel, indexing with xcode

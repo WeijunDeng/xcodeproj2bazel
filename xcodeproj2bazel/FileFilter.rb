@@ -219,10 +219,6 @@ class FileFilter
         return get_source_file_extnames_objective_c + get_source_file_extnames_c
     end
 
-    def self.get_source_file_extnames_ignore
-        return [".docc", ".metal", ".intentdefinition", ".strings", ".js", ".l", ".y"]
-    end
-
     def self.get_source_file_extnames_swift
         return [".swift"]
     end
